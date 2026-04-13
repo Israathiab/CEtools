@@ -1,0 +1,1446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Circularity Assessment Tool v2.0 - Enhanced</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #2ecc71;
+            --secondary: #3498db;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --dark: #2c3e50;
+            --light: #ecf0f1;
+            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: var(--gradient);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.95;
+        }
+        
+        .version-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 0;
+        }
+        
+        .assessment-section {
+            padding: 40px;
+            max-height: calc(100vh - 200px);
+            overflow-y: auto;
+        }
+        
+        .results-panel {
+            background: #f8f9fa;
+            padding: 40px;
+            border-left: 2px solid #dee2e6;
+            position: sticky;
+            top: 0;
+            max-height: calc(100vh - 200px);
+            overflow-y: auto;
+        }
+        
+        .section-title {
+            font-size: 1.4em;
+            color: var(--dark);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary);
+        }
+        
+        .assessment-category {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+            transition: border-color 0.3s;
+        }
+        
+        .assessment-category.has-error {
+            border-color: var(--danger);
+            background: #fff5f5;
+        }
+        
+        .category-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .category-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 1.5em;
+        }
+        
+        .materials-icon { background: #e8f5e9; color: #4caf50; }
+        .design-icon { background: #e3f2fd; color: #2196f3; }
+        .use-icon { background: #fff3e0; color: #ff9800; }
+        .eol-icon { background: #f3e5f5; color: #9c27b0; }
+        .business-icon { background: #e0f2f1; color: #009688; }
+        
+        .category-title {
+            font-size: 1.2em;
+            color: var(--dark);
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        .input-group label {
+            display: block;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 8px;
+        }
+        
+        .input-group input[type="number"],
+        .input-group select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #dee2e6;
+            border-radius: 5px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+        
+        .input-group input.error {
+            border-color: var(--danger);
+            background: #fff5f5;
+        }
+        
+        .input-group input[type="range"] {
+            width: 100%;
+            margin: 10px 0;
+        }
+        
+        .range-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85em;
+            color: #6c757d;
+        }
+        
+        .range-value {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 3px;
+            margin-left: 10px;
+        }
+        
+        .input-group input:focus,
+        .input-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+        }
+        
+        .checkbox-item input[type="checkbox"] {
+            margin-right: 8px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+        
+        .validation-message {
+            color: var(--danger);
+            font-size: 0.85em;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .validation-message.show {
+            display: block;
+        }
+        
+        .material-total {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            font-weight: 600;
+        }
+        
+        .material-total.valid {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .material-total.invalid {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .eol-total {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            font-weight: 600;
+        }
+        
+        .eol-total.valid {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .eol-total.invalid {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .circular-score {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .score-circle {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 20px;
+            position: relative;
+        }
+        
+        .score-value {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3em;
+            font-weight: bold;
+        }
+        
+        .score-label {
+            position: absolute;
+            bottom: 35%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.9em;
+            color: #6c757d;
+        }
+        
+        .score-interpretation {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .score-excellent { background: #d4edda; color: #155724; }
+        .score-good { background: #d1ecf1; color: #0c5460; }
+        .score-moderate { background: #fff3cd; color: #856404; }
+        .score-poor { background: #f8d7da; color: #721c24; }
+        
+        .dimension-scores {
+            margin-bottom: 30px;
+        }
+        
+        .dimension-item {
+            margin-bottom: 15px;
+        }
+        
+        .dimension-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        
+        .dimension-name {
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .dimension-score {
+            font-weight: bold;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            transition: width 0.5s ease;
+        }
+        
+        .mci-breakdown {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .mci-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .mci-item:last-child {
+            border-bottom: none;
+        }
+        
+        .recommendations {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid var(--primary);
+        }
+        
+        .recommendation-item {
+            padding: 10px;
+            margin-bottom: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            border-left: 4px solid var(--warning);
+        }
+        
+        .priority-high {
+            border-left-color: var(--danger);
+        }
+        
+        .priority-medium {
+            border-left-color: var(--warning);
+        }
+        
+        .priority-low {
+            border-left-color: var(--primary);
+        }
+        
+        .btn-calculate {
+            width: 100%;
+            padding: 15px;
+            background: var(--gradient);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .btn-calculate:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-calculate:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .btn-export {
+            width: 100%;
+            padding: 12px;
+            background: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: background 0.3s;
+        }
+        
+        .btn-export:hover {
+            background: #2980b9;
+        }
+        
+        .btn-save {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+        
+        .btn-save:hover {
+            background: #27ae60;
+        }
+        
+        .tooltip {
+            display: inline-block;
+            margin-left: 5px;
+            width: 16px;
+            height: 16px;
+            background: #6c757d;
+            color: white;
+            border-radius: 50%;
+            font-size: 0.75em;
+            text-align: center;
+            line-height: 16px;
+            cursor: help;
+            position: relative;
+        }
+        
+        .tooltip:hover::after {
+            content: attr(data-tip);
+            position: absolute;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 5px;
+            white-space: nowrap;
+            z-index: 1000;
+            font-size: 0.9rem;
+            max-width: 250px;
+            white-space: normal;
+        }
+        
+        .methodology-note {
+            background: #d1ecf1;
+            border-left: 4px solid var(--secondary);
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            font-size: 0.9em;
+        }
+        
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .results-panel {
+                border-left: none;
+                border-top: 2px solid #dee2e6;
+            }
+        }
+        
+        @media print {
+            body { background: white; }
+            .container { box-shadow: none; }
+            .btn-calculate, .btn-export, .btn-save { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔄 Product Circularity Assessment Tool</h1>
+            <p>Measure your product's current circular economy performance</p>
+            <div class="version-badge">Version 2.0 - Enhanced with MCI Methodology</div>
+        </div>
+        
+        <div class="main-content">
+            <div class="assessment-section">
+                <div class="section-title">Product Assessment Input</div>
+                
+                <div class="methodology-note">
+                    <strong>📊 Assessment Methodology:</strong> This tool calculates the Material Circularity Indicator (MCI) based on the Ellen MacArthur Foundation methodology, combined with additional circular economy dimensions for comprehensive assessment.
+                </div>
+                
+                <!-- Material Flows Category -->
+                <div class="assessment-category" id="materialsCategory">
+                    <div class="category-header">
+                        <div class="category-icon materials-icon">🌿</div>
+                        <div class="category-title">Material Flows & Composition</div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Virgin Material Content (%)
+                            <span class="tooltip" data-tip="Percentage of materials from virgin/primary sources">?</span>
+                        </label>
+                        <input type="range" id="virginContent" min="0" max="100" value="60" oninput="updateMaterialFlows()">
+                        <span class="range-value" id="virginValue">60%</span>
+                        <div class="range-labels">
+                            <span>0% (None)</span>
+                            <span>100% (All virgin)</span>
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Recycled Material Content (%)
+                            <span class="tooltip" data-tip="Percentage of materials from recycled sources">?</span>
+                        </label>
+                        <input type="range" id="recycledContent" min="0" max="100" value="30" oninput="updateMaterialFlows()">
+                        <span class="range-value" id="recycledValue">30%</span>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Renewable Material Content (%)
+                            <span class="tooltip" data-tip="Percentage of materials from renewable/bio-based sources">?</span>
+                        </label>
+                        <input type="range" id="renewableContent" min="0" max="100" value="10" oninput="updateMaterialFlows()">
+                        <span class="range-value" id="renewableValue">10%</span>
+                    </div>
+                    
+                    <div class="material-total" id="materialTotal">
+                        Total: 100% ✓
+                    </div>
+                    <div class="validation-message" id="materialValidation">
+                        Material percentages must sum to 100%
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Material Health & Safety
+                            <span class="tooltip" data-tip="Are materials non-toxic and safe for humans and environment?">?</span>
+                        </label>
+                        <select id="materialHealth">
+                            <option value="0">All materials are hazardous</option>
+                            <option value="0.3">Many hazardous materials present</option>
+                            <option value="0.7">Mostly safe materials</option>
+                            <option value="1">All materials are safe and non-toxic</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Design for Circularity Category -->
+                <div class="assessment-category">
+                    <div class="category-header">
+                        <div class="category-icon design-icon">🔧</div>
+                        <div class="category-title">Design for Circularity</div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Design Features Implemented
+                            <span class="tooltip" data-tip="Select all circular design features currently in your product">?</span>
+                        </label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="modular" value="0.20">
+                                <label for="modular">Modular Design</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="standardParts" value="0.15">
+                                <label for="standardParts">Standard Parts</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="easyDisassembly" value="0.20">
+                                <label for="easyDisassembly">Easy Disassembly</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="repairManual" value="0.15">
+                                <label for="repairManual">Repair Manual Available</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="spareParts" value="0.15">
+                                <label for="spareParts">Spare Parts Available</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="upgradeable" value="0.15">
+                                <label for="upgradeable">Upgradeable Components</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Material Complexity
+                            <span class="tooltip" data-tip="How many different materials are used?">?</span>
+                        </label>
+                        <select id="materialComplexity">
+                            <option value="1">Simple (1-3 materials)</option>
+                            <option value="0.7">Moderate (4-10 materials)</option>
+                            <option value="0.3">Complex (10+ materials)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Product Use & Lifetime Category -->
+                <div class="assessment-category">
+                    <div class="category-header">
+                        <div class="category-icon use-icon">⏱️</div>
+                        <div class="category-title">Product Use & Lifetime</div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Product Lifetime (years)
+                            <span class="tooltip" data-tip="Average lifetime before replacement">?</span>
+                        </label>
+                        <input type="number" id="productLifetime" min="0.1" max="100" step="0.1" value="5">
+                        <div class="validation-message" id="lifetimeValidation">
+                            Lifetime must be positive
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Industry Average Lifetime (years)
+                            <span class="tooltip" data-tip="Average lifetime of similar products in the market">?</span>
+                        </label>
+                        <input type="number" id="avgLifetime" min="0.1" max="100" step="0.1" value="3">
+                        <div class="validation-message" id="avgLifetimeValidation">
+                            Average lifetime must be positive
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Utilization Rate (%)
+                            <span class="tooltip" data-tip="How intensively is the product used compared to its capacity?">?</span>
+                        </label>
+                        <input type="range" id="utilizationRate" min="0" max="100" value="50" oninput="updateRangeValue(this)">
+                        <span class="range-value">50%</span>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Maintenance & Repair Services
+                            <span class="tooltip" data-tip="What level of support is provided?">?</span>
+                        </label>
+                        <select id="maintenanceLevel">
+                            <option value="0">No support provided</option>
+                            <option value="0.3">Limited warranty only</option>
+                            <option value="0.6">Repair services available</option>
+                            <option value="1">Full maintenance program</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- End of Life Category -->
+                <div class="assessment-category" id="eolCategory">
+                    <div class="category-header">
+                        <div class="category-icon eol-icon">♻️</div>
+                        <div class="category-title">End of Life Management</div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Collection Rate (%)
+                            <span class="tooltip" data-tip="Percentage of products collected back after use">?</span>
+                        </label>
+                        <input type="range" id="collectionRate" min="0" max="100" value="30" oninput="updateRangeValue(this)">
+                        <span class="range-value">30%</span>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>End of Life Pathways
+                            <span class="tooltip" data-tip="Where do collected products go? (must sum to 100%)">?</span>
+                        </label>
+                        <div style="margin-top: 10px;">
+                            <label style="font-weight: normal;">Reuse/Refurbishment (%)</label>
+                            <input type="number" id="eolReuse" min="0" max="100" value="10" 
+                                   style="width: 80px; display: inline-block; margin-left: 10px;"
+                                   oninput="updateEOLPathways()">
+                        </div>
+                        <div style="margin-top: 10px;">
+                            <label style="font-weight: normal;">Remanufacturing (%)</label>
+                            <input type="number" id="eolRemanufacturing" min="0" max="100" value="5" 
+                                   style="width: 80px; display: inline-block; margin-left: 10px;"
+                                   oninput="updateEOLPathways()">
+                        </div>
+                        <div style="margin-top: 10px;">
+                            <label style="font-weight: normal;">Recycling (%)</label>
+                            <input type="number" id="eolRecycling" min="0" max="100" value="60" 
+                                   style="width: 80px; display: inline-block; margin-left: 10px;"
+                                   oninput="updateEOLPathways()">
+                        </div>
+                        <div style="margin-top: 10px;">
+                            <label style="font-weight: normal;">Energy Recovery (%)</label>
+                            <input type="number" id="eolEnergy" min="0" max="100" value="15" 
+                                   style="width: 80px; display: inline-block; margin-left: 10px;"
+                                   oninput="updateEOLPathways()">
+                        </div>
+                        <div style="margin-top: 10px;">
+                            <label style="font-weight: normal;">Landfill/Disposal (%)</label>
+                            <input type="number" id="eolLandfill" min="0" max="100" value="10" 
+                                   style="width: 80px; display: inline-block; margin-left: 10px;"
+                                   oninput="updateEOLPathways()">
+                        </div>
+                    </div>
+                    
+                    <div class="eol-total" id="eolTotal">
+                        Total: 100% ✓
+                    </div>
+                    <div class="validation-message" id="eolValidation">
+                        EOL pathways must sum to 100%
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Take-back Program
+                            <span class="tooltip" data-tip="Do you have a take-back program?">?</span>
+                        </label>
+                        <select id="takebackProgram">
+                            <option value="0">No program</option>
+                            <option value="0.5">Voluntary take-back</option>
+                            <option value="1">Guaranteed buy-back</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Business Model Category -->
+                <div class="assessment-category">
+                    <div class="category-header">
+                        <div class="category-icon business-icon">💼</div>
+                        <div class="category-title">Business Model</div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Primary Business Model
+                            <span class="tooltip" data-tip="How is the product offered to customers?">?</span>
+                        </label>
+                        <select id="businessModel">
+                            <option value="0">Linear sale (ownership transfer)</option>
+                            <option value="0.3">Sale with service contracts</option>
+                            <option value="0.6">Leasing/Rental</option>
+                            <option value="0.8">Product-as-a-Service</option>
+                            <option value="1">Performance-based contracts</option>
+                        </select>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Circular Services Offered
+                            <span class="tooltip" data-tip="Select all services currently offered">?</span>
+                        </label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="repairService" value="0.25">
+                                <label for="repairService">Repair Services</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="upgradeService" value="0.25">
+                                <label for="upgradeService">Upgrade Services</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="refurbService" value="0.25">
+                                <label for="refurbService">Refurbishment</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="sharingPlatform" value="0.25">
+                                <label for="sharingPlatform">Sharing Platform</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="btn-calculate" id="calculateBtn" onclick="calculateCircularity()">Calculate Circularity Score</button>
+            </div>
+            
+            <div class="results-panel">
+                <div class="section-title">Circularity Results</div>
+                
+                <div class="circular-score">
+                    <div class="score-circle">
+                        <svg width="200" height="200">
+                            <circle cx="100" cy="100" r="90" fill="none" stroke="#e9ecef" stroke-width="20"/>
+                            <circle id="scoreCircle" cx="100" cy="100" r="90" fill="none" stroke="#28a745" 
+                                    stroke-width="20" stroke-dasharray="565.48" stroke-dashoffset="565.48"
+                                    transform="rotate(-90 100 100)" style="transition: stroke-dashoffset 1s ease;"/>
+                        </svg>
+                        <div class="score-value" id="scoreValue">--</div>
+                        <div class="score-label">Overall Score</div>
+                    </div>
+                </div>
+                
+                <div class="score-interpretation" id="scoreInterpretation">
+                    Calculate your score to see results
+                </div>
+                
+                <div class="dimension-scores">
+                    <h3 style="margin-bottom: 15px;">Dimension Breakdown</h3>
+                    
+                    <div class="dimension-item">
+                        <div class="dimension-header">
+                            <span class="dimension-name">Material Circularity (MCI)</span>
+                            <span class="dimension-score" id="mciScore">--</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="mciProgress" style="width: 0%; background: #28a745;"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="dimension-item">
+                        <div class="dimension-header">
+                            <span class="dimension-name">Design for Circularity</span>
+                            <span class="dimension-score" id="designScore">--</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="designProgress" style="width: 0%; background: #3498db;"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="dimension-item">
+                        <div class="dimension-header">
+                            <span class="dimension-name">Product Lifetime</span>
+                            <span class="dimension-score" id="lifetimeScore">--</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="lifetimeProgress" style="width: 0%; background: #f39c12;"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="dimension-item">
+                        <div class="dimension-header">
+                            <span class="dimension-name">End of Life</span>
+                            <span class="dimension-score" id="eolScore">--</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="eolProgress" style="width: 0%; background: #9b59b6;"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="dimension-item">
+                        <div class="dimension-header">
+                            <span class="dimension-name">Business Model</span>
+                            <span class="dimension-score" id="businessScore">--</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="businessProgress" style="width: 0%; background: #1abc9c;"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mci-breakdown" id="mciBreakdown" style="display: none;">
+                    <h4 style="margin-bottom: 10px;">MCI Components</h4>
+                    <div class="mci-item">
+                        <span>Virgin Material (V)</span>
+                        <span id="mciV">--</span>
+                    </div>
+                    <div class="mci-item">
+                        <span>Unrecoverable Waste (W)</span>
+                        <span id="mciW">--</span>
+                    </div>
+                    <div class="mci-item">
+                        <span>Linear Flow Index (LFI)</span>
+                        <span id="mciLFI">--</span>
+                    </div>
+                    <div class="mci-item">
+                        <span>Utility Factor (X)</span>
+                        <span id="mciX">--</span>
+                    </div>
+                    <div class="mci-item">
+                        <span>F(X) Function</span>
+                        <span id="mciFX">--</span>
+                    </div>
+                </div>
+                
+                <div class="recommendations" id="recommendations" style="display: none;">
+                    <h4 style="margin-bottom: 15px;">Prioritized Improvement Areas</h4>
+                    <div id="recommendationsList"></div>
+                </div>
+                
+                <button class="btn-export" onclick="exportResults()" style="display: none;" id="exportBtn">
+                    📊 Export Results (CSV)
+                </button>
+                
+                <button class="btn-save" onclick="saveScenario()" style="display: none;" id="saveBtn">
+                    💾 Save Scenario
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Configuration constants
+        const CONFIG = {
+            WEIGHTS: {
+                mci: 0.35,
+                design: 0.15,
+                lifetime: 0.20,
+                eol: 0.20,
+                business: 0.10
+            },
+            THRESHOLDS: {
+                excellent: 75,
+                good: 50,
+                moderate: 25
+            },
+            ASSUMPTIONS: {
+                recyclingEfficiency: 0.95,
+                averageUtilization: 0.5,
+                energyRecoveryFactor: 0.5
+            },
+            DESIGN_FEATURES_MAX: 1.0  // Sum of all design feature values
+        };
+        
+        // Store calculation results
+        let calculationResults = null;
+        
+        function updateRangeValue(input) {
+            const value = input.value;
+            const valueDisplay = input.nextElementSibling;
+            if (valueDisplay && valueDisplay.classList.contains('range-value')) {
+                valueDisplay.textContent = value + '%';
+            }
+        }
+        
+        function updateMaterialFlows() {
+            const virgin = parseFloat(document.getElementById('virginContent').value);
+            const recycled = parseFloat(document.getElementById('recycledContent').value);
+            const renewable = parseFloat(document.getElementById('renewableContent').value);
+            
+            // Update display values
+            document.getElementById('virginValue').textContent = virgin + '%';
+            document.getElementById('recycledValue').textContent = recycled + '%';
+            document.getElementById('renewableValue').textContent = renewable + '%';
+            
+            const total = virgin + recycled + renewable;
+            const totalDisplay = document.getElementById('materialTotal');
+            const validation = document.getElementById('materialValidation');
+            const category = document.getElementById('materialsCategory');
+            
+            if (Math.abs(total - 100) < 0.01) {
+                totalDisplay.textContent = 'Total: 100% ✓';
+                totalDisplay.className = 'material-total valid';
+                validation.classList.remove('show');
+                category.classList.remove('has-error');
+            } else {
+                totalDisplay.textContent = `Total: ${total.toFixed(1)}% ✗`;
+                totalDisplay.className = 'material-total invalid';
+                validation.classList.add('show');
+                category.classList.add('has-error');
+            }
+        }
+        
+        function updateEOLPathways() {
+            const reuse = parseFloat(document.getElementById('eolReuse').value) || 0;
+            const remanufacturing = parseFloat(document.getElementById('eolRemanufacturing').value) || 0;
+            const recycling = parseFloat(document.getElementById('eolRecycling').value) || 0;
+            const energy = parseFloat(document.getElementById('eolEnergy').value) || 0;
+            const landfill = parseFloat(document.getElementById('eolLandfill').value) || 0;
+            
+            const total = reuse + remanufacturing + recycling + energy + landfill;
+            const totalDisplay = document.getElementById('eolTotal');
+            const validation = document.getElementById('eolValidation');
+            const category = document.getElementById('eolCategory');
+            
+            if (Math.abs(total - 100) < 0.01) {
+                totalDisplay.textContent = 'Total: 100% ✓';
+                totalDisplay.className = 'eol-total valid';
+                validation.classList.remove('show');
+                category.classList.remove('has-error');
+            } else {
+                totalDisplay.textContent = `Total: ${total.toFixed(1)}% ✗`;
+                totalDisplay.className = 'eol-total invalid';
+                validation.classList.add('show');
+                category.classList.add('has-error');
+            }
+        }
+        
+        function validateInputs() {
+            let isValid = true;
+            
+            // Check material flows
+            const virgin = parseFloat(document.getElementById('virginContent').value);
+            const recycled = parseFloat(document.getElementById('recycledContent').value);
+            const renewable = parseFloat(document.getElementById('renewableContent').value);
+            const materialTotal = virgin + recycled + renewable;
+            
+            if (Math.abs(materialTotal - 100) > 0.01) {
+                alert('Material percentages must sum to 100%. Current total: ' + materialTotal.toFixed(1) + '%');
+                isValid = false;
+            }
+            
+            // Check EOL pathways
+            const eolTotal = parseFloat(document.getElementById('eolReuse').value || 0) +
+                           parseFloat(document.getElementById('eolRemanufacturing').value || 0) +
+                           parseFloat(document.getElementById('eolRecycling').value || 0) +
+                           parseFloat(document.getElementById('eolEnergy').value || 0) +
+                           parseFloat(document.getElementById('eolLandfill').value || 0);
+            
+            if (Math.abs(eolTotal - 100) > 0.01) {
+                alert('End-of-life pathways must sum to 100%. Current total: ' + eolTotal.toFixed(1) + '%');
+                isValid = false;
+            }
+            
+            // Check lifetimes
+            const productLife = parseFloat(document.getElementById('productLifetime').value);
+            const avgLife = parseFloat(document.getElementById('avgLifetime').value);
+            
+            if (productLife <= 0 || isNaN(productLife)) {
+                document.getElementById('lifetimeValidation').classList.add('show');
+                isValid = false;
+            } else {
+                document.getElementById('lifetimeValidation').classList.remove('show');
+            }
+            
+            if (avgLife <= 0 || isNaN(avgLife)) {
+                document.getElementById('avgLifetimeValidation').classList.add('show');
+                isValid = false;
+            } else {
+                document.getElementById('avgLifetimeValidation').classList.remove('show');
+            }
+            
+            return isValid;
+        }
+        
+        function calculateCircularity() {
+            // Validate inputs first
+            if (!validateInputs()) {
+                return;
+            }
+            
+            try {
+                // Gather all inputs
+                const data = gatherInputData();
+                
+                // Calculate MCI (Material Circularity Indicator)
+                const mci = calculateMCI(data);
+                
+                // Calculate other dimension scores
+                const designScore = calculateDesignScore(data);
+                const lifetimeScore = calculateLifetimeScore(data);
+                const eolScore = calculateEOLScore(data);
+                const businessScore = calculateBusinessScore(data);
+                
+                // Calculate overall score (weighted average)
+                const overallScore = calculateOverallScore(mci, designScore, lifetimeScore, eolScore, businessScore);
+                
+                // Store results
+                calculationResults = {
+                    overall: overallScore,
+                    mci: mci,
+                    design: designScore,
+                    lifetime: lifetimeScore,
+                    eol: eolScore,
+                    business: businessScore,
+                    data: data
+                };
+                
+                // Display results
+                displayResults(overallScore, mci, designScore, lifetimeScore, eolScore, businessScore, data);
+                
+                // Generate recommendations
+                generateRecommendations(mci, designScore, lifetimeScore, eolScore, businessScore);
+                
+                // Show export buttons
+                document.getElementById('exportBtn').style.display = 'block';
+                document.getElementById('saveBtn').style.display = 'block';
+                
+            } catch (error) {
+                console.error('Calculation error:', error);
+                alert('Error calculating circularity. Please check your inputs and try again.');
+            }
+        }
+        
+        function gatherInputData() {
+            return {
+                // Material flows
+                virginContent: parseFloat(document.getElementById('virginContent').value) / 100,
+                recycledContent: parseFloat(document.getElementById('recycledContent').value) / 100,
+                renewableContent: parseFloat(document.getElementById('renewableContent').value) / 100,
+                materialHealth: parseFloat(document.getElementById('materialHealth').value),
+                
+                // Design features
+                designFeatures: Array.from(document.querySelectorAll('#modular, #standardParts, #easyDisassembly, #repairManual, #spareParts, #upgradeable'))
+                    .filter(cb => cb.checked)
+                    .map(cb => parseFloat(cb.value)),
+                materialComplexity: parseFloat(document.getElementById('materialComplexity').value),
+                
+                // Product use
+                productLifetime: parseFloat(document.getElementById('productLifetime').value),
+                avgLifetime: parseFloat(document.getElementById('avgLifetime').value),
+                utilizationRate: parseFloat(document.getElementById('utilizationRate').value) / 100,
+                maintenanceLevel: parseFloat(document.getElementById('maintenanceLevel').value),
+                
+                // End of life
+                collectionRate: parseFloat(document.getElementById('collectionRate').value) / 100,
+                eolReuse: parseFloat(document.getElementById('eolReuse').value) / 100,
+                eolRemanufacturing: parseFloat(document.getElementById('eolRemanufacturing').value) / 100,
+                eolRecycling: parseFloat(document.getElementById('eolRecycling').value) / 100,
+                eolEnergy: parseFloat(document.getElementById('eolEnergy').value) / 100,
+                eolLandfill: parseFloat(document.getElementById('eolLandfill').value) / 100,
+                takebackProgram: parseFloat(document.getElementById('takebackProgram').value),
+                
+                // Business model
+                businessModel: parseFloat(document.getElementById('businessModel').value),
+                circularServices: Array.from(document.querySelectorAll('#repairService, #upgradeService, #refurbService, #sharingPlatform'))
+                    .filter(cb => cb.checked)
+                    .map(cb => parseFloat(cb.value))
+            };
+        }
+        
+        function calculateMCI(data) {
+            // MCI calculation based on Ellen MacArthur Foundation methodology
+            
+            // Calculate virgin material V
+            const V = data.virginContent;
+            
+            // Calculate unrecoverable waste W
+            const collectedWaste = data.collectionRate;
+            const recyclingEfficiency = CONFIG.ASSUMPTIONS.recyclingEfficiency;
+            const energyRecoveryFactor = CONFIG.ASSUMPTIONS.energyRecoveryFactor;
+            
+            const W = (1 - collectedWaste) + 
+                     collectedWaste * data.eolLandfill + 
+                     collectedWaste * data.eolEnergy * energyRecoveryFactor +
+                     collectedWaste * data.eolRecycling * (1 - recyclingEfficiency);
+            
+            // Linear Flow Index
+            const LFI = Math.min(1, Math.max(0, (V + W) / 2));
+            
+            // Utility factor X
+            const L = data.productLifetime / data.avgLifetime;
+            const U = data.utilizationRate / CONFIG.ASSUMPTIONS.averageUtilization;
+            const X = L * U;
+            
+            // F(X) function - corrected implementation
+            let FX;
+            if (X < 1) {
+                FX = 0.9 / X;
+            } else {
+                FX = 0.9 / Math.pow(X, 0.2);
+            }
+            FX = Math.min(1, FX);  // Cap at 1
+            
+            // Material Circularity Indicator
+            const MCI = Math.max(0, Math.min(1, 1 - LFI * FX));
+            
+            // Store components for display
+            window.mciComponents = {
+                V: V.toFixed(3),
+                W: W.toFixed(3),
+                LFI: LFI.toFixed(3),
+                X: X.toFixed(2),
+                FX: FX.toFixed(3),
+                MCI: MCI
+            };
+            
+            return MCI;
+        }
+        
+        function calculateDesignScore(data) {
+            const featuresSum = data.designFeatures.reduce((sum, val) => sum + val, 0);
+            const featuresScore = featuresSum / CONFIG.DESIGN_FEATURES_MAX; // Normalize to 0-1
+            const complexityScore = data.materialComplexity;
+            
+            // Weighted average (features 70%, complexity 30%)
+            return Math.min(1, featuresScore * 0.7 + complexityScore * 0.3);
+        }
+        
+        function calculateLifetimeScore(data) {
+            const lifetimeRatio = Math.min(2, data.productLifetime / data.avgLifetime) / 2;
+            const utilizationScore = data.utilizationRate;
+            const maintenanceScore = data.maintenanceLevel;
+            
+            // Weighted average
+            return lifetimeRatio * 0.5 + utilizationScore * 0.25 + maintenanceScore * 0.25;
+        }
+        
+        function calculateEOLScore(data) {
+            const collectionScore = data.collectionRate;
+            
+            // Weight different EOL pathways
+            const pathwayScore = data.eolReuse * 1.0 + 
+                               data.eolRemanufacturing * 0.9 + 
+                               data.eolRecycling * 0.6 + 
+                               data.eolEnergy * 0.2 + 
+                               data.eolLandfill * 0;
+            
+            const takebackScore = data.takebackProgram;
+            
+            // Weighted average
+            return collectionScore * 0.4 + pathwayScore * 0.4 + takebackScore * 0.2;
+        }
+        
+        function calculateBusinessScore(data) {
+            const modelScore = data.businessModel;
+            const servicesSum = data.circularServices.reduce((sum, val) => sum + val, 0);
+            const servicesScore = Math.min(1, servicesSum); // Cap at 1.0
+            
+            // Weighted average
+            return modelScore * 0.6 + servicesScore * 0.4;
+        }
+        
+        function calculateOverallScore(mci, design, lifetime, eol, business) {
+            // Weighted average with MCI having highest weight
+            return mci * CONFIG.WEIGHTS.mci + 
+                   design * CONFIG.WEIGHTS.design + 
+                   lifetime * CONFIG.WEIGHTS.lifetime + 
+                   eol * CONFIG.WEIGHTS.eol + 
+                   business * CONFIG.WEIGHTS.business;
+        }
+        
+        function displayResults(overall, mci, design, lifetime, eol, business, data) {
+            // Update overall score
+            const scorePercent = Math.round(overall * 100);
+            document.getElementById('scoreValue').textContent = scorePercent + '%';
+            
+            // Update circular progress
+            const circumference = 565.48;
+            const offset = circumference - (scorePercent / 100 * circumference);
+            const circle = document.getElementById('scoreCircle');
+            circle.style.strokeDashoffset = offset;
+            
+            // Update circle color based on score
+            if (scorePercent >= CONFIG.THRESHOLDS.excellent) {
+                circle.style.stroke = '#28a745';
+            } else if (scorePercent >= CONFIG.THRESHOLDS.good) {
+                circle.style.stroke = '#3498db';
+            } else if (scorePercent >= CONFIG.THRESHOLDS.moderate) {
+                circle.style.stroke = '#f39c12';
+            } else {
+                circle.style.stroke = '#e74c3c';
+            }
+            
+            // Update interpretation
+            const interpretation = document.getElementById('scoreInterpretation');
+            if (scorePercent >= CONFIG.THRESHOLDS.excellent) {
+                interpretation.className = 'score-interpretation score-excellent';
+                interpretation.innerHTML = '<strong>Excellent!</strong> Your product demonstrates strong circular economy principles.';
+            } else if (scorePercent >= CONFIG.THRESHOLDS.good) {
+                interpretation.className = 'score-interpretation score-good';
+                interpretation.innerHTML = '<strong>Good Progress!</strong> Your product shows good circularity with room for improvement.';
+            } else if (scorePercent >= CONFIG.THRESHOLDS.moderate) {
+                interpretation.className = 'score-interpretation score-moderate';
+                interpretation.innerHTML = '<strong>Moderate.</strong> Significant opportunities exist to improve circularity.';
+            } else {
+                interpretation.className = 'score-interpretation score-poor';
+                interpretation.innerHTML = '<strong>Linear Model.</strong> Major transformation needed for circular economy transition.';
+            }
+            
+            // Update dimension scores
+            updateDimensionDisplay('mci', mci);
+            updateDimensionDisplay('design', design);
+            updateDimensionDisplay('lifetime', lifetime);
+            updateDimensionDisplay('eol', eol);
+            updateDimensionDisplay('business', business);
+            
+            // Show MCI breakdown
+            document.getElementById('mciBreakdown').style.display = 'block';
+            document.getElementById('mciV').textContent = window.mciComponents.V;
+            document.getElementById('mciW').textContent = window.mciComponents.W;
+            document.getElementById('mciLFI').textContent = window.mciComponents.LFI;
+            document.getElementById('mciX').textContent = window.mciComponents.X;
+            document.getElementById('mciFX').textContent = window.mciComponents.FX;
+        }
+        
+        function updateDimensionDisplay(dimension, score) {
+            const percent = Math.round(score * 100);
+            document.getElementById(dimension + 'Score').textContent = percent + '%';
+            document.getElementById(dimension + 'Progress').style.width = percent + '%';
+        }
+        
+        function generateRecommendations(mci, design, lifetime, eol, business) {
+            const recommendations = {
+                'Material Circularity': {
+                    score: mci,
+                    recs: [
+                        { text: 'Increase recycled content in materials', impact: 'high' },
+                        { text: 'Switch to renewable or bio-based materials', impact: 'medium' },
+                        { text: 'Reduce material diversity for easier recycling', impact: 'medium' }
+                    ]
+                },
+                'Design': {
+                    score: design,
+                    recs: [
+                        { text: 'Implement modular design principles', impact: 'high' },
+                        { text: 'Provide repair manuals and spare parts', impact: 'medium' },
+                        { text: 'Design for easy disassembly', impact: 'high' }
+                    ]
+                },
+                'Lifetime': {
+                    score: lifetime,
+                    recs: [
+                        { text: 'Improve product durability and quality', impact: 'high' },
+                        { text: 'Offer comprehensive maintenance services', impact: 'medium' },
+                        { text: 'Enable product upgrades and retrofits', impact: 'medium' }
+                    ]
+                },
+                'End of Life': {
+                    score: eol,
+                    recs: [
+                        { text: 'Implement guaranteed take-back program', impact: 'high' },
+                        { text: 'Increase collection rates through incentives', impact: 'high' },
+                        { text: 'Partner with certified recycling facilities', impact: 'medium' }
+                    ]
+                },
+                'Business Model': {
+                    score: business,
+                    recs: [
+                        { text: 'Transition to Product-as-a-Service model', impact: 'high' },
+                        { text: 'Offer leasing and rental options', impact: 'medium' },
+                        { text: 'Develop comprehensive repair services', impact: 'medium' }
+                    ]
+                }
+            };
+            
+            // Sort dimensions by score (lowest first)
+            const sortedDimensions = Object.entries(recommendations)
+                .sort((a, b) => a[1].score - b[1].score);
+            
+            const recList = document.getElementById('recommendationsList');
+            recList.innerHTML = '';
+            
+            // Show top 3 improvement areas
+            sortedDimensions.slice(0, 3).forEach(([dimension, data]) => {
+                if (data.score < 0.7) {
+                    // Select highest impact recommendation
+                    const topRec = data.recs.find(r => r.impact === 'high') || data.recs[0];
+                    const item = document.createElement('div');
+                    item.className = `recommendation-item priority-${topRec.impact}`;
+                    item.innerHTML = `<strong>${dimension}:</strong> ${topRec.text}`;
+                    recList.appendChild(item);
+                }
+            });
+            
+            document.getElementById('recommendations').style.display = 'block';
+        }
+        
+        function exportResults() {
+            if (!calculationResults) return;
+            
+            const data = calculationResults.data;
+            let csv = 'Product Circularity Assessment Results\n\n';
+            
+            csv += 'Overall Scores\n';
+            csv += 'Metric,Score (%)\n';
+            csv += `Overall Circularity Score,${Math.round(calculationResults.overall * 100)}\n`;
+            csv += `Material Circularity Indicator (MCI),${Math.round(calculationResults.mci * 100)}\n`;
+            csv += `Design for Circularity,${Math.round(calculationResults.design * 100)}\n`;
+            csv += `Product Lifetime Score,${Math.round(calculationResults.lifetime * 100)}\n`;
+            csv += `End of Life Score,${Math.round(calculationResults.eol * 100)}\n`;
+            csv += `Business Model Score,${Math.round(calculationResults.business * 100)}\n`;
+            
+            csv += '\nMCI Components\n';
+            csv += 'Component,Value\n';
+            csv += `Virgin Material (V),${window.mciComponents.V}\n`;
+            csv += `Unrecoverable Waste (W),${window.mciComponents.W}\n`;
+            csv += `Linear Flow Index (LFI),${window.mciComponents.LFI}\n`;
+            csv += `Utility Factor (X),${window.mciComponents.X}\n`;
+            csv += `F(X) Function,${window.mciComponents.FX}\n`;
+            
+            csv += '\nInput Parameters\n';
+            csv += 'Parameter,Value\n';
+            csv += `Virgin Material Content,${(data.virginContent * 100).toFixed(1)}%\n`;
+            csv += `Recycled Content,${(data.recycledContent * 100).toFixed(1)}%\n`;
+            csv += `Renewable Content,${(data.renewableContent * 100).toFixed(1)}%\n`;
+            csv += `Product Lifetime,${data.productLifetime} years\n`;
+            csv += `Industry Average Lifetime,${data.avgLifetime} years\n`;
+            csv += `Utilization Rate,${(data.utilizationRate * 100).toFixed(1)}%\n`;
+            csv += `Collection Rate,${(data.collectionRate * 100).toFixed(1)}%\n`;
+            
+            csv += '\nEOL Pathways\n';
+            csv += 'Pathway,Percentage\n';
+            csv += `Reuse/Refurbishment,${(data.eolReuse * 100).toFixed(1)}%\n`;
+            csv += `Remanufacturing,${(data.eolRemanufacturing * 100).toFixed(1)}%\n`;
+            csv += `Recycling,${(data.eolRecycling * 100).toFixed(1)}%\n`;
+            csv += `Energy Recovery,${(data.eolEnergy * 100).toFixed(1)}%\n`;
+            csv += `Landfill/Disposal,${(data.eolLandfill * 100).toFixed(1)}%\n`;
+            
+            // Create download link
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `circularity-assessment-${Date.now()}.csv`;
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+        
+        function saveScenario() {
+            const scenario = {
+                timestamp: new Date().toISOString(),
+                inputs: gatherInputData(),
+                results: calculationResults,
+                mciComponents: window.mciComponents
+            };
+            
+            const dataStr = JSON.stringify(scenario, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            
+            const exportFileDefaultName = `circularity-scenario-${Date.now()}.json`;
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+        }
+        
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize material flow validation
+            updateMaterialFlows();
+            updateEOLPathways();
+            
+            // Add input event listeners for validation
+            document.getElementById('productLifetime').addEventListener('input', function() {
+                const value = parseFloat(this.value);
+                if (value <= 0 || isNaN(value)) {
+                    this.classList.add('error');
+                    document.getElementById('lifetimeValidation').classList.add('show');
+                } else {
+                    this.classList.remove('error');
+                    document.getElementById('lifetimeValidation').classList.remove('show');
+                }
+            });
+            
+            document.getElementById('avgLifetime').addEventListener('input', function() {
+                const value = parseFloat(this.value);
+                if (value <= 0 || isNaN(value)) {
+                    this.classList.add('error');
+                    document.getElementById('avgLifetimeValidation').classList.add('show');
+                } else {
+                    this.classList.remove('error');
+                    document.getElementById('avgLifetimeValidation').classList.remove('show');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

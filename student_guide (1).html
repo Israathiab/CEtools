@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Circular Business Case Tool — Student Guide</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.7;
+            color: #2d3436;
+            background: #f0f2f5;
+        }
+        
+        .guide { max-width: 960px; margin: 0 auto; background: white; box-shadow: 0 0 30px rgba(0,0,0,0.08); }
+        
+        .header {
+            background: linear-gradient(135deg, #00b894 0%, #00cec9 50%, #0984e3 100%);
+            color: white;
+            padding: 50px 40px;
+        }
+        .header h1 { font-size: 2.2em; margin-bottom: 8px; font-weight: 700; }
+        .header p { font-size: 1.15em; opacity: 0.92; }
+        .header .subtitle { font-size: 0.95em; margin-top: 15px; opacity: 0.8; font-style: italic; }
+        
+        nav {
+            background: #2d3436;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 0 20px;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+        nav a {
+            display: inline-block;
+            padding: 14px 18px;
+            color: #dfe6e9;
+            text-decoration: none;
+            font-size: 0.9em;
+            font-weight: 500;
+            transition: color 0.2s, border-bottom 0.2s;
+            border-bottom: 2px solid transparent;
+        }
+        nav a:hover { color: #fff; border-bottom-color: #00b894; }
+
+        .content { padding: 40px; }
+        
+        section { margin-bottom: 55px; }
+        section h2 {
+            color: #0984e3;
+            font-size: 1.7em;
+            margin-bottom: 18px;
+            padding-bottom: 8px;
+            border-bottom: 3px solid #00b894;
+        }
+        section h3 {
+            color: #2d3436;
+            font-size: 1.3em;
+            margin: 28px 0 12px;
+        }
+
+        p, li { margin-bottom: 10px; }
+        ul, ol { margin-left: 28px; }
+        
+        .concept-box {
+            background: #dfe6e9;
+            border-left: 4px solid #0984e3;
+            padding: 18px 20px;
+            margin: 20px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        .concept-box strong { color: #0984e3; }
+        
+        .try-it {
+            background: #ffeaa7;
+            border-left: 4px solid #fdcb6e;
+            padding: 18px 20px;
+            margin: 22px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        .try-it strong { color: #e17055; }
+
+        .think-about {
+            background: #e8f5e9;
+            border-left: 4px solid #00b894;
+            padding: 18px 20px;
+            margin: 22px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        .think-about strong { color: #00b894; }
+        
+        .warning-box {
+            background: #ffeef0;
+            border-left: 4px solid #d63031;
+            padding: 18px 20px;
+            margin: 20px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        .warning-box strong { color: #d63031; }
+
+        .walkthrough {
+            background: #f8f9fa;
+            border: 1px solid #dfe6e9;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+        .walkthrough h4 { color: #636e72; margin-bottom: 12px; font-size: 1.1em; }
+        
+        .step-list { counter-reset: step; margin: 16px 0; }
+        .step-list li {
+            counter-increment: step;
+            margin: 14px 0;
+            padding-left: 44px;
+            position: relative;
+            list-style: none;
+        }
+        .step-list li::before {
+            content: counter(step);
+            position: absolute;
+            left: 0; top: 0;
+            background: #00b894;
+            color: white;
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 0.85em;
+        }
+        
+        .strategy-card {
+            background: white;
+            border: 1px solid #dfe6e9;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            transition: box-shadow 0.2s;
+        }
+        .strategy-card:hover { box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
+        .strategy-card h4 { color: #0984e3; margin-bottom: 8px; }
+        .strategy-card .example { color: #636e72; font-size: 0.92em; font-style: italic; margin-top: 8px; }
+
+        .metric-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .metric-item {
+            background: #f8f9fa;
+            border-radius: 6px;
+            padding: 15px;
+        }
+        .metric-item h5 { color: #0984e3; margin-bottom: 6px; font-size: 1em; }
+        .metric-item p { margin: 0; font-size: 0.92em; }
+
+        .exercise-box {
+            background: linear-gradient(135deg, #f8f9fa 0%, #dfe6e9 100%);
+            border: 2px solid #0984e3;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+        .exercise-box h4 { color: #0984e3; margin-bottom: 10px; }
+        .exercise-box ol { margin-left: 24px; }
+
+        .footer {
+            margin-top: 50px;
+            padding: 30px;
+            background: #2d3436;
+            color: #b2bec3;
+            text-align: center;
+            font-size: 0.9em;
+        }
+        .footer strong { color: #dfe6e9; }
+
+        @media (max-width: 700px) {
+            .content { padding: 24px; }
+            .header { padding: 30px 24px; }
+            .header h1 { font-size: 1.6em; }
+            .metric-grid { grid-template-columns: 1fr; }
+        }
+        @media print {
+            nav { display: none; }
+            .header { background: none; color: #2d3436; border-bottom: 3px solid #0984e3; }
+        }
+    </style>
+</head>
+<body>
+<div class="guide">
+
+<div class="header">
+    <h1>🔄 Circular Business Case Tool</h1>
+    <p>Student Guide</p>
+    <div class="subtitle">An exploration tool for understanding how circular economy strategies affect business finances — not a financial planner, but a thinking companion.</div>
+</div>
+
+<nav>
+    <a href="#purpose">Purpose</a>
+    <a href="#mindset">Mindset</a>
+    <a href="#walkthrough">Walkthrough</a>
+    <a href="#strategies">Strategies</a>
+    <a href="#reading-results">Reading Results</a>
+    <a href="#explanation">The Explanation Panel</a>
+    <a href="#exercises">Exercises</a>
+    <a href="#pitfalls">Pitfalls</a>
+    <a href="#glossary">Glossary</a>
+</nav>
+
+<div class="content">
+
+<!-- 1. PURPOSE -->
+<section id="purpose">
+    <h2>1. What This Tool Is (and Isn't)</h2>
+    
+    <p>The Circular Business Case Comparison Tool lets you explore the financial side of circular economy strategies. You pick a product, set up its basic economics, and then compare two circular approaches against a traditional linear (make → sell → dispose) model.</p>
+
+    <div class="concept-box">
+        <strong>This tool is for inspiration and learning.</strong> It helps you develop intuition about which circular strategies make financial sense, why some work better than others, and what drives the difference. It is not a financial planning tool — real business decisions require far more detailed analysis, market research, and risk assessment.
+    </div>
+
+    <h3>What you'll learn by using it</h3>
+    <ul>
+        <li><strong>Trade-offs are real.</strong> Circular strategies aren't automatically more profitable. Some cost more than they save. The tool helps you understand why.</li>
+        <li><strong>Numbers tell stories.</strong> A 14% profit margin versus a 10% margin isn't just a number — it reflects specific choices about pricing, costs, and how you serve customers.</li>
+        <li><strong>Context matters.</strong> A strategy that works brilliantly for electronics may fail for packaging. The same strategy at a different price point produces completely different results.</li>
+        <li><strong>Small changes can flip outcomes.</strong> Adjusting one parameter — a monthly fee, a return rate, a refurbishment cost — can turn a losing strategy into a winning one. That's the point: understanding what levers matter.</li>
+    </ul>
+</section>
+
+<!-- 2. MINDSET -->
+<section id="mindset">
+    <h2>2. How to Approach This Tool</h2>
+
+    <p>You're not here to find "the right answer." You're here to ask good questions and develop business intuition.</p>
+    
+    <h3>Think like an explorer, not an accountant</h3>
+    <p>The most useful way to use this tool is to change things and watch what happens. Don't just enter numbers once and read the result. Enter numbers, read the result, then ask "what if?" and change something. That cycle of hypothesising → testing → observing is where the real learning happens.</p>
+
+    <div class="think-about">
+        <strong>🤔 Questions to carry with you:</strong>
+        <ul>
+            <li>Why does this strategy make more (or less) money than simply selling the product?</li>
+            <li>Where is the revenue actually coming from in this model?</li>
+            <li>What costs does this strategy add that the linear model doesn't have?</li>
+            <li>What would need to be true for this strategy to work in the real world?</li>
+            <li>Who benefits — the business, the customer, or both?</li>
+        </ul>
+    </div>
+
+    <h3>You don't need exact numbers</h3>
+    <p>The default values in the tool are reasonable starting points. You're not building a real business plan — you're building understanding. It's perfectly fine to use approximate numbers and focus on patterns rather than precision. Ask yourself: "Is this strategy fundamentally better, fundamentally worse, or roughly similar?" That matters more than whether the profit is $212,500 or $218,000.</p>
+</section>
+
+<!-- 3. WALKTHROUGH -->
+<section id="walkthrough">
+    <h2>3. Step-by-Step Walkthrough</h2>
+
+    <p>Here's how to work through the tool from start to finish. Don't rush — each section shapes the results.</p>
+
+    <div class="walkthrough">
+        <h4>Step 1 — Choose your industry</h4>
+        <p>Select the sector closest to your product. This determines which circular strategies are available. If your product doesn't fit neatly, choose the sector with the most similar product characteristics (value, lifespan, material complexity).</p>
+        <p>The five sectors are: Electronics & Technology, Fashion & Textiles, Furniture & Home Goods, Automotive Parts, and Packaging.</p>
+    </div>
+
+    <div class="walkthrough">
+        <h4>Step 2 — Set your product basics</h4>
+        <p>Enter three numbers that define your product:</p>
+        <ul>
+            <li><strong>Annual Production Volume</strong> — how many units per year (start with the default 10,000 if unsure)</li>
+            <li><strong>Unit Production Cost</strong> — what it costs to make one unit (materials + labour)</li>
+            <li><strong>Current Selling Price</strong> — what customers pay</li>
+        </ul>
+        <div class="try-it">
+            <strong>🧪 Try this:</strong> Think of an actual product you know. A pair of jeans might cost $25 to make and sell for $80. A smartphone might cost $200 to make and sell for $500. A dining chair might cost $60 to make and sell for $180. Use real-ish numbers — they make the results more meaningful to you.
+        </div>
+    </div>
+
+    <div class="walkthrough">
+        <h4>Step 3 — Define the linear model costs</h4>
+        <p>These are the costs your business has beyond just making the product:</p>
+        <ul>
+            <li><strong>Fixed Costs</strong> — rent, salaries, equipment that you pay regardless of how much you sell</li>
+            <li><strong>Variable Cost per Unit</strong> — shipping, packaging, commissions that scale with each sale</li>
+            <li><strong>Waste Cost per Unit</strong> — disposal, environmental compliance, end-of-life handling</li>
+            <li><strong>Warranty/Repair %</strong> — what percentage of revenue goes to fixing things that break</li>
+        </ul>
+        <p>The defaults are reasonable. Don't get stuck here — you can always come back and adjust.</p>
+    </div>
+
+    <div class="walkthrough">
+        <h4>Step 4 — Financial projections</h4>
+        <p>These settings shape the multi-year view:</p>
+        <ul>
+            <li><strong>Projection Period</strong> — how many years to look ahead (5-10 is typical)</li>
+            <li><strong>Revenue Growth</strong> — how fast you expect to grow each year (5% is moderate)</li>
+            <li><strong>Cost Inflation</strong> — how fast costs rise (2-3% is typical)</li>
+            <li><strong>Base Business Investment</strong> — total capital to start the business. Set to $0 if you're modelling a transition from an existing linear business</li>
+            <li><strong>Discount Rate</strong> — used for NPV calculation. 8% is a common default; higher for riskier ventures</li>
+        </ul>
+    </div>
+
+    <div class="walkthrough">
+        <h4>Step 5 — Choose two circular strategies</h4>
+        <p>The tool compares your linear model against two circular alternatives side by side. Pick two that interest you — you can always re-run with different choices. Each strategy reveals its own input fields (monthly fee, return rate, etc.) and an investment field for the capital that strategy requires.</p>
+    </div>
+
+    <div class="walkthrough">
+        <h4>Step 6 — Click "Calculate Business Case"</h4>
+        <p>The tool runs all three models and shows the comparison. But don't stop here — the real learning starts now. Read the numbers, click "Why these numbers?" on each card, and start asking questions.</p>
+    </div>
+</section>
+
+<!-- 4. STRATEGIES -->
+<section id="strategies">
+    <h2>4. Understanding the Strategies</h2>
+    
+    <p>Each circular strategy changes the fundamental relationship between you, your product, and your customer. Here's what each one actually means for the business:</p>
+
+    <div class="strategy-card">
+        <h4>🔄 Product-as-a-Service</h4>
+        <p>Instead of selling the product, you charge a monthly fee for its use. You keep ownership, the customer gets access. You need fewer total units (because they're shared), but you take on maintenance, replacement, and customer management.</p>
+        <p class="example">Real-world examples: Rolls-Royce "Power by the Hour" jet engines, Philips "Pay per Lux" lighting, Mud Jeans leasing</p>
+    </div>
+
+    <div class="strategy-card">
+        <h4>👗 Rental / Leasing</h4>
+        <p>Similar to service, but typically shorter-term. You maintain a fleet of products that rotate between customers. Revenue depends heavily on how often each unit is rented (utilization rate). Low utilization kills this model.</p>
+        <p class="example">Real-world examples: Rent the Runway (fashion), Grover (electronics), IKEA furniture rental pilots</p>
+    </div>
+
+    <div class="strategy-card">
+        <h4>🔁 Buy-back & Resale</h4>
+        <p>Sell the product normally, then offer to buy it back later at a discount. You refurbish it and resell at a lower price. The catch: some of those refurbished sales replace new sales you would have made (cannibalization).</p>
+        <p class="example">Real-world examples: Apple Trade In, Patagonia Worn Wear, IKEA Buy Back</p>
+    </div>
+
+    <div class="strategy-card">
+        <h4>🔧 Refurbishment Program</h4>
+        <p>Source used products, restore them to good condition, and sell them alongside your new products. Margin depends on the spread between low refurbishment costs and the resale price.</p>
+        <p class="example">Real-world examples: Apple Certified Refurbished, Dell Outlet, Caterpillar Cat Reman</p>
+    </div>
+
+    <div class="strategy-card">
+        <h4>🛠️ Repair Services</h4>
+        <p>Continue selling products normally, but add a paid repair service. This creates a recurring revenue stream from your installed base. However, longer-lasting products mean fewer replacement sales over time.</p>
+        <p class="example">Real-world examples: Fairphone's modular repair, Patagonia Repairs, iFixit partnerships</p>
+    </div>
+
+    <div class="strategy-card">
+        <h4>📋 Leasing Model</h4>
+        <p>Customers pay an annual percentage of the product's price over a lease term. At the end, they return it. You resell the returned product at its residual value. Works best for expensive products where the lease payments cover your costs.</p>
+        <p class="example">Real-world examples: Car leasing, Bundles (washing machine leasing), Signify lighting leases</p>
+    </div>
+
+    <div class="strategy-card">
+        <h4>🏭 Remanufacturing</h4>
+        <p>Completely disassemble used products, rebuild them to original specifications using a mix of new and recovered parts. Sell at a discount to new. The key question: is the cost of disassembly + rebuilding less than making new?</p>
+        <p class="example">Real-world examples: Caterpillar Cat Reman, Xerox printers, Bosch power tools remanufacturing</p>
+    </div>
+
+    <div class="strategy-card">
+        <h4>♻️ Material Recycling</h4>
+        <p>Collect used products, extract raw materials, and feed them back into production. This is primarily a cost-reduction strategy (cheaper materials) rather than a revenue generator. Rarely transformative on its own.</p>
+        <p class="example">Real-world examples: Interface carpet recycling, Nespresso capsule recovery, H&M garment collection</p>
+    </div>
+
+    <div class="strategy-card">
+        <h4>⏳ Design for Longevity</h4>
+        <p>Make products that last much longer. Costs more to build, but you can charge a premium. The trade-off: fewer replacement sales over time as products don't wear out.</p>
+        <p class="example">Real-world examples: Miele appliances, Vitsoe shelving, Buy It For Life products</p>
+    </div>
+
+    <div class="strategy-card">
+        <h4>🧩 Modular Design</h4>
+        <p>Design products as upgradeable modules rather than sealed units. Customers pay a premium upfront, then buy individual module upgrades over the product's life instead of replacing the whole thing.</p>
+        <p class="example">Real-world examples: Fairphone, Framework Laptop, modular furniture systems</p>
+    </div>
+
+    <div class="strategy-card">
+        <h4>📦 Reusable Packaging</h4>
+        <p>Replace single-use packaging with durable packaging that's returned, cleaned, and reused. Saves on packaging costs per use but adds cleaning, logistics, and system setup costs.</p>
+        <p class="example">Real-world examples: Loop (Terracycle), reusable shipping containers, milk bottle return systems</p>
+    </div>
+
+    <div class="strategy-card">
+        <h4>🌱 Biodegradable Materials</h4>
+        <p>Switch to biodegradable materials that cost more but reduce waste disposal costs and may command a market premium from environmentally-conscious customers.</p>
+        <p class="example">Real-world examples: Ecovative mushroom packaging, compostable food packaging, PLA-based products</p>
+    </div>
+
+    <div class="strategy-card">
+        <h4>🚰 Refill Stations</h4>
+        <p>Offer product refills at a lower price than buying packaged. Customers save money, you save on packaging costs, but revenue per unit drops. Works best when cost savings outweigh the price discount.</p>
+        <p class="example">Real-world examples: Ecover refill stations, The Body Shop, bulk food stores, cleaning product refills</p>
+    </div>
+</section>
+
+<!-- 5. READING RESULTS -->
+<section id="reading-results">
+    <h2>5. Reading Your Results</h2>
+    
+    <p>After you click Calculate, you'll see three cards side by side: the linear model (red border), and your two chosen circular strategies (green and blue). Here's what each metric tells you.</p>
+
+    <div class="metric-grid">
+        <div class="metric-item">
+            <h5>Annual Revenue</h5>
+            <p>Total money coming in per year. A circular model can have higher or lower revenue than linear — lower isn't necessarily bad if costs drop even more.</p>
+        </div>
+        <div class="metric-item">
+            <h5>Annual Profit</h5>
+            <p>Revenue minus all costs. This is the bottom line. Green text = profitable, red text = losing money. Compare across all three models.</p>
+        </div>
+        <div class="metric-item">
+            <h5>Profit Margin</h5>
+            <p>Profit as a percentage of revenue. Tells you how efficiently each model converts revenue into profit. Below 5% is fragile; 10-20% is healthy; above 20% is strong.</p>
+        </div>
+        <div class="metric-item">
+            <h5>N-Year Profit</h5>
+            <p>Total cumulative profit over your projection period. Accounts for revenue growth and cost inflation year by year.</p>
+        </div>
+        <div class="metric-item">
+            <h5>Annual ROI</h5>
+            <p>Average yearly profit divided by total investment. Shows the return you get on your money each year. 10-30% is realistic for most businesses.</p>
+        </div>
+        <div class="metric-item">
+            <h5>NPV (Net Present Value)</h5>
+            <p>The value of all future profits in today's money, minus the investment. Positive NPV = the investment is worthwhile. Negative = it destroys value. This uses the discount rate you set.</p>
+        </div>
+        <div class="metric-item">
+            <h5>Payback Period</h5>
+            <p>How many years until cumulative profits cover the initial investment. Shorter is better. "Not recovered" means the investment doesn't pay back within your projection period.</p>
+        </div>
+    </div>
+
+    <div class="concept-box">
+        <strong>Which metric matters most?</strong> There's no single right answer. Profit margin shows efficiency. NPV shows whether the investment creates value. Payback period shows risk (shorter = less risk). In a real business, you'd weigh all of them based on your situation. For learning purposes, focus on <em>why the numbers differ between models</em> — that's where the insight is.
+    </div>
+
+    <h3>The Analysis Summary</h3>
+    <p>Below the cards, the green summary box shows which model has the best NPV, the percentage difference between each circular strategy and linear, and a sensitivity note reminding you that NPV and ROI are heavily influenced by the investment amounts you entered. It also suggests typical investment ranges for a business of your size.</p>
+</section>
+
+<!-- 6. THE EXPLANATION PANEL -->
+<section id="explanation">
+    <h2>6. The "Why These Numbers?" Panel</h2>
+
+    <p>This is arguably the most valuable part of the tool. Each results card has a button labelled <strong>"Why these numbers?"</strong> that expands to show a plain-English explanation of that model's results.</p>
+
+    <h3>What the explanation includes</h3>
+    <ul>
+        <li><strong>How it works</strong> — a description of the model's mechanics using your actual input values</li>
+        <li><strong>Revenue and cost breakdown</strong> — where the money comes from and where it goes, with real dollar amounts</li>
+        <li><strong>Key economics</strong> — per-unit margins, break-even points, utilization thresholds</li>
+        <li><strong>🔍 Diagnosis</strong> — the tool's assessment of what's working or not working, with specific suggestions (e.g. "raise the monthly fee above $15" or "reduce buyback price below 25%")</li>
+        <li><strong>📈/📉 vs Linear</strong> — a comparison explaining whether this strategy outperforms or underperforms the linear model, and specifically why (revenue difference, cost difference, or both)</li>
+    </ul>
+
+    <div class="try-it">
+        <strong>🧪 Try this:</strong> Run the tool with defaults, read the explanation for all three models, then change one parameter (e.g. increase the monthly service fee from $12 to $20). Re-read the explanation and see how the diagnosis changes. This is how you build intuition about what drives circular business economics.
+    </div>
+
+    <h3>For the Linear model</h3>
+    <p>The explanation identifies your largest cost driver, calculates your break-even volume, and assesses whether your margin is healthy. If your margin is thin, it suggests which type of circular strategy might address your biggest cost problem — for instance, if production costs dominate, it will point toward remanufacturing or recycled materials.</p>
+
+    <h3>For each Circular model</h3>
+    <p>The explanation adapts to the specific strategy and your specific numbers. It doesn't give generic advice — it calculates things like "refurbished units earn $35 margin vs $50 for new" or "break-even utilization is 62% and you're set at 70%, so you have an 8-point buffer." The diagnosis tells you whether the strategy fundamentally works at your numbers, and if not, what specific parameter change would fix it.</p>
+</section>
+
+<!-- 7. EXERCISES -->
+<section id="exercises">
+    <h2>7. Learning Exercises</h2>
+    
+    <p>These exercises are designed to build your understanding progressively. Each one asks you to explore a specific aspect of circular business economics.</p>
+
+    <div class="exercise-box">
+        <h4>Exercise 1 — Explore your product</h4>
+        <p>Pick a product you're familiar with (a phone, a piece of clothing, a piece of furniture — anything). Research or estimate its production cost and selling price. Enter it into the tool and run the linear model.</p>
+        <ol>
+            <li>What is the profit margin? Does it feel realistic for that industry?</li>
+            <li>Click "Why these numbers?" — what is the biggest cost driver?</li>
+            <li>What would happen if you doubled the volume? Halved it? (Change it and see.)</li>
+        </ol>
+    </div>
+
+    <div class="exercise-box">
+        <h4>Exercise 2 — Strategy comparison</h4>
+        <p>Using your product from Exercise 1, select two circular strategies and compare them.</p>
+        <ol>
+            <li>Which strategy performs better? Why? (Read both explanations.)</li>
+            <li>Does either strategy beat the linear model? If not, what would need to change?</li>
+            <li>Which strategy would be easier to actually implement in the real world? Does "easier to implement" correlate with "more profitable"?</li>
+        </ol>
+    </div>
+
+    <div class="exercise-box">
+        <h4>Exercise 3 — Find the tipping point</h4>
+        <p>Choose a strategy that underperforms the linear model at default settings. Your task: adjust the strategy's parameters until it matches or beats linear.</p>
+        <ol>
+            <li>Which parameter had the biggest impact when you changed it?</li>
+            <li>Are the values you needed realistic? Would customers actually pay that price? Would those costs actually be achievable?</li>
+            <li>What does this tell you about the conditions needed for this strategy to succeed?</li>
+        </ol>
+    </div>
+
+    <div class="exercise-box">
+        <h4>Exercise 4 — The same strategy, different products</h4>
+        <p>Pick one circular strategy (e.g. leasing). Run it for three different products at very different price points: a $20 product, a $200 product, and a $2,000 product. Keep all other defaults the same.</p>
+        <ol>
+            <li>At which price point does the strategy work best? Worst?</li>
+            <li>Why? What changes in the economics at different price points?</li>
+            <li>What general principle can you draw about which products suit this strategy?</li>
+        </ol>
+    </div>
+
+    <div class="exercise-box">
+        <h4>Exercise 5 — The investor's perspective</h4>
+        <p>Set the base business investment to $0 (you're an existing business considering a transition). Now compare two strategies with very different investment requirements — set one at $50,000 and the other at $300,000.</p>
+        <ol>
+            <li>Compare the NPV and payback period. Is the more expensive strategy worth the extra investment?</li>
+            <li>Change the discount rate from 8% to 15%. How does this change which strategy looks better? Why?</li>
+            <li>What does this teach you about risk tolerance and investment decisions?</li>
+        </ol>
+    </div>
+
+    <div class="exercise-box">
+        <h4>Exercise 6 — Challenge the model</h4>
+        <p>This exercise develops critical thinking. The tool makes simplifying assumptions. Your job is to identify them.</p>
+        <ol>
+            <li>The service model assumes 50% of customers will adopt. Is that realistic for your product? What would make it higher or lower?</li>
+            <li>The buy-back model assumes 50% cannibalization (refurb sales replacing new). Could it be higher? Lower? What factors determine this?</li>
+            <li>The tool uses the same revenue growth rate for all models. Should a circular strategy grow faster or slower than linear? Why?</li>
+            <li>What costs or risks does the tool NOT include that a real business would face?</li>
+        </ol>
+    </div>
+</section>
+
+<!-- 8. PITFALLS -->
+<section id="pitfalls">
+    <h2>8. Common Misconceptions</h2>
+
+    <div class="warning-box">
+        <strong>❌ "Circular always beats linear"</strong>
+        <p>Not true. Many circular strategies are less profitable than linear at certain price points, volumes, or cost structures. The tool is designed to show this honestly. If a strategy underperforms, the explanation will tell you why and what would need to change.</p>
+    </div>
+
+    <div class="warning-box">
+        <strong>❌ "The numbers are predictions"</strong>
+        <p>They're not. They're illustrations based on your inputs and simplified assumptions. Real businesses have seasonality, competition, regulatory changes, supply chain disruptions, and customer behaviour that no simple model can capture. Use the numbers to understand <em>patterns</em>, not to make <em>forecasts</em>.</p>
+    </div>
+
+    <div class="warning-box">
+        <strong>❌ "Higher revenue = better strategy"</strong>
+        <p>Revenue means nothing without looking at costs. A rental model might generate less revenue than selling outright, but if costs drop even more, the margin is better. Always look at profit margin and the explanation of where costs went.</p>
+    </div>
+
+    <div class="warning-box">
+        <strong>❌ "The default values are right for my product"</strong>
+        <p>They're starting points, not answers. A $50,000 service fee makes no sense for a $15 product. Always sanity-check the strategy parameters against your product's price point. The explanation panel will often flag when something looks off.</p>
+    </div>
+
+    <div class="warning-box">
+        <strong>❌ "NPV is the only metric that matters"</strong>
+        <p>NPV depends heavily on the investment amount and discount rate. Change either one and the ranking of strategies can flip completely. The sensitivity note in the results warns you about this. In reality, businesses consider financial metrics alongside strategic fit, implementation feasibility, customer acceptance, and environmental impact.</p>
+    </div>
+</section>
+
+<!-- 9. GLOSSARY -->
+<section id="glossary">
+    <h2>9. Glossary</h2>
+
+    <h3>Business and financial terms</h3>
+    <div class="concept-box">
+        <strong>Revenue</strong> — total money received from sales or services before deducting any costs.<br><br>
+        <strong>Profit</strong> — revenue minus all costs. What the business keeps.<br><br>
+        <strong>Profit Margin</strong> — profit divided by revenue, expressed as a percentage. A 15% margin means $0.15 of profit for every $1 of revenue.<br><br>
+        <strong>COGS (Cost of Goods Sold)</strong> — the direct cost of producing the product (materials + labour).<br><br>
+        <strong>Fixed Costs</strong> — costs that don't change with production volume (rent, salaries, insurance).<br><br>
+        <strong>Variable Costs</strong> — costs that scale with each unit produced or sold (shipping, packaging, commissions).<br><br>
+        <strong>ROI (Return on Investment)</strong> — profit generated relative to the money invested. An annual ROI of 20% means the investment earns 20 cents per dollar per year.<br><br>
+        <strong>NPV (Net Present Value)</strong> — the total value of future cash flows discounted back to today's money. A positive NPV means the investment is worth more than it costs.<br><br>
+        <strong>Discount Rate</strong> — the rate used to convert future money to present value. Reflects the cost of capital and risk. A higher rate means future money is worth less today.<br><br>
+        <strong>Payback Period</strong> — how long until cumulative profits repay the initial investment.<br><br>
+        <strong>Break-even</strong> — the point where revenue exactly equals costs (zero profit). Below break-even, the business loses money.<br><br>
+        <strong>Cannibalization</strong> — when a new product or channel takes sales away from your existing products. For example, selling refurbished units may reduce demand for new ones.
+    </div>
+
+    <h3>Circular economy terms</h3>
+    <div class="concept-box">
+        <strong>Linear Model</strong> — the traditional take → make → sell → dispose approach. Products are used once and discarded.<br><br>
+        <strong>Circular Model</strong> — business approaches that keep products and materials in use as long as possible through repair, reuse, refurbishment, remanufacturing, or recycling.<br><br>
+        <strong>Product-as-a-Service (PaaS)</strong> — selling access to a product's function rather than the product itself. The manufacturer retains ownership.<br><br>
+        <strong>Installed Base</strong> — the total number of your products currently in use by customers. Important for repair and upgrade revenue streams.<br><br>
+        <strong>Fleet Utilization</strong> — the percentage of a rental or service fleet that's actively generating revenue at any time. The rest is idle, being cleaned, or in transit.<br><br>
+        <strong>Core</strong> — a used product that serves as the starting point for remanufacturing.<br><br>
+        <strong>Residual Value</strong> — the remaining market value of a product at the end of a lease or service period.<br><br>
+        <strong>Reverse Logistics</strong> — the process of moving products from customers back to the business for return, repair, refurbishment, or recycling.<br><br>
+        <strong>Take-back Program</strong> — a system where the manufacturer accepts used products from customers, often offering a credit or discount on the next purchase.
+    </div>
+</section>
+
+</div><!-- /content -->
+
+<div class="footer">
+    <strong>Circular Business Case Comparison Tool — Student Guide</strong><br>
+    This tool is for educational exploration. It builds intuition about circular economy business models.<br>
+    For technical details, see the Instructor Guide. For questions about your course, ask your instructor.
+</div>
+
+</div><!-- /guide -->
+</body>
+</html>

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Circularity Assessment Tool — Student Guide</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.7; color: #2d3436; background: #f0f2f5; }
+        .guide { max-width: 960px; margin: 0 auto; background: white; box-shadow: 0 0 30px rgba(0,0,0,0.08); }
+        .header { background: linear-gradient(135deg, #00b894 0%, #00cec9 50%, #0984e3 100%); color: white; padding: 50px 40px; }
+        .header h1 { font-size: 2.2em; margin-bottom: 8px; font-weight: 700; }
+        .header p { font-size: 1.15em; opacity: 0.92; }
+        .header .subtitle { font-size: 0.95em; margin-top: 15px; opacity: 0.8; font-style: italic; }
+        nav { background: #2d3436; position: sticky; top: 0; z-index: 100; padding: 0 20px; overflow-x: auto; white-space: nowrap; }
+        nav a { display: inline-block; padding: 14px 18px; color: #dfe6e9; text-decoration: none; font-size: 0.9em; font-weight: 500; transition: color 0.2s, border-bottom 0.2s; border-bottom: 2px solid transparent; }
+        nav a:hover { color: #fff; border-bottom-color: #00b894; }
+        .content { padding: 40px; }
+        section { margin-bottom: 55px; }
+        section h2 { color: #0984e3; font-size: 1.7em; margin-bottom: 18px; padding-bottom: 8px; border-bottom: 3px solid #00b894; }
+        section h3 { color: #2d3436; font-size: 1.3em; margin: 28px 0 12px; }
+        p, li { margin-bottom: 10px; }
+        ul, ol { margin-left: 28px; }
+        .concept-box { background: #dfe6e9; border-left: 4px solid #0984e3; padding: 18px 20px; margin: 20px 0; border-radius: 0 6px 6px 0; }
+        .concept-box strong { color: #0984e3; }
+        .try-it { background: #ffeaa7; border-left: 4px solid #fdcb6e; padding: 18px 20px; margin: 22px 0; border-radius: 0 6px 6px 0; }
+        .try-it strong { color: #e17055; }
+        .think-about { background: #e8f5e9; border-left: 4px solid #00b894; padding: 18px 20px; margin: 22px 0; border-radius: 0 6px 6px 0; }
+        .think-about strong { color: #00b894; }
+        .warning-box { background: #ffeef0; border-left: 4px solid #d63031; padding: 18px 20px; margin: 20px 0; border-radius: 0 6px 6px 0; }
+        .warning-box strong { color: #d63031; }
+        .walkthrough { background: #f8f9fa; border: 1px solid #dfe6e9; border-radius: 8px; padding: 25px; margin: 20px 0; }
+        .walkthrough h4 { color: #636e72; margin-bottom: 12px; font-size: 1.1em; }
+        .exercise-box { background: linear-gradient(135deg, #f8f9fa 0%, #dfe6e9 100%); border: 2px solid #0984e3; border-radius: 10px; padding: 25px; margin: 25px 0; }
+        .exercise-box h4 { color: #0984e3; margin-bottom: 10px; }
+        .exercise-box ol { margin-left: 24px; }
+        .dim-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0; }
+        .dim-item { background: #f8f9fa; border-radius: 6px; padding: 15px; }
+        .dim-item h5 { color: #0984e3; margin-bottom: 6px; font-size: 1em; }
+        .dim-item p { margin: 0; font-size: 0.92em; }
+        .footer { margin-top: 50px; padding: 30px; background: #2d3436; color: #b2bec3; text-align: center; font-size: 0.9em; }
+        .footer strong { color: #dfe6e9; }
+        @media (max-width: 700px) { .content { padding: 24px; } .header { padding: 30px 24px; } .header h1 { font-size: 1.6em; } .dim-grid { grid-template-columns: 1fr; } }
+        @media print { nav { display: none; } .header { background: none; color: #2d3436; border-bottom: 3px solid #0984e3; } }
+    </style>
+</head>
+<body>
+<div class="guide">
+
+<div class="header">
+    <h1>📊 Product Circularity Assessment Tool</h1>
+    <p>Student Guide</p>
+    <div class="subtitle">Measure and understand how circular a product really is — across materials, design, use, end-of-life, and business model.</div>
+</div>
+
+<nav>
+    <a href="#purpose">Purpose</a>
+    <a href="#concept">The Concept</a>
+    <a href="#walkthrough">Walkthrough</a>
+    <a href="#dimensions">Five Dimensions</a>
+    <a href="#reading-results">Reading Results</a>
+    <a href="#exercises">Exercises</a>
+    <a href="#pitfalls">Pitfalls</a>
+    <a href="#glossary">Glossary</a>
+</nav>
+
+<div class="content">
+
+<section id="purpose">
+    <h2>1. What This Tool Is (and Isn't)</h2>
+    <p>This tool gives you a structured way to assess how circular a product is. You answer questions about a product's materials, design, lifespan, end-of-life fate, and business model, and the tool calculates a circularity score based on the Ellen MacArthur Foundation's Material Circularity Indicator (MCI) methodology, extended with additional dimensions.</p>
+    <div class="concept-box">
+        <strong>This tool is for learning and exploration.</strong> It helps you think systematically about what makes a product circular — or not. It's not a certification system. A real MCI assessment requires detailed material flow data and lifecycle analysis. This is a simplified version designed to build your intuition.
+    </div>
+    <h3>What you'll learn</h3>
+    <ul>
+        <li><strong>Circularity is multidimensional.</strong> A product can score well on materials but poorly on design, or have a great business model but terrible end-of-life outcomes. The score forces you to see the full picture.</li>
+        <li><strong>Trade-offs exist everywhere.</strong> Using 100% recycled materials but designing a product that can't be disassembled creates a different kind of problem. Circularity isn't about maximising one dimension.</li>
+        <li><strong>The score is a starting point for questions, not an endpoint.</strong> A score of 65% doesn't mean the product is "65% circular" — it means there are specific areas where circularity could improve, and the tool tells you which ones.</li>
+    </ul>
+</section>
+
+<section id="concept">
+    <h2>2. The Idea Behind Circularity Measurement</h2>
+    <p>In a perfectly linear economy, virgin materials are extracted, turned into a product, used once, and discarded. In a perfectly circular economy, materials are kept in use indefinitely through reuse, repair, refurbishment, remanufacturing, and recycling. No product is perfectly circular. The question is: how far along the spectrum is your product?</p>
+    <p>The Material Circularity Indicator (MCI) was developed by the Ellen MacArthur Foundation and Granta Design as a way to quantify this. It looks at how much of a product's input comes from recycled or renewable sources, and how much of its output goes back into the system rather than to waste.</p>
+    <p>This tool extends the MCI with four additional dimensions — design, product lifetime, end-of-life management, and business model — because material flows alone don't capture the full story of circularity.</p>
+    <div class="think-about">
+        <strong>🤔 Think about this:</strong> A smartphone made from 90% recycled materials but designed to be impossible to repair and obsolete in 2 years — is it truly circular? The MCI alone might give it a decent score because of the recycled input. The extended dimensions in this tool would flag the design and lifetime problems. That's why multiple dimensions matter.
+    </div>
+</section>
+
+<section id="walkthrough">
+    <h2>3. Step-by-Step Walkthrough</h2>
+
+    <div class="walkthrough">
+        <h4>Step 1 — Material Flows & Composition</h4>
+        <p>Use the sliders to set the percentage of your product that comes from virgin, recycled, and renewable materials. These must add up to 100%. Then set the recyclability rate — what percentage of the product's materials can actually be recovered at end of life.</p>
+        <p>Think about the product you're assessing: what's it made of? Is any of that recycled? Could it be recycled when it's done?</p>
+    </div>
+
+    <div class="walkthrough">
+        <h4>Step 2 — Design for Circularity</h4>
+        <p>Rate your product on design features that enable circularity: modularity (can parts be replaced?), standardised components (do they use common parts?), ease of disassembly (can it be taken apart without destroying it?), and material identification (are materials labelled for sorting?).</p>
+    </div>
+
+    <div class="walkthrough">
+        <h4>Step 3 — Product Use & Lifetime</h4>
+        <p>How long does the product last? How intensively is it used? Is it shared between users or used by one person? Can it be repaired? These factors determine how much value is extracted from the materials before end-of-life.</p>
+    </div>
+
+    <div class="walkthrough">
+        <h4>Step 4 — End of Life Management</h4>
+        <p>What happens when the product is done? What percentage is recycled, reused, composted, incinerated, or landfilled? A product that's 100% recyclable in theory but 80% landfilled in practice isn't very circular.</p>
+    </div>
+
+    <div class="walkthrough">
+        <h4>Step 5 — Business Model</h4>
+        <p>Does the business model support circularity? Is there a take-back program? Is the product sold or leased? Are there repair services? The business model determines whether the design-for-circularity features are actually used.</p>
+    </div>
+
+    <div class="try-it">
+        <strong>🧪 Try this:</strong> Pick a product on your desk right now — your phone, a pen, a water bottle. Go through each step and answer honestly. You'll probably find you don't know the answer to several questions. That's the point — it reveals how little we typically think about where products come from and where they go.
+    </div>
+</section>
+
+<section id="dimensions">
+    <h2>4. The Five Dimensions Explained</h2>
+    <p>Each dimension is scored separately, then combined into an overall circularity score. Understanding what each dimension measures helps you interpret the results.</p>
+
+    <div class="dim-grid">
+        <div class="dim-item">
+            <h5>🌿 Material Circularity (MCI)</h5>
+            <p>The core MCI metric. How much recycled/renewable input, how much recycling at end of life, and the overall linear flow index. This is the foundation — based on the EMF methodology.</p>
+        </div>
+        <div class="dim-item">
+            <h5>🔧 Design for Circularity</h5>
+            <p>Can the product be repaired, upgraded, and disassembled? Are materials identifiable for sorting? Good design is what makes the other dimensions possible.</p>
+        </div>
+        <div class="dim-item">
+            <h5>⏱️ Product Lifetime</h5>
+            <p>How long does it last? Is it used intensively or sitting idle? Longer, more intensive use means more value extracted per unit of material — a fundamental circularity principle.</p>
+        </div>
+        <div class="dim-item">
+            <h5>♻️ End of Life</h5>
+            <p>What actually happens when the product is discarded? The gap between "recyclable" and "actually recycled" is often enormous. This dimension measures the reality.</p>
+        </div>
+    </div>
+    <div class="dim-grid">
+        <div class="dim-item" style="grid-column: 1 / -1;">
+            <h5>💼 Business Model</h5>
+            <p>Does the business model incentivise circularity? A take-back program, repair services, or leasing model creates the conditions for materials to actually flow back. Without the right business model, even the best-designed product ends up in landfill.</p>
+        </div>
+    </div>
+</section>
+
+<section id="reading-results">
+    <h2>5. Reading Your Results</h2>
+    <h3>The Overall Score</h3>
+    <p>The circular score at the top ranges from 0 to 100. It's a weighted combination of all five dimensions. The tool also gives an interpretation: Excellent (80+), Good (60-79), Moderate (40-59), or Poor (below 40).</p>
+
+    <div class="concept-box">
+        <strong>Don't obsess over the number.</strong> A score of 52 vs 58 isn't meaningful — the model is too simplified for that precision. What matters is the pattern: which dimensions are strong, which are weak, and what the recommendations say about improvement priorities.
+    </div>
+
+    <h3>The Dimension Breakdown</h3>
+    <p>Below the overall score you'll see each dimension scored individually with a progress bar. This is where the real insight is. A product might score 80% on materials but 20% on end-of-life — that pattern tells a specific story (good materials, terrible waste management).</p>
+
+    <h3>Prioritised Recommendations</h3>
+    <p>The tool identifies your three weakest dimensions and suggests specific improvement actions. These recommendations are generated based on where your scores are lowest — they show you the highest-impact areas for improvement.</p>
+
+    <div class="try-it">
+        <strong>🧪 Try this:</strong> After getting your results, pick the lowest-scoring dimension. Go back to those inputs and change them to the best possible values. How much does the overall score change? This shows you the sensitivity — some dimensions have more weight than others.
+    </div>
+</section>
+
+<section id="exercises">
+    <h2>6. Learning Exercises</h2>
+
+    <div class="exercise-box">
+        <h4>Exercise 1 — Compare two competing products</h4>
+        <p>Choose two products that serve the same function (e.g., a disposable water bottle vs a reusable one, or a fast-fashion shirt vs a durable brand). Assess both.</p>
+        <ol>
+            <li>Which scores higher overall? Is the result what you expected?</li>
+            <li>Are there dimensions where the "less circular" product actually scores better?</li>
+            <li>What does this tell you about the complexity of circularity?</li>
+        </ol>
+    </div>
+
+    <div class="exercise-box">
+        <h4>Exercise 2 — Redesign a product</h4>
+        <p>Assess a product you think is poorly designed for circularity (a disposable coffee pod, a glued-together electronic device, etc.). Note the score. Now go back and change the inputs to reflect a redesigned version — what would it take to reach a "Good" score (60+)?</p>
+        <ol>
+            <li>Which changes had the most impact?</li>
+            <li>Would those changes be feasible in the real world? What would they cost?</li>
+            <li>Are there trade-offs (e.g., making it modular might increase cost or weight)?</li>
+        </ol>
+    </div>
+
+    <div class="exercise-box">
+        <h4>Exercise 3 — The business model gap</h4>
+        <p>Assess a product with excellent material and design scores but a purely linear business model (sold once, no take-back). Then change only the business model inputs to reflect a circular approach (take-back, leasing, repair services).</p>
+        <ol>
+            <li>How much does the business model alone affect the overall score?</li>
+            <li>What does this tell you about the relationship between product design and business model?</li>
+            <li>Can you think of a real company that made this transition?</li>
+        </ol>
+    </div>
+
+    <div class="exercise-box">
+        <h4>Exercise 4 — Challenge the methodology</h4>
+        <p>The tool weights all five dimensions to create an overall score. Think critically:</p>
+        <ol>
+            <li>Should all dimensions be weighted equally? Which might deserve more weight, and why?</li>
+            <li>What's missing? Are there aspects of circularity this tool doesn't capture (e.g., water use, energy, social factors, toxicity)?</li>
+            <li>Could a product score 90% on this tool but still be environmentally harmful? How?</li>
+        </ol>
+    </div>
+</section>
+
+<section id="pitfalls">
+    <h2>7. Common Misconceptions</h2>
+    <div class="warning-box">
+        <strong>❌ "100% recyclable means 100% circular"</strong>
+        <p>Recyclability is potential; recycling is reality. A product that's theoretically 100% recyclable but has no collection infrastructure, no take-back program, and no economic incentive to recycle might end up 90% landfilled. The tool captures this gap in the End of Life dimension.</p>
+    </div>
+    <div class="warning-box">
+        <strong>❌ "A high score means the product is sustainable"</strong>
+        <p>Circularity is one part of sustainability. This tool doesn't measure carbon footprint, water usage, biodiversity impact, labour conditions, or toxicity. A highly circular product made with toxic chemicals in a coal-powered factory is not sustainable.</p>
+    </div>
+    <div class="warning-box">
+        <strong>❌ "More recycled content is always better"</strong>
+        <p>It depends. If the recycling process is energy-intensive and the recycled material is lower quality (downcycling), the environmental benefit may be limited. Also, some products (e.g. food packaging) have safety requirements that limit recycled content.</p>
+    </div>
+    <div class="warning-box">
+        <strong>❌ "The score is precise and comparable across products"</strong>
+        <p>It's not. The inputs are estimates, the weightings are simplified, and different product categories have fundamentally different circularity challenges. Use the scores for directional learning, not for ranking products against each other.</p>
+    </div>
+</section>
+
+<section id="glossary">
+    <h2>8. Glossary</h2>
+    <div class="concept-box">
+        <strong>MCI (Material Circularity Indicator)</strong> — a metric developed by the Ellen MacArthur Foundation that measures how restorative a product's material flows are, from 0 (fully linear) to 1 (fully circular).<br><br>
+        <strong>Virgin Material</strong> — raw material extracted from nature that has never been used in a product before.<br><br>
+        <strong>Recycled Content</strong> — the proportion of a product's material that comes from previously used and reprocessed materials.<br><br>
+        <strong>Renewable Content</strong> — material from sources that naturally replenish (e.g. sustainably harvested wood, bio-based plastics).<br><br>
+        <strong>Recyclability Rate</strong> — the percentage of a product's materials that can technically be recovered and reprocessed into new materials.<br><br>
+        <strong>Modularity</strong> — designing a product so that individual components can be replaced, upgraded, or repaired independently.<br><br>
+        <strong>Design for Disassembly</strong> — designing products so they can be taken apart non-destructively at end of life, enabling material separation and recovery.<br><br>
+        <strong>Utilisation Intensity</strong> — how much a product is actually used relative to its capacity. A drill used 15 minutes per year has very low utilisation intensity.<br><br>
+        <strong>Downcycling</strong> — recycling a material into a lower-quality application (e.g. plastic bottles into park benches). The material is recovered but at reduced value.<br><br>
+        <strong>Take-back Program</strong> — a system where the manufacturer accepts used products from customers for reuse, refurbishment, or recycling.<br><br>
+        <strong>Linear Flow Index</strong> — in the MCI methodology, the proportion of material flow that is linear (extracted from nature and disposed to waste). Lower is better.
+    </div>
+</section>
+
+</div>
+
+<div class="footer">
+    <strong>Product Circularity Assessment Tool — Student Guide</strong><br>
+    For educational exploration. Builds understanding of what makes products circular and where improvement opportunities exist.
+</div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,1898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Circular Business Case Comparison Tool</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+
+        h2 {
+            color: #34495e;
+            margin-top: 20px;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 5px;
+        }
+
+        .subtitle {
+            color: #7f8c8d;
+            margin-bottom: 30px;
+        }
+
+        .input-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .input-columns {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #34495e;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .strategy-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+            padding: 15px;
+            background: #fff;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        .results {
+            display: none;
+            margin-top: 30px;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .model-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .model-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .model-card.linear {
+            border-color: #e74c3c;
+        }
+
+        .model-card.circular-1 {
+            border-color: #27ae60;
+        }
+
+        .model-card.circular-2 {
+            border-color: #3498db;
+        }
+
+        .model-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .metric-name {
+            color: #7f8c8d;
+        }
+
+        .metric-value {
+            font-weight: bold;
+        }
+
+        .summary {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .info-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        .collapsible {
+            background: #f1f1f1;
+            color: #444;
+            cursor: pointer;
+            padding: 12px;
+            width: 100%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 15px;
+            font-weight: 600;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+
+        .collapsible:after {
+            content: '\002B';
+            color: #777;
+            font-weight: bold;
+            float: right;
+            margin-left: 5px;
+        }
+
+        .collapsible.active:after {
+            content: "\2212";
+        }
+
+        .collapsible-content {
+            padding: 0 18px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.2s ease-out;
+            background-color: white;
+        }
+
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: help;
+            color: #667eea;
+            font-weight: bold;
+            margin-left: 5px;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 300px;
+            background-color: #555;
+            color: #fff;
+            text-align: left;
+            border-radius: 6px;
+            padding: 10px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -150px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-weight: normal;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .explanation-toggle {
+            background: none;
+            border: 1px solid #ccc;
+            color: #667eea;
+            padding: 6px 12px;
+            margin-top: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 4px;
+            width: 100%;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .explanation-toggle:hover {
+            background: #667eea;
+            color: white;
+            transform: none;
+        }
+
+        .explanation-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            font-size: 0.85em;
+            line-height: 1.5;
+            color: #555;
+        }
+
+        .explanation-content.open {
+            max-height: 800px;
+            padding-top: 10px;
+            border-top: 1px solid #e0e0e0;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔄 Circular Business Case Comparison Tool</h1>
+        <p class="subtitle">Compare linear vs. circular business models with fully configurable parameters</p>
+
+        <!-- Basic Business Context -->
+        <div class="input-section">
+            <h2>Basic Business Context</h2>
+            <div class="input-columns">
+                <div class="input-group">
+                    <label>Industry Sector:</label>
+                    <select id="sector" onchange="updateStrategies()">
+                        <option value="">Select sector...</option>
+                        <option value="electronics">Electronics & Technology</option>
+                        <option value="fashion">Fashion & Textiles</option>
+                        <option value="furniture">Furniture & Home Goods</option>
+                        <option value="automotive">Automotive Parts</option>
+                        <option value="packaging">Packaging</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Annual Production Volume (units):
+                        <span class="tooltip">?
+                            <span class="tooltiptext">Number of units you produce or plan to produce annually</span>
+                        </span>
+                    </label>
+                    <input type="number" id="volume" value="10000" min="100">
+                </div>
+                <div class="input-group">
+                    <label>Unit Production Cost ($):
+                        <span class="tooltip">?
+                            <span class="tooltiptext">Direct cost to produce one unit (materials + labor)</span>
+                        </span>
+                    </label>
+                    <input type="number" id="unitCost" value="100" min="1">
+                </div>
+                <div class="input-group">
+                    <label>Current Selling Price ($):</label>
+                    <input type="number" id="sellingPrice" value="150" min="1">
+                </div>
+            </div>
+        </div>
+
+        <!-- Linear Model Parameters -->
+        <div class="input-section">
+            <h2>Linear Model Parameters</h2>
+            <div class="input-columns">
+                <div class="input-group">
+                    <label>Fixed Costs ($):
+                        <span class="tooltip">?
+                            <span class="tooltiptext">Annual fixed costs (rent, salaries, equipment, etc.)</span>
+                        </span>
+                    </label>
+                    <input type="number" id="fixedCosts" value="100000" min="0">
+                </div>
+                <div class="input-group">
+                    <label>Variable Cost per Unit ($):
+                        <span class="tooltip">?
+                            <span class="tooltiptext">Additional variable costs per unit (shipping, packaging, etc.)</span>
+                        </span>
+                    </label>
+                    <input type="number" id="variableCostPerUnit" value="10" min="0">
+                </div>
+                <div class="input-group">
+                    <label>Waste Cost per Unit ($):
+                        <span class="tooltip">?
+                            <span class="tooltiptext">Cost of waste disposal and environmental compliance per unit</span>
+                        </span>
+                    </label>
+                    <input type="number" id="wasteCostPerUnit" value="5" min="0">
+                </div>
+                <div class="input-group">
+                    <label>Warranty/Repair (% of Revenue):
+                        <span class="tooltip">?
+                            <span class="tooltiptext">Percentage of revenue spent on warranty claims and repairs</span>
+                        </span>
+                    </label>
+                    <input type="number" id="warrantyPercent" value="2.5" min="0" step="0.1">
+                </div>
+            </div>
+        </div>
+
+        <!-- Financial Projections -->
+        <div class="input-section">
+            <h2>Financial Projection Parameters</h2>
+            <div class="input-columns">
+                <div class="input-group">
+                    <label>Projection Period (years):</label>
+                    <input type="number" id="projectionYears" value="10" min="1" max="20">
+                </div>
+                <div class="input-group">
+                    <label>Annual Revenue Growth (%):
+                        <span class="tooltip">?
+                            <span class="tooltiptext">Expected annual growth rate in sales volume/revenue</span>
+                        </span>
+                    </label>
+                    <input type="number" id="revenueGrowth" value="5" min="-10" max="50" step="0.5">
+                </div>
+                <div class="input-group">
+                    <label>Annual Cost Inflation (%):
+                        <span class="tooltip">?
+                            <span class="tooltiptext">Expected annual increase in costs due to inflation</span>
+                        </span>
+                    </label>
+                    <input type="number" id="costInflation" value="2.5" min="0" max="20" step="0.5">
+                </div>
+                <div class="input-group">
+                    <label>Base Business Investment ($):
+                        <span class="tooltip">?
+                            <span class="tooltiptext">Capital required to set up the baseline (linear) business. For new ventures, enter total startup cost. For existing businesses evaluating circular transition, set to 0. This applies to all three models — circular strategies add their own investment on top.</span>
+                        </span>
+                    </label>
+                    <input type="number" id="initialInvestment" value="500000" min="0">
+                </div>
+                <div class="input-group">
+                    <label>Discount Rate for NPV (%):
+                        <span class="tooltip">?
+                            <span class="tooltiptext">Rate used to discount future cash flows to present value. Reflects your cost of capital or required rate of return. Typical values: 3–5% for government/low-risk projects, 6–10% for established businesses, 12–20% for startups or high-risk ventures. Higher rates make future profits worth less today.</span>
+                        </span>
+                    </label>
+                    <input type="number" id="discountRate" value="8" min="0" max="30" step="0.5">
+                </div>
+            </div>
+        </div>
+
+        <!-- Circular Model Common Parameters -->
+        <div class="input-section">
+            <h2>Circular Model Common Parameters</h2>
+            <div class="input-columns">
+                <div class="input-group">
+                    <label>Additional Fixed Costs for Circular ($):
+                        <span class="tooltip">?
+                            <span class="tooltiptext">Additional annual fixed costs on top of linear model that apply to both circular strategies (e.g. sustainability team, reporting systems)</span>
+                        </span>
+                    </label>
+                    <input type="number" id="additionalCircularFixed" value="50000" min="0">
+                </div>
+            </div>
+        </div>
+
+        <!-- Circular Strategies -->
+        <div class="input-section">
+            <h2>Circular Strategies</h2>
+            <div class="info-box">
+                ℹ️ Select your industry sector first to see relevant circular strategies. Each strategy has its own investment requirement.
+            </div>
+            
+            <div class="input-group">
+                <label>Strategy 1:</label>
+                <select id="strategy1" onchange="showStrategyInputs(1)">
+                    <option value="">Select first strategy...</option>
+                </select>
+            </div>
+            <div id="strategy1Inputs" class="strategy-inputs" style="display: none;"></div>
+            <div class="strategy-inputs" id="strategy1Investment" style="display: none;">
+                <div class="input-group">
+                    <label>Strategy 1 Investment ($):
+                        <span class="tooltip">?
+                            <span class="tooltiptext">One-time capital investment required for this specific circular strategy (equipment, technology, infrastructure). This is added to the base investment for ROI/NPV/payback calculations.</span>
+                        </span>
+                    </label>
+                    <input type="number" id="circularInvestment1" value="100000" min="0">
+                </div>
+            </div>
+
+            <div class="input-group" style="margin-top: 15px;">
+                <label>Strategy 2:</label>
+                <select id="strategy2" onchange="showStrategyInputs(2)">
+                    <option value="">Select second strategy...</option>
+                </select>
+            </div>
+            <div id="strategy2Inputs" class="strategy-inputs" style="display: none;"></div>
+            <div class="strategy-inputs" id="strategy2Investment" style="display: none;">
+                <div class="input-group">
+                    <label>Strategy 2 Investment ($):
+                        <span class="tooltip">?
+                            <span class="tooltiptext">One-time capital investment required for this specific circular strategy. Different strategies often require very different investment levels.</span>
+                        </span>
+                    </label>
+                    <input type="number" id="circularInvestment2" value="100000" min="0">
+                </div>
+            </div>
+        </div>
+
+        <!-- Advanced Settings (Collapsible) -->
+        <button type="button" class="collapsible">Advanced Strategy Parameters</button>
+        <div class="collapsible-content">
+            <div class="input-section" style="margin-top: 15px;">
+                <h2>Advanced Parameters for Circular Strategies</h2>
+                <div class="input-columns">
+                    <div class="input-group">
+                        <label>Service Model - Production Cost Factor:
+                            <span class="tooltip">?
+                                <span class="tooltiptext">Factor applied to production costs in service model (default: 0.6)</span>
+                            </span>
+                        </label>
+                        <input type="number" id="serviceProdCostFactor" value="0.6" min="0" max="1" step="0.05">
+                    </div>
+                    <div class="input-group">
+                        <label>Service Model - Maintenance Factor:
+                            <span class="tooltip">?
+                                <span class="tooltiptext">Maintenance cost as factor of unit cost (default: 0.15)</span>
+                            </span>
+                        </label>
+                        <input type="number" id="serviceMaintenanceFactor" value="0.15" min="0" max="1" step="0.05">
+                    </div>
+                    <div class="input-group">
+                        <label>Buyback - Refurb Cost Factor:
+                            <span class="tooltip">?
+                                <span class="tooltiptext">Refurbishment cost as factor of unit cost (default: 0.2)</span>
+                            </span>
+                        </label>
+                        <input type="number" id="buybackRefurbFactor" value="0.2" min="0" max="1" step="0.05">
+                    </div>
+                    <div class="input-group">
+                        <label>Leasing - Maintenance Factor:
+                            <span class="tooltip">?
+                                <span class="tooltiptext">Annual maintenance as factor of unit cost (default: 0.1)</span>
+                            </span>
+                        </label>
+                        <input type="number" id="leasingMaintenanceFactor" value="0.1" min="0" max="1" step="0.05">
+                    </div>
+                    <div class="input-group">
+                        <label>Recycling - Base Units Factor:
+                            <span class="tooltip">?
+                                <span class="tooltiptext">Fraction of units entering recycling stream (default: 0.3)</span>
+                            </span>
+                        </label>
+                        <input type="number" id="recyclingBaseFactor" value="0.3" min="0" max="1" step="0.05">
+                    </div>
+                    <div class="input-group">
+                        <label>Recycling - Material Value Factor:
+                            <span class="tooltip">?
+                                <span class="tooltiptext">Recovered material value as factor of unit cost (default: 0.4)</span>
+                            </span>
+                        </label>
+                        <input type="number" id="recyclingValueFactor" value="0.4" min="0" max="1" step="0.05">
+                    </div>
+                    <div class="input-group">
+                        <label>Recycling - Processing Cost ($):
+                            <span class="tooltip">?
+                                <span class="tooltiptext">Additional processing cost per recycled unit (default: $15)</span>
+                            </span>
+                        </label>
+                        <input type="number" id="recyclingProcessCost" value="15" min="0" step="1">
+                    </div>
+                    <div class="input-group">
+                        <label>Recycling - Cost Reduction Factor:
+                            <span class="tooltip">?
+                                <span class="tooltiptext">Production cost reduction from using recycled materials (default: 0.95)</span>
+                            </span>
+                        </label>
+                        <input type="number" id="recyclingCostReduction" value="0.95" min="0" max="1" step="0.05">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button onclick="calculateBusinessCase(true)">Calculate Business Case</button>
+
+        <div id="results" class="results">
+            <h2>Financial Comparison</h2>
+            <div id="comparisonGrid" class="comparison-grid"></div>
+            <div id="summary" class="summary"></div>
+        </div>
+    </div>
+
+    <script>
+        // Auto-recalculate when financial inputs change (if results are already shown)
+        function setupAutoRecalculate() {
+            const financialInputIds = [
+                'volume', 'unitCost', 'sellingPrice', 'fixedCosts', 'variableCostPerUnit',
+                'wasteCostPerUnit', 'warrantyPercent', 'projectionYears', 'revenueGrowth',
+                'costInflation', 'initialInvestment', 'discountRate',
+                'additionalCircularFixed', 'circularInvestment1', 'circularInvestment2',
+                'serviceProdCostFactor', 'serviceMaintenanceFactor', 'buybackRefurbFactor',
+                'leasingMaintenanceFactor', 'recyclingBaseFactor', 'recyclingValueFactor',
+                'recyclingProcessCost', 'recyclingCostReduction'
+            ];
+            financialInputIds.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.addEventListener('change', function() {
+                        if (document.getElementById('results').style.display === 'block') {
+                            calculateBusinessCase();
+                        }
+                    });
+                }
+            });
+        }
+        
+        // Collapsible functionality
+        var coll = document.getElementsByClassName("collapsible");
+        for (var i = 0; i < coll.length; i++) {
+            coll[i].addEventListener("click", function() {
+                this.classList.toggle("active");
+                var content = this.nextElementSibling;
+                if (content.style.maxHeight){
+                    content.style.maxHeight = null;
+                } else {
+                    content.style.maxHeight = content.scrollHeight + "px";
+                }
+            });
+        }
+
+        const strategyOptions = {
+            electronics: [
+                { value: 'service', label: 'Product-as-a-Service' },
+                { value: 'refurbishment', label: 'Refurbishment Program' },
+                { value: 'buyback', label: 'Buy-back & Resale' },
+                { value: 'repair', label: 'Repair Services' }
+            ],
+            fashion: [
+                { value: 'rental', label: 'Rental/Leasing' },
+                { value: 'buyback', label: 'Buy-back & Resale' },
+                { value: 'repair', label: 'Repair & Alteration' },
+                { value: 'recycling', label: 'Material Recycling' }
+            ],
+            furniture: [
+                { value: 'leasing', label: 'Leasing Model' },
+                { value: 'refurbishment', label: 'Refurbishment Program' },
+                { value: 'longevity', label: 'Design for Longevity' },
+                { value: 'modular', label: 'Modular Design' }
+            ],
+            automotive: [
+                { value: 'remanufacturing', label: 'Remanufacturing' },
+                { value: 'service', label: 'Performance Agreements' },
+                { value: 'recycling', label: 'Material Recovery' },
+                { value: 'repair', label: 'Extended Repair Network' }
+            ],
+            packaging: [
+                { value: 'reusable', label: 'Reusable Systems' },
+                { value: 'recycling', label: 'Recycling Program' },
+                { value: 'biodegradable', label: 'Biodegradable Materials' },
+                { value: 'refill', label: 'Refill Stations' }
+            ]
+        };
+
+        const strategyInputs = {
+            service: [
+                { id: 'monthlyFee', label: 'Monthly Service Fee ($)', default: 12 },
+                { id: 'contractDuration', label: 'Contract Duration (years)', default: 3 },
+                { id: 'utilizationIncrease', label: 'Utilization Increase (%)', default: 30 }
+            ],
+            rental: [
+                { id: 'rentalPrice', label: 'Monthly Rental Price ($)', default: 30 },
+                { id: 'refurbCost', label: 'Inter-rental Refurbishment (% of cost)', default: 15 },
+                { id: 'utilization', label: 'Fleet Utilization Rate (%)', default: 70 }
+            ],
+            leasing: [
+                { id: 'leaseRate', label: 'Annual Lease Rate (% of price)', default: 40 },
+                { id: 'leaseTerm', label: 'Lease Term (years)', default: 3 },
+                { id: 'residualValue', label: 'Residual Value (%)', default: 40 }
+            ],
+            buyback: [
+                { id: 'buybackPrice', label: 'Buy-back Price (% of original)', default: 30 },
+                { id: 'returnRate', label: 'Expected Return Rate (%)', default: 25 },
+                { id: 'resalePrice', label: 'Resale Price (% of new)', default: 60 }
+            ],
+            refurbishment: [
+                { id: 'refurbCost', label: 'Refurbishment Cost (% of new)', default: 25 },
+                { id: 'resalePrice', label: 'Resale Price (% of new)', default: 55 },
+                { id: 'processVolume', label: 'Processing Volume (% of sales)', default: 20 }
+            ],
+            repair: [
+                { id: 'repairPrice', label: 'Average Repair Price ($)', default: 50 },
+                { id: 'repairFrequency', label: 'Repairs per Unit/Year', default: 0.5 },
+                { id: 'extendedLife', label: 'Life Extension (years)', default: 2 }
+            ],
+            remanufacturing: [
+                { id: 'coreAcquisition', label: 'Core Acquisition (% of new cost)', default: 20 },
+                { id: 'processCost', label: 'Processing Cost (% of new)', default: 40 },
+                { id: 'salePrice', label: 'Sale Price (% of new)', default: 65 }
+            ],
+            recycling: [
+                { id: 'collectionCost', label: 'Collection Cost ($/unit)', default: 10 },
+                { id: 'recoveryRate', label: 'Material Recovery Rate (%)', default: 75 },
+                { id: 'materialValue', label: 'Recycled Material Value (% of virgin)', default: 70 }
+            ],
+            longevity: [
+                { id: 'costIncrease', label: 'Production Cost Increase (%)', default: 15 },
+                { id: 'priceIncrease', label: 'Price Premium (%)', default: 25 },
+                { id: 'lifeExtension', label: 'Product Life Extension (x)', default: 2 }
+            ],
+            modular: [
+                { id: 'moduleCost', label: 'Module Replacement Cost (% of new)', default: 30 },
+                { id: 'upgradeFrequency', label: 'Upgrades per Product Life', default: 2 },
+                { id: 'pricePremium', label: 'Price Premium (%)', default: 20 }
+            ],
+            reusable: [
+                { id: 'systemCost', label: 'System Setup Cost ($)', default: 100000 },
+                { id: 'reuseCount', label: 'Average Reuse Count', default: 10 },
+                { id: 'cleaningCost', label: 'Cleaning Cost per Use ($)', default: 2 }
+            ],
+            biodegradable: [
+                { id: 'materialPremium', label: 'Material Cost Premium (%)', default: 30 },
+                { id: 'marketPremium', label: 'Market Price Premium (%)', default: 15 },
+                { id: 'wasteReduction', label: 'Waste Cost Reduction (%)', default: 60 }
+            ],
+            refill: [
+                { id: 'stationCost', label: 'Station Setup Cost ($)', default: 50000 },
+                { id: 'refillPrice', label: 'Refill Price (% of packaged)', default: 70 },
+                { id: 'adoptionRate', label: 'Customer Adoption (%)', default: 30 }
+            ]
+        };
+
+        function updateStrategies() {
+            const sector = document.getElementById('sector').value;
+            const strategy1 = document.getElementById('strategy1');
+            const strategy2 = document.getElementById('strategy2');
+            
+            strategy1.innerHTML = '<option value="">Select first strategy...</option>';
+            strategy2.innerHTML = '<option value="">Select second strategy...</option>';
+            
+            if (sector && strategyOptions[sector]) {
+                strategyOptions[sector].forEach(option => {
+                    strategy1.innerHTML += `<option value="${option.value}">${option.label}</option>`;
+                    strategy2.innerHTML += `<option value="${option.value}">${option.label}</option>`;
+                });
+            }
+            
+            document.getElementById('strategy1Inputs').innerHTML = '';
+            document.getElementById('strategy1Inputs').style.display = 'none';
+            document.getElementById('strategy1Investment').style.display = 'none';
+            document.getElementById('strategy2Inputs').innerHTML = '';
+            document.getElementById('strategy2Inputs').style.display = 'none';
+            document.getElementById('strategy2Investment').style.display = 'none';
+        }
+
+        function showStrategyInputs(strategyNum) {
+            const strategyValue = document.getElementById(`strategy${strategyNum}`).value;
+            const inputsDiv = document.getElementById(`strategy${strategyNum}Inputs`);
+            const investmentDiv = document.getElementById(`strategy${strategyNum}Investment`);
+            
+            if (!strategyValue) {
+                inputsDiv.innerHTML = '';
+                inputsDiv.style.display = 'none';
+                investmentDiv.style.display = 'none';
+                return;
+            }
+            
+            const inputs = strategyInputs[strategyValue] || [];
+            inputsDiv.innerHTML = inputs.map(input => `
+                <div class="input-group">
+                    <label>${input.label}:</label>
+                    <input type="number" id="${strategyNum}_${input.id}" value="${input.default}" step="any">
+                </div>
+            `).join('');
+            inputsDiv.style.display = 'grid';
+            investmentDiv.style.display = 'grid';
+            
+            // Add auto-recalculate listeners to new strategy inputs
+            inputs.forEach(input => {
+                const el = document.getElementById(`${strategyNum}_${input.id}`);
+                if (el) {
+                    el.addEventListener('change', function() {
+                        if (document.getElementById('results').style.display === 'block') {
+                            calculateBusinessCase();
+                        }
+                    });
+                }
+            });
+        }
+
+        function calculateLinearModel(volume, unitCost, sellingPrice) {
+            // Get user-defined parameters
+            const fixedCosts = parseFloat(document.getElementById('fixedCosts').value);
+            const variableCostPerUnit = parseFloat(document.getElementById('variableCostPerUnit').value);
+            const wasteCostPerUnit = parseFloat(document.getElementById('wasteCostPerUnit').value);
+            const warrantyPercent = parseFloat(document.getElementById('warrantyPercent').value) / 100;
+            const projectionYears = parseInt(document.getElementById('projectionYears').value);
+            const revenueGrowth = parseFloat(document.getElementById('revenueGrowth').value) / 100;
+            const costInflation = parseFloat(document.getElementById('costInflation').value) / 100;
+            const initialInvestment = parseFloat(document.getElementById('initialInvestment').value);
+            
+            const revenue = volume * sellingPrice;
+            const cogs = volume * unitCost;
+            const variableCosts = volume * variableCostPerUnit;
+            const wasteCosts = volume * wasteCostPerUnit;
+            const warrantyRepair = revenue * warrantyPercent;
+            
+            const totalCosts = cogs + fixedCosts + variableCosts + wasteCosts + warrantyRepair;
+            const profit = revenue - totalCosts;
+            const margin = (profit / revenue) * 100;
+            
+            // Multi-year projection with realistic cost scaling
+            // Volume-driven costs (COGS, variable, waste, warranty) scale with revenue growth
+            // Fixed costs inflate at cost inflation rate only
+            let totalRevenue = 0;
+            let totalProfit = 0;
+            const volumeDrivenCosts = cogs + variableCosts + wasteCosts + warrantyRepair;
+            const discountRate = parseFloat(document.getElementById('discountRate').value) / 100;
+            let npv = -initialInvestment;
+            let paybackYear = projectionYears + 1; // default: not recovered
+            let cumulativeCashFlow = -initialInvestment;
+            
+            for (let year = 1; year <= projectionYears; year++) {
+                const yearRevenue = revenue * Math.pow(1 + revenueGrowth, year - 1);
+                // Volume-driven costs grow with revenue/volume
+                const yearVolumeCosts = volumeDrivenCosts * Math.pow(1 + revenueGrowth, year - 1);
+                // Fixed costs grow with inflation only
+                const yearFixedCosts = fixedCosts * Math.pow(1 + costInflation, year - 1);
+                const yearProfit = yearRevenue - yearVolumeCosts - yearFixedCosts;
+                totalRevenue += yearRevenue;
+                totalProfit += yearProfit;
+                
+                // NPV calculation
+                npv += yearProfit / Math.pow(1 + discountRate, year);
+                
+                // Payback period
+                cumulativeCashFlow += yearProfit;
+                if (cumulativeCashFlow >= 0 && paybackYear > projectionYears) {
+                    // Interpolate for fractional year
+                    const prevCumulative = cumulativeCashFlow - yearProfit;
+                    paybackYear = year - 1 + Math.abs(prevCumulative) / yearProfit;
+                }
+            }
+            
+            // Annual ROI = average annual profit / investment
+            const annualROI = ((totalProfit / projectionYears) / initialInvestment) * 100;
+            
+            return {
+                annualRevenue: revenue,
+                annualProfit: profit,
+                margin: margin,
+                totalRevenue: totalRevenue,
+                totalProfit: totalProfit,
+                annualROI: annualROI,
+                npv: npv,
+                paybackYears: paybackYear,
+                projectionYears: projectionYears
+            };
+        }
+
+        function calculateCircularModel(strategy, volume, unitCost, sellingPrice, inputs, strategyNum) {
+            // Sector-aware base product life (years)
+            const sectorBaseLife = {
+                electronics: 4, fashion: 2, furniture: 10, automotive: 8, packaging: 1
+            };
+            const sector = document.getElementById('sector').value;
+            const baseProductLife = sectorBaseLife[sector] || 5;
+            
+            // Get base parameters (same as linear for fair comparison)
+            const fixedCosts = parseFloat(document.getElementById('fixedCosts').value);
+            const additionalCircularFixed = parseFloat(document.getElementById('additionalCircularFixed').value);
+            const totalFixedCosts = fixedCosts + additionalCircularFixed;
+            const variableCostPerUnit = parseFloat(document.getElementById('variableCostPerUnit').value);
+            const wasteCostPerUnit = parseFloat(document.getElementById('wasteCostPerUnit').value);
+            const warrantyPercent = parseFloat(document.getElementById('warrantyPercent').value) / 100;
+            const circularInvestment = parseFloat(document.getElementById(`circularInvestment${strategyNum}`).value) || 100000;
+            const projectionYears = parseInt(document.getElementById('projectionYears').value);
+            const revenueGrowth = parseFloat(document.getElementById('revenueGrowth').value) / 100;
+            const costInflation = parseFloat(document.getElementById('costInflation').value) / 100;
+            const initialInvestment = parseFloat(document.getElementById('initialInvestment').value);
+            const totalInvestment = initialInvestment + circularInvestment;
+            
+            // Get advanced parameters
+            const serviceProdCostFactor = parseFloat(document.getElementById('serviceProdCostFactor').value);
+            const serviceMaintenanceFactor = parseFloat(document.getElementById('serviceMaintenanceFactor').value);
+            const buybackRefurbFactor = parseFloat(document.getElementById('buybackRefurbFactor').value);
+            const leasingMaintenanceFactor = parseFloat(document.getElementById('leasingMaintenanceFactor').value);
+            const recyclingBaseFactor = parseFloat(document.getElementById('recyclingBaseFactor').value);
+            const recyclingValueFactor = parseFloat(document.getElementById('recyclingValueFactor').value);
+            const recyclingProcessCost = parseFloat(document.getElementById('recyclingProcessCost').value);
+            const recyclingCostReduction = parseFloat(document.getElementById('recyclingCostReduction').value);
+            
+            let result = {
+                annualRevenue: 0,
+                annualProfit: 0,
+                margin: 0,
+                totalRevenue: 0,
+                totalProfit: 0,
+                roi: 0,
+                projectionYears: projectionYears,
+                explanation: { revenueLines: [], costLines: [], insights: [] }
+            };
+
+            switch(strategy) {
+                case 'service':
+                    // Product-as-a-Service: recurring revenue from service fees
+                    // Revenue is constrained by product value and competitive alternatives
+                    const monthlyFee = parseFloat(inputs['monthlyFee']);
+                    const contractYears = parseFloat(inputs['contractDuration']);
+                    const utilIncrease = parseFloat(inputs['utilizationIncrease']) / 100;
+                    
+                    // Not all customers convert to service — realistic adoption ceiling
+                    const serviceAdoptionRate = 0.5; // 50% of market adopts service model
+                    const serviceCustomers = volume * serviceAdoptionRate;
+                    // Remaining customers still buy traditionally
+                    const traditionalCustomers = volume * (1 - serviceAdoptionRate);
+                    
+                    // Fewer physical units needed for service customers due to shared utilization
+                    const effectiveServiceUnits = serviceCustomers / (1 + utilIncrease);
+                    
+                    // Revenue: service fees from adopters + traditional sales from rest
+                    const serviceRevenue = effectiveServiceUnits * monthlyFee * 12;
+                    const traditionalRevenue = traditionalCustomers * sellingPrice;
+                    const totalServiceRevenue = serviceRevenue + traditionalRevenue;
+                    
+                    // Costs for service fleet: annual replacement of aging units
+                    const annualFleetReplacement = (effectiveServiceUnits / contractYears) * unitCost;
+                    // Costs for traditional production
+                    const traditionalProdCosts = traditionalCustomers * unitCost;
+                    // Maintenance on service fleet
+                    const maintenanceCosts = effectiveServiceUnits * unitCost * serviceMaintenanceFactor;
+                    // Variable costs (both channels)
+                    const serviceVariableCosts = (effectiveServiceUnits + traditionalCustomers) * variableCostPerUnit;
+                    // Waste costs
+                    const serviceWasteCosts = traditionalCustomers * wasteCostPerUnit + effectiveServiceUnits * wasteCostPerUnit * 0.4;
+                    // Service ops overhead (only on service portion): 10% of service revenue
+                    const serviceOpsOverhead = serviceRevenue * 0.10;
+                    // Customer acquisition/churn (service portion): 5% of service revenue
+                    const serviceAcquisitionCost = serviceRevenue * 0.05;
+                    // Warranty: traditional + heavier on service units (you bear all repair cost)
+                    const serviceWarranty = traditionalRevenue * warrantyPercent + effectiveServiceUnits * unitCost * 0.04;
+                    
+                    result.annualRevenue = totalServiceRevenue;
+                    result.annualProfit = totalServiceRevenue - annualFleetReplacement - traditionalProdCosts
+                        - maintenanceCosts - serviceVariableCosts - serviceWasteCosts
+                        - serviceOpsOverhead - serviceAcquisitionCost - serviceWarranty - totalFixedCosts;
+                    break;
+
+                case 'rental':
+                    // Rental model: fleet-based, revenue from utilization
+                    const rentalPrice = parseFloat(inputs['rentalPrice']);
+                    const rentalRefurbCost = parseFloat(inputs['refurbCost']) / 100;
+                    const utilization = parseFloat(inputs['utilization']) / 100;
+                    
+                    // Fleet size based on serving equivalent demand
+                    // Each item rented ~10 times/year (realistic turnover with gaps)
+                    const annualTurnsPerItem = 10;
+                    const fleetSize = volume / (annualTurnsPerItem * utilization);
+                    const rentalRevenue = fleetSize * rentalPrice * 12 * utilization;
+                    const fleetCost = fleetSize * unitCost;
+                    const annualDepreciation = fleetCost / 3; // 3-year depreciation
+                    // Refurb between rentals
+                    const refurbCostsRental = fleetSize * annualTurnsPerItem * utilization * unitCost * rentalRefurbCost;
+                    // Logistics costs (shipping, returns, inspection)
+                    const rentalLogistics = fleetSize * annualTurnsPerItem * utilization * variableCostPerUnit * 0.6;
+                    // Damage/loss reserve: 5% of fleet value annually
+                    const damageReserve = fleetCost * 0.05;
+                    // Ops overhead (inventory management, customer service)
+                    const rentalOpsOverhead = rentalRevenue * 0.10;
+                    
+                    result.annualRevenue = rentalRevenue;
+                    result.annualProfit = rentalRevenue - annualDepreciation - refurbCostsRental
+                        - rentalLogistics - damageReserve - rentalOpsOverhead - totalFixedCosts;
+                    break;
+
+                case 'buyback':
+                    // Buy-back: sell new + buy back used + resell refurbished
+                    // Key fix: refurbished units partially cannibalize new sales
+                    const buybackPct = parseFloat(inputs['buybackPrice']) / 100;
+                    const returnRate = parseFloat(inputs['returnRate']) / 100;
+                    const resalePct = parseFloat(inputs['resalePrice']) / 100;
+                    
+                    const returnedUnits = volume * returnRate;
+                    // Cannibalization: ~50% of refurb sales displace new sales
+                    const cannibalizationRate = 0.5;
+                    const displacedNewSales = returnedUnits * cannibalizationRate;
+                    const effectiveNewVolume = volume - displacedNewSales;
+                    
+                    const newSaleRevenue = effectiveNewVolume * sellingPrice;
+                    const resaleRevenue = returnedUnits * sellingPrice * resalePct;
+                    const buybackCost = returnedUnits * sellingPrice * buybackPct;
+                    const refurbCost = returnedUnits * unitCost * buybackRefurbFactor;
+                    // Inspection and grading costs
+                    const inspectionCosts = returnedUnits * unitCost * 0.05;
+                    // Variable and waste costs on new production
+                    const buybackVariableCosts = effectiveNewVolume * variableCostPerUnit;
+                    const buybackWasteCosts = effectiveNewVolume * wasteCostPerUnit;
+                    const buybackWarranty = (newSaleRevenue + resaleRevenue) * warrantyPercent;
+                    // Reverse logistics
+                    const reverseLogistics = returnedUnits * variableCostPerUnit * 0.5;
+                    
+                    result.annualRevenue = newSaleRevenue + resaleRevenue;
+                    result.annualProfit = result.annualRevenue - (effectiveNewVolume * unitCost)
+                        - buybackCost - refurbCost - inspectionCosts
+                        - buybackVariableCosts - buybackWasteCosts - buybackWarranty
+                        - reverseLogistics - totalFixedCosts;
+                    break;
+
+                case 'refurbishment':
+                    // Refurbishment: new sales + refurb stream, with cannibalization
+                    const refurbCostPct = parseFloat(inputs['refurbCost']) / 100;
+                    const resalePrice = parseFloat(inputs['resalePrice']) / 100;
+                    const processVol = parseFloat(inputs['processVolume']) / 100;
+                    
+                    const refurbUnits = volume * processVol;
+                    // Cannibalization: refurb units partially replace new sales (~40%)
+                    const refurbCannibalization = refurbUnits * 0.4;
+                    const effectiveNewVolumeRefurb = volume - refurbCannibalization;
+                    
+                    const newRevenueRefurb = effectiveNewVolumeRefurb * sellingPrice;
+                    const refurbRevenue = refurbUnits * sellingPrice * resalePrice;
+                    const refurbCosts = refurbUnits * unitCost * refurbCostPct;
+                    // Sourcing/collection of used units
+                    const sourcingCosts = refurbUnits * unitCost * 0.10;
+                    // Quality control and testing
+                    const qcCosts = refurbUnits * unitCost * 0.05;
+                    // Variable costs on new production
+                    const refurbVariableCosts = effectiveNewVolumeRefurb * variableCostPerUnit;
+                    const refurbWasteCosts = effectiveNewVolumeRefurb * wasteCostPerUnit;
+                    const refurbWarranty = (newRevenueRefurb + refurbRevenue) * warrantyPercent;
+                    
+                    result.annualRevenue = newRevenueRefurb + refurbRevenue;
+                    result.annualProfit = result.annualRevenue - (effectiveNewVolumeRefurb * unitCost)
+                        - refurbCosts - sourcingCosts - qcCosts
+                        - refurbVariableCosts - refurbWasteCosts - refurbWarranty - totalFixedCosts;
+                    break;
+
+                case 'repair':
+                    // Repair services: base product sales + repair revenue
+                    // Key fix: installed base builds gradually, not instant 3x
+                    const repairPrice = parseFloat(inputs['repairPrice']);
+                    const repairFrequency = parseFloat(inputs['repairFrequency']);
+                    const extendedLife = parseFloat(inputs['extendedLife']);
+                    
+                    const baseRevenueRepair = volume * sellingPrice;
+                    // Installed base: use ~1.5 years average for a steady-state estimate
+                    // (ramps from 0 to 3 years over time — average is ~1.5 in early years)
+                    const installedBase = volume * 1.5;
+                    const repairRevenue = installedBase * repairFrequency * repairPrice;
+                    const repairLaborCosts = repairRevenue * 0.45; // Labor: 45% of repair revenue
+                    const repairPartsCosts = repairRevenue * 0.25; // Parts: 25% of repair revenue
+                    // Repair infrastructure overhead
+                    const repairOverhead = repairRevenue * 0.10;
+                    // Reduced new unit sales due to longer product life (some cannibalization)
+                    // Uses sector-specific base product life for realistic volume adjustment
+                    const lifeCannibalization = volume * (extendedLife / (extendedLife + baseProductLife)) * 0.15;
+                    const adjustedNewVolume = volume - lifeCannibalization;
+                    const adjustedBaseRevenue = adjustedNewVolume * sellingPrice;
+                    // Standard variable/waste/warranty on new production
+                    const repairVariableCosts = adjustedNewVolume * variableCostPerUnit;
+                    const repairWasteCosts = adjustedNewVolume * wasteCostPerUnit;
+                    const repairWarranty = adjustedBaseRevenue * warrantyPercent * 0.7; // Lower warranty due to repair offering
+                    
+                    result.annualRevenue = adjustedBaseRevenue + repairRevenue;
+                    result.annualProfit = result.annualRevenue - (adjustedNewVolume * unitCost)
+                        - repairLaborCosts - repairPartsCosts - repairOverhead
+                        - repairVariableCosts - repairWasteCosts - repairWarranty - totalFixedCosts;
+                    break;
+
+                case 'leasing':
+                    // Leasing: recurring lease revenue + residual value from returned units
+                    const leaseRate = parseFloat(inputs['leaseRate']) / 100;
+                    const leaseTerm = parseFloat(inputs['leaseTerm']);
+                    const residual = parseFloat(inputs['residualValue']) / 100;
+                    
+                    // Lease payments from active fleet
+                    const leasingPaymentRevenue = volume * sellingPrice * leaseRate;
+                    // Units returned each year (end of lease) can be resold at residual value
+                    const newUnitsPerYear = volume / leaseTerm;
+                    const residualRevenue = newUnitsPerYear * sellingPrice * residual * 0.80; // 80% of theoretical residual realized
+                    const totalLeasingRevenue = leasingPaymentRevenue + residualRevenue;
+                    
+                    // Production costs for replacement units only (not full fleet each year)
+                    const productionCosts = newUnitsPerYear * unitCost;
+                    // Maintenance scales with fleet age — average ~6% of unit cost across fleet
+                    const maintenanceLeasing = volume * unitCost * leasingMaintenanceFactor * 0.6;
+                    // End-of-lease processing (return handling, inspection, light refurb for resale)
+                    const endOfLeaseCosts = newUnitsPerYear * unitCost * 0.05;
+                    // Variable costs on new units entering fleet
+                    const leasingVariableCosts = newUnitsPerYear * variableCostPerUnit;
+                    // Waste costs (reduced due to take-back and managed lifecycle)
+                    const leasingWasteCosts = newUnitsPerYear * wasteCostPerUnit * 0.3;
+                    // Leasing admin overhead (billing, contracts, collections)
+                    const leasingAdmin = totalLeasingRevenue * 0.05;
+                    // Warranty (lessor bears responsibility, but controlled environment)
+                    const leasingWarranty = totalLeasingRevenue * warrantyPercent;
+                    
+                    result.annualRevenue = totalLeasingRevenue;
+                    result.annualProfit = totalLeasingRevenue - productionCosts - maintenanceLeasing
+                        - endOfLeaseCosts - leasingVariableCosts - leasingWasteCosts
+                        - leasingAdmin - leasingWarranty - totalFixedCosts;
+                    break;
+
+                case 'remanufacturing':
+                    // Remanufacturing: 30% reman / 70% new mix
+                    const coreAcquisition = parseFloat(inputs['coreAcquisition']) / 100;
+                    const processCost = parseFloat(inputs['processCost']) / 100;
+                    const salePrice = parseFloat(inputs['salePrice']) / 100;
+                    
+                    const remanVolume = volume * 0.3;
+                    const newVolume = volume * 0.7;
+                    
+                    const newSalesRevenue = newVolume * sellingPrice;
+                    const remanRevenue = remanVolume * sellingPrice * salePrice;
+                    const coreCosts = remanVolume * unitCost * coreAcquisition;
+                    const remanProcessCosts = remanVolume * unitCost * processCost;
+                    const newProdCosts = newVolume * unitCost;
+                    // QC testing for reman units (included in processCost, just add final validation)
+                    const remanQC = remanVolume * unitCost * 0.03;
+                    // Variable costs: new units full rate, reman units reduced (no raw material sourcing)
+                    const remanVariableCosts = (newVolume * variableCostPerUnit) + (remanVolume * variableCostPerUnit * 0.6);
+                    // Waste costs: significantly reduced for reman portion
+                    const remanWasteCosts = (newVolume * wasteCostPerUnit) + (remanVolume * wasteCostPerUnit * 0.2);
+                    // Warranty: reman units may have slightly higher warranty rate
+                    const remanWarranty = (newSalesRevenue * warrantyPercent) + (remanRevenue * warrantyPercent * 1.2);
+                    // Core collection logistics (built into core acquisition cost, just add transport)
+                    const coreLogistics = remanVolume * 3; // flat $3/unit transport
+                    
+                    result.annualRevenue = newSalesRevenue + remanRevenue;
+                    result.annualProfit = result.annualRevenue - newProdCosts - coreCosts
+                        - remanProcessCosts - remanQC - remanVariableCosts - remanWasteCosts
+                        - remanWarranty - coreLogistics - totalFixedCosts;
+                    break;
+
+                case 'recycling':
+                    // Material recycling: base sales + modest material value recovery
+                    const collectionCost = parseFloat(inputs['collectionCost']);
+                    const recoveryRate = parseFloat(inputs['recoveryRate']) / 100;
+                    const materialValue = parseFloat(inputs['materialValue']) / 100;
+                    
+                    const baseRevenue = volume * sellingPrice;
+                    const recycledUnits = volume * recyclingBaseFactor;
+                    // Material recovery value (this is a cost offset, not really "revenue")
+                    const materialRecoveryValue = recycledUnits * unitCost * recyclingValueFactor * recoveryRate * materialValue;
+                    const recyclingCosts = recycledUnits * (collectionCost + recyclingProcessCost);
+                    // Net material savings applied to production costs
+                    const netRecyclingSaving = materialRecoveryValue - recyclingCosts;
+                    // Standard costs on production
+                    const recyclingProdCosts = volume * unitCost * recyclingCostReduction;
+                    const recyclingVariableCosts = volume * variableCostPerUnit;
+                    const recyclingWasteCosts = volume * wasteCostPerUnit * (1 - recyclingBaseFactor * 0.5); // Reduced waste
+                    const recyclingWarranty = baseRevenue * warrantyPercent;
+                    
+                    result.annualRevenue = baseRevenue;
+                    result.annualProfit = baseRevenue - recyclingProdCosts + netRecyclingSaving
+                        - recyclingVariableCosts - recyclingWasteCosts - recyclingWarranty - totalFixedCosts;
+                    break;
+
+                case 'longevity':
+                    // Design for longevity: higher price, higher cost, but reduced volume over time
+                    const costIncrease = parseFloat(inputs['costIncrease']) / 100;
+                    const priceIncrease = parseFloat(inputs['priceIncrease']) / 100;
+                    const lifeExtension = parseFloat(inputs['lifeExtension']);
+                    
+                    // Volume reduction: if product lasts 2x longer, replacement demand drops
+                    // But effect is gradual — in steady state, volume drops proportionally
+                    // Use a realistic transitional factor (not instant full reduction)
+                    const volumeReductionFactor = 1 / (1 + (lifeExtension - 1) * 0.4);
+                    const adjustedVolumeLong = volume * volumeReductionFactor;
+                    const longevityRevenue = adjustedVolumeLong * sellingPrice * (1 + priceIncrease);
+                    const longevityCosts = adjustedVolumeLong * unitCost * (1 + costIncrease);
+                    // Variable and waste costs on adjusted volume
+                    const longevityVariableCosts = adjustedVolumeLong * variableCostPerUnit;
+                    const longevityWasteCosts = adjustedVolumeLong * wasteCostPerUnit * 0.7; // Less waste per unit
+                    // Warranty: longer-lived products may have lower warranty rate
+                    const longevityWarranty = longevityRevenue * warrantyPercent * 0.6;
+                    
+                    result.annualRevenue = longevityRevenue;
+                    result.annualProfit = longevityRevenue - longevityCosts
+                        - longevityVariableCosts - longevityWasteCosts - longevityWarranty - totalFixedCosts;
+                    break;
+
+                case 'modular':
+                    // Modular design: premium initial sale + upgrade revenue stream
+                    // Key reality: modular design adds complexity and costs, partially offset by premium + upgrades
+                    const moduleCost = parseFloat(inputs['moduleCost']) / 100;
+                    const upgradeFrequency = parseFloat(inputs['upgradeFrequency']);
+                    const pricePremium = parseFloat(inputs['pricePremium']) / 100;
+                    
+                    // Modular products last longer, reducing replacement volume (~15% cannibalization)
+                    const modularCannibalization = volume * 0.15;
+                    const effectiveModularVolume = volume - modularCannibalization;
+                    
+                    const modularBaseRevenue = effectiveModularVolume * sellingPrice * (1 + pricePremium);
+                    // Installed base builds over time — ~1 year average in early period
+                    const installedBaseModular = effectiveModularVolume * 1;
+                    // Average product life ~5 years for modular, annual upgrade rate
+                    const annualUpgradeRate = upgradeFrequency / 5;
+                    const moduleRevenue = installedBaseModular * annualUpgradeRate * sellingPrice * moduleCost;
+                    // Production: 15% higher cost for modular design (tooling, interfaces, testing)
+                    const modularProdCosts = effectiveModularVolume * unitCost * 1.15;
+                    // Module manufacturing costs: 65% of module revenue (smaller runs, more SKUs)
+                    const moduleManufCosts = moduleRevenue * 0.65;
+                    // Module inventory management overhead
+                    const moduleInventoryOverhead = moduleRevenue * 0.08;
+                    // R&D overhead for maintaining modular platform (3% of total revenue)
+                    const modularRnD = (modularBaseRevenue + moduleRevenue) * 0.03;
+                    // Standard operating costs on effective volume
+                    const modularVariableCosts = effectiveModularVolume * variableCostPerUnit;
+                    const modularWasteCosts = effectiveModularVolume * wasteCostPerUnit * 0.7;
+                    const modularWarranty = (modularBaseRevenue + moduleRevenue) * warrantyPercent;
+                    
+                    result.annualRevenue = modularBaseRevenue + moduleRevenue;
+                    result.annualProfit = result.annualRevenue - modularProdCosts - moduleManufCosts
+                        - moduleInventoryOverhead - modularRnD
+                        - modularVariableCosts - modularWasteCosts - modularWarranty - totalFixedCosts;
+                    break;
+
+                case 'reusable':
+                    // Reusable packaging: cost savings from reuse, not magical cost elimination
+                    const systemCost = parseFloat(inputs['systemCost']);
+                    const reuseCount = parseFloat(inputs['reuseCount']);
+                    const cleaningCost = parseFloat(inputs['cleaningCost']);
+                    
+                    const annualSystemCost = systemCost / 5; // Amortized over 5 years
+                    // Each unit is reused reuseCount times, so we need volume/reuseCount new units per year
+                    const newPackagingUnits = volume / reuseCount;
+                    const packagingProdCost = newPackagingUnits * unitCost;
+                    // Cleaning cost per use (each unit cleaned once per cycle, volume uses total)
+                    const totalCleaningCost = volume * cleaningCost;
+                    // Reverse logistics to collect reusable packaging
+                    const returnLogistics = volume * variableCostPerUnit * 0.3;
+                    // Loss/damage rate: ~8% of packaging stock needs replacing
+                    const lossRate = (volume / reuseCount) * unitCost * 0.08 * reuseCount;
+                    const reusableRevenue = volume * sellingPrice;
+                    // Standard product costs (the product inside the packaging)
+                    // Note: unitCost here includes packaging; savings are from packaging reuse
+                    // Realistic: packaging is typically 5-15% of unit cost
+                    const packagingShareOfCost = 0.10;
+                    const productCostExPackaging = volume * unitCost * (1 - packagingShareOfCost);
+                    const effectivePackagingCost = packagingProdCost * packagingShareOfCost;
+                    // Variable costs, reduced waste
+                    const reusableVariableCosts = volume * variableCostPerUnit * 0.85;
+                    const reusableWasteCosts = volume * wasteCostPerUnit * 0.3; // Major waste reduction
+                    const reusableWarranty = reusableRevenue * warrantyPercent;
+                    
+                    result.annualRevenue = reusableRevenue;
+                    result.annualProfit = reusableRevenue - productCostExPackaging - effectivePackagingCost
+                        - totalCleaningCost - returnLogistics - lossRate
+                        - annualSystemCost - reusableVariableCosts - reusableWasteCosts
+                        - reusableWarranty - totalFixedCosts;
+                    break;
+
+                case 'biodegradable':
+                    // Biodegradable materials: higher material costs, modest price premium, waste savings
+                    const materialPremium = parseFloat(inputs['materialPremium']) / 100;
+                    const marketPremium = parseFloat(inputs['marketPremium']) / 100;
+                    const wasteReduction = parseFloat(inputs['wasteReduction']) / 100;
+                    
+                    const biodegRevenue = volume * sellingPrice * (1 + marketPremium);
+                    const biodegCosts = volume * unitCost * (1 + materialPremium);
+                    const wasteCostPerUnitBio = parseFloat(document.getElementById('wasteCostPerUnit').value);
+                    const wasteSavings = volume * wasteCostPerUnitBio * wasteReduction;
+                    // Variable costs (may be slightly higher due to different materials handling)
+                    const biodegVariableCosts = volume * variableCostPerUnit * 1.05;
+                    const biodegWarranty = biodegRevenue * warrantyPercent;
+                    // Certification and compliance costs
+                    const certificationCosts = biodegRevenue * 0.02;
+                    
+                    result.annualRevenue = biodegRevenue;
+                    result.annualProfit = biodegRevenue - biodegCosts + wasteSavings
+                        - biodegVariableCosts - biodegWarranty - certificationCosts - totalFixedCosts;
+                    break;
+
+                case 'refill':
+                    // Refill stations: lower revenue per refill unit, savings on packaging
+                    const stationCost = parseFloat(inputs['stationCost']);
+                    const refillPrice = parseFloat(inputs['refillPrice']) / 100;
+                    const adoptionRate = parseFloat(inputs['adoptionRate']) / 100;
+                    
+                    const traditionalVolume = volume * (1 - adoptionRate);
+                    const refillVolume = volume * adoptionRate;
+                    const refillRevenue = (traditionalVolume * sellingPrice) + (refillVolume * sellingPrice * refillPrice);
+                    // Refill product costs (no packaging, but still need product): ~50% of packaged cost
+                    const refillProdCosts = (traditionalVolume * unitCost) + (refillVolume * unitCost * 0.50);
+                    const annualStationCost = stationCost / 5;
+                    // Station maintenance and hygiene
+                    const stationMaintenance = annualStationCost * 0.15;
+                    // Variable costs
+                    const refillVariableCosts = (traditionalVolume * variableCostPerUnit) + (refillVolume * variableCostPerUnit * 0.4);
+                    const refillWasteCosts = (traditionalVolume * wasteCostPerUnit) + (refillVolume * wasteCostPerUnit * 0.2);
+                    const refillWarranty = refillRevenue * warrantyPercent;
+                    
+                    result.annualRevenue = refillRevenue;
+                    result.annualProfit = refillRevenue - refillProdCosts - annualStationCost
+                        - stationMaintenance - refillVariableCosts - refillWasteCosts
+                        - refillWarranty - totalFixedCosts;
+                    break;
+
+                default:
+                    result.annualRevenue = volume * sellingPrice;
+                    result.annualProfit = result.annualRevenue * 0.15;
+            }
+
+            result.margin = (result.annualProfit / result.annualRevenue) * 100;
+            
+            // Multi-year projection with realistic cost scaling
+            const annualCosts = result.annualRevenue - result.annualProfit;
+            const fixedShareOfCosts = totalFixedCosts / Math.max(annualCosts, 1);
+            const variableShareOfCosts = 1 - fixedShareOfCosts;
+            const discountRate = parseFloat(document.getElementById('discountRate').value) / 100;
+            let npv = -totalInvestment;
+            let paybackYear = projectionYears + 1;
+            let cumulativeCashFlow = -totalInvestment;
+            
+            for (let year = 1; year <= projectionYears; year++) {
+                const yearRevenue = result.annualRevenue * Math.pow(1 + revenueGrowth, year - 1);
+                const yearVariableCosts = annualCosts * variableShareOfCosts * Math.pow(1 + revenueGrowth, year - 1);
+                const yearFixedCosts = annualCosts * fixedShareOfCosts * Math.pow(1 + costInflation, year - 1);
+                const yearProfit = yearRevenue - yearVariableCosts - yearFixedCosts;
+                result.totalRevenue += yearRevenue;
+                result.totalProfit += yearProfit;
+                
+                npv += yearProfit / Math.pow(1 + discountRate, year);
+                
+                cumulativeCashFlow += yearProfit;
+                if (cumulativeCashFlow >= 0 && paybackYear > projectionYears) {
+                    const prevCumulative = cumulativeCashFlow - yearProfit;
+                    paybackYear = year - 1 + Math.abs(prevCumulative) / yearProfit;
+                }
+            }
+            
+            result.annualROI = ((result.totalProfit / projectionYears) / totalInvestment) * 100;
+            result.npv = npv;
+            result.paybackYears = paybackYear;
+            
+            return result;
+        }
+
+        function generateLinearExplanation(data, volume, unitCost, sellingPrice) {
+            const fixedCosts = parseFloat(document.getElementById('fixedCosts').value);
+            const vc = parseFloat(document.getElementById('variableCostPerUnit').value);
+            const wc = parseFloat(document.getElementById('wasteCostPerUnit').value);
+            const wp = parseFloat(document.getElementById('warrantyPercent').value);
+            const f = (n) => '$' + Math.abs(n).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            const sector = document.getElementById('sector').value;
+            
+            const cogs = volume * unitCost;
+            const varCosts = volume * vc;
+            const wasteCosts = volume * wc;
+            const warranty = data.annualRevenue * (wp/100);
+            const totalCosts = cogs + fixedCosts + varCosts + wasteCosts + warranty;
+            
+            // Identify largest cost driver
+            const costItems = [
+                { name: 'Production (COGS)', val: cogs },
+                { name: 'Fixed costs', val: fixedCosts },
+                { name: 'Variable costs', val: varCosts },
+                { name: 'Waste disposal', val: wasteCosts },
+                { name: 'Warranty/repair', val: warranty }
+            ].sort((a, b) => b.val - a.val);
+            
+            const grossMargin = ((sellingPrice - unitCost) / sellingPrice * 100).toFixed(1);
+            const fixedCostPerUnit = (fixedCosts / volume).toFixed(2);
+            const breakEvenUnits = Math.ceil(fixedCosts / (sellingPrice - unitCost - vc - wc - sellingPrice * wp / 100));
+            
+            let out = `<strong>Revenue:</strong> ${volume.toLocaleString()} units × $${sellingPrice} = ${f(data.annualRevenue)}/year.`;
+            out += `<br><strong>Cost breakdown:</strong> `;
+            costItems.forEach((c, i) => {
+                const pct = (c.val / totalCosts * 100).toFixed(0);
+                out += `${c.name}: ${f(c.val)} (${pct}%)${i < costItems.length - 1 ? ', ' : '.'}`;
+            });
+            
+            out += `<br><strong>Unit economics:</strong> Gross margin $${(sellingPrice - unitCost).toFixed(0)}/unit (${grossMargin}%). After all costs, net margin is $${(data.annualProfit / volume).toFixed(2)}/unit. Fixed cost burden is $${fixedCostPerUnit}/unit.`;
+            
+            if (breakEvenUnits > 0 && breakEvenUnits < volume * 10) {
+                out += ` Break-even volume is ~${breakEvenUnits.toLocaleString()} units — you're ${volume > breakEvenUnits ? (volume / breakEvenUnits).toFixed(1) + '× above' : 'below'} break-even.`;
+            }
+            
+            // Diagnostic insight based on margin
+            out += `<br><strong>Assessment:</strong> `;
+            if (data.margin > 20) {
+                out += `Strong ${data.margin.toFixed(1)}% margin provides a solid baseline. Circular strategies need to beat this — focus on models that add revenue streams or significantly cut costs.`;
+            } else if (data.margin > 10) {
+                out += `A ${data.margin.toFixed(1)}% margin is workable but not exceptional. `;
+                if (cogs / totalCosts > 0.6) out += `Production costs dominate (${(cogs/totalCosts*100).toFixed(0)}% of total) — strategies that reduce material costs (recycling, remanufacturing) could help.`;
+                else if (fixedCosts / totalCosts > 0.3) out += `Fixed costs are a large share (${(fixedCosts/totalCosts*100).toFixed(0)}%) — higher volume or shared-utilization models could improve margins.`;
+                else out += `Costs are fairly balanced — look at strategies that either add premium pricing or create additional revenue streams.`;
+            } else if (data.margin > 0) {
+                out += `A thin ${data.margin.toFixed(1)}% margin is vulnerable. `;
+                const biggestCost = costItems[0];
+                out += `Your biggest cost driver is ${biggestCost.name} at ${f(biggestCost.val)} (${(biggestCost.val/totalCosts*100).toFixed(0)}% of total costs). A ${biggestCost.name === 'Production (COGS)' ? 'remanufacturing or recycled materials' : biggestCost.name === 'Fixed costs' ? 'service/leasing model to spread fixed costs across revenue' : biggestCost.name === 'Waste disposal' ? 'biodegradable or reusable packaging' : 'longevity or repair'} strategy could directly address this.`;
+            } else {
+                out += `This business loses ${f(Math.abs(data.annualProfit))}/year at current parameters. `;
+                if (sellingPrice <= unitCost) out += `Fundamental problem: selling price ($${sellingPrice}) doesn't even cover unit production cost ($${unitCost}). No circular strategy can fix this — pricing must increase or production costs must decrease.`;
+                else if (breakEvenUnits > volume) out += `You need ${breakEvenUnits.toLocaleString()} units to break even but only produce ${volume.toLocaleString()}. Either increase volume, reduce fixed costs (${f(fixedCosts)}), or find strategies that generate additional revenue from the same volume.`;
+                else out += `Review the cost structure — variable and overhead costs are consuming the gross margin.`;
+            }
+            
+            return out;
+        }
+
+        function generateCircularExplanation(strategy, data, linearData, volume, unitCost, sellingPrice, inputs) {
+            const f = (n) => '$' + Math.abs(n).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            const marginDiff = data.margin - linearData.margin;
+            const profitDiff = data.annualProfit - linearData.annualProfit;
+            const revDiff = data.annualRevenue - linearData.annualRevenue;
+            const fixedCosts = parseFloat(document.getElementById('fixedCosts').value);
+            const addlFixed = parseFloat(document.getElementById('additionalCircularFixed').value);
+            const totalCosts = data.annualRevenue - data.annualProfit;
+            const linearTotalCosts = linearData.annualRevenue - linearData.annualProfit;
+            const costDiff = totalCosts - linearTotalCosts;
+            
+            let explanation = '';
+            let diagnosis = '';
+            
+            switch(strategy) {
+                case 'service': {
+                    const fee = parseFloat(inputs['monthlyFee']);
+                    const contract = parseFloat(inputs['contractDuration']);
+                    const util = parseFloat(inputs['utilizationIncrease']);
+                    const serviceCust = volume * 0.5;
+                    const effUnits = Math.round(serviceCust / (1 + util/100));
+                    const lifetimeValue = fee * 12 * contract;
+                    const annualServiceRev = effUnits * fee * 12;
+                    const tradRev = serviceCust * sellingPrice;
+                    
+                    explanation = `<strong>How it works:</strong> 50% of customers (${serviceCust.toLocaleString()}) pay $${fee}/month instead of buying. The rest buy traditionally at $${sellingPrice}. Shared utilization (+${util}%) reduces the fleet to ${effUnits.toLocaleString()} units.`;
+                    explanation += `<br><strong>Revenue mix:</strong> Service fees ${f(annualServiceRev)}/year + traditional sales ${f(tradRev)} = ${f(data.annualRevenue)} total.`;
+                    explanation += `<br><strong>Key economics:</strong> Lifetime service value per customer is $${lifetimeValue.toLocaleString()} over ${contract} years vs $${sellingPrice} one-time. `;
+                    
+                    if (lifetimeValue < sellingPrice * 1.5) {
+                        diagnosis = `⚠️ Service lifetime value ($${lifetimeValue}) is only ${(lifetimeValue/sellingPrice).toFixed(1)}× the purchase price — barely enough to cover service overhead. Try increasing the monthly fee above $${Math.ceil(sellingPrice * 1.5 / 12 / contract)}/month for better economics.`;
+                    } else if (lifetimeValue > sellingPrice * 4) {
+                        diagnosis = `✅ Strong service economics — lifetime value ($${lifetimeValue}) is ${(lifetimeValue/sellingPrice).toFixed(1)}× the purchase price, providing healthy margins on the service portion.`;
+                    } else {
+                        diagnosis = `Service economics are reasonable — lifetime value ($${lifetimeValue}) is ${(lifetimeValue/sellingPrice).toFixed(1)}× the purchase price.`;
+                    }
+                    
+                    // What levers matter
+                    explanation += `<br><strong>What would improve this:</strong> `;
+                    if (profitDiff < 0) {
+                        const feeNeeded = Math.ceil((linearData.annualProfit - (tradRev - serviceCust*unitCost - (fixedCosts+addlFixed)) + totalCosts - annualServiceRev) / (effUnits * 12) + fee);
+                        explanation += `To match linear profitability, the monthly fee would need to be ~$${Math.max(feeNeeded, fee + 1)}/month (currently $${fee}), or increase the adoption rate, or reduce service overhead costs.`;
+                    } else {
+                        explanation += `The service model is already outperforming linear. Increasing adoption beyond 50% or raising the fee could further improve results, but watch for customer resistance.`;
+                    }
+                    break;
+                }
+                case 'rental': {
+                    const price = parseFloat(inputs['rentalPrice']);
+                    const util = parseFloat(inputs['utilization']);
+                    const refurb = parseFloat(inputs['refurbCost']);
+                    const turnsPerYear = 10;
+                    const fleetSize = Math.round(volume / (turnsPerYear * util/100));
+                    const annualRevPerUnit = price * 12 * (util/100);
+                    
+                    explanation = `<strong>How it works:</strong> A fleet of ~${fleetSize.toLocaleString()} units is rented at $${price}/month with ${util}% utilization target. Each unit generates ~${f(annualRevPerUnit)}/year in revenue.`;
+                    explanation += `<br><strong>Fleet economics:</strong> Fleet costs ${f(fleetSize * unitCost)} to build, depreciated over 3 years (${f(fleetSize * unitCost / 3)}/year). Each unit must generate at least $${(unitCost/3).toFixed(0)}/year just to cover depreciation.`;
+                    
+                    const revPerUnitVsCost = annualRevPerUnit / (unitCost / 3 + unitCost * refurb/100 * turnsPerYear * util/100);
+                    if (revPerUnitVsCost < 1.3) {
+                        diagnosis = `⚠️ Revenue-to-cost ratio per unit is only ${revPerUnitVsCost.toFixed(1)}× — very thin. Either raise rental price above $${Math.ceil(unitCost/3/12/(util/100) * 1.5)}/month, or improve utilization above ${util}%.`;
+                    } else {
+                        diagnosis = `Unit economics are workable at ${revPerUnitVsCost.toFixed(1)}× revenue-to-cost ratio.`;
+                    }
+                    
+                    const breakEvenUtil = Math.ceil(((unitCost/3 + (fixedCosts+addlFixed)/fleetSize) / (price * 12)) * 100);
+                    explanation += `<br><strong>Break-even utilization:</strong> ~${Math.min(breakEvenUtil, 99)}%. ${util > breakEvenUtil ? `You're ${(util - breakEvenUtil)}pp above — solid.` : `You're ${(breakEvenUtil - util)}pp below — the fleet loses money at current utilization.`}`;
+                    break;
+                }
+                case 'buyback': {
+                    const returnRate = parseFloat(inputs['returnRate']);
+                    const buybackPct = parseFloat(inputs['buybackPrice']);
+                    const resalePct = parseFloat(inputs['resalePrice']);
+                    const returned = Math.round(volume * returnRate / 100);
+                    const displaced = Math.round(returned * 0.5);
+                    const marginPerRefurb = sellingPrice * resalePct/100 - sellingPrice * buybackPct/100 - unitCost * parseFloat(document.getElementById('buybackRefurbFactor').value);
+                    const marginPerNew = sellingPrice - unitCost;
+                    
+                    explanation = `<strong>How it works:</strong> ${returned.toLocaleString()} units (${returnRate}%) are bought back at ${buybackPct}% of price ($${(sellingPrice*buybackPct/100).toFixed(0)}), refurbished, and resold at ${resalePct}% ($${(sellingPrice*resalePct/100).toFixed(0)}).`;
+                    explanation += `<br><strong>Per-unit margins:</strong> New unit: $${marginPerNew.toFixed(0)} margin. Refurbished unit: $${marginPerRefurb.toFixed(0)} margin. ${marginPerRefurb > marginPerNew ? 'Refurbished units are more profitable!' : marginPerRefurb > 0 ? 'Refurbished units are profitable but lower-margin than new.' : '⚠️ Refurbished units lose money — the buyback + refurb cost exceeds the resale price.'}`;
+                    explanation += `<br><strong>Cannibalization:</strong> ~${displaced.toLocaleString()} refurb sales displace new sales, so net volume is ${(volume - displaced).toLocaleString()} new + ${returned.toLocaleString()} refurbished.`;
+                    
+                    if (marginPerRefurb < 0) {
+                        const maxBuyback = Math.floor((sellingPrice * resalePct/100 - unitCost * parseFloat(document.getElementById('buybackRefurbFactor').value)) / sellingPrice * 100);
+                        diagnosis = `To make refurbishment profitable, reduce buyback price below ${maxBuyback}% (currently ${buybackPct}%) or increase resale price above ${Math.ceil((sellingPrice*buybackPct/100 + unitCost*parseFloat(document.getElementById('buybackRefurbFactor').value)) / sellingPrice * 100)}%.`;
+                    } else {
+                        const totalRefurbProfit = returned * marginPerRefurb;
+                        const lostNewProfit = displaced * marginPerNew;
+                        explanation += `<br><strong>Net impact:</strong> Refurb stream adds ${f(totalRefurbProfit)} but displaces ${f(lostNewProfit)} in new sales profit. Net: ${totalRefurbProfit > lostNewProfit ? '+' : ''}${f(totalRefurbProfit - lostNewProfit)}.`;
+                    }
+                    break;
+                }
+                case 'refurbishment': {
+                    const refurbCost = parseFloat(inputs['refurbCost']);
+                    const resale = parseFloat(inputs['resalePrice']);
+                    const processVol = parseFloat(inputs['processVolume']);
+                    const refurbUnits = Math.round(volume * processVol / 100);
+                    const marginPerRefurb = sellingPrice * resale/100 - unitCost * (refurbCost/100 + 0.10 + 0.05);
+                    const displaced = Math.round(refurbUnits * 0.4);
+                    
+                    explanation = `<strong>How it works:</strong> ${refurbUnits.toLocaleString()} used units (${processVol}% of volume) are refurbished at ${refurbCost}% of unit cost ($${(unitCost*refurbCost/100).toFixed(0)}) and sold at ${resale}% of new price ($${(sellingPrice*resale/100).toFixed(0)}).`;
+                    explanation += `<br><strong>Refurb unit economics:</strong> Revenue $${(sellingPrice*resale/100).toFixed(0)} - refurb cost $${(unitCost*refurbCost/100).toFixed(0)} - sourcing $${(unitCost*0.1).toFixed(0)} - QC $${(unitCost*0.05).toFixed(0)} = $${marginPerRefurb.toFixed(0)} margin per refurbished unit.`;
+                    explanation += `<br><strong>Cannibalization:</strong> ~${displaced.toLocaleString()} refurb sales displace new (40% rate), reducing new production to ${(volume-displaced).toLocaleString()} units.`;
+                    
+                    if (marginPerRefurb < 0) {
+                        diagnosis = `⚠️ Refurbishment loses $${Math.abs(marginPerRefurb).toFixed(0)}/unit. To fix: increase resale price above ${Math.ceil((unitCost*(refurbCost/100+0.15))/sellingPrice*100)}% or reduce refurb cost below ${Math.floor((sellingPrice*resale/100 - unitCost*0.15)/unitCost*100)}%.`;
+                    } else {
+                        const spreadPct = ((sellingPrice*resale/100 - unitCost*(refurbCost/100+0.15)) / (sellingPrice*resale/100) * 100).toFixed(0);
+                        diagnosis = `Refurb margin is ${spreadPct}% — ${parseInt(spreadPct) > 40 ? 'strong economics' : parseInt(spreadPct) > 20 ? 'workable but watch for quality cost overruns' : 'thin — any increase in refurb costs could erase the margin'}.`;
+                    }
+                    break;
+                }
+                case 'repair': {
+                    const repairPrice = parseFloat(inputs['repairPrice']);
+                    const repairFreq = parseFloat(inputs['repairFrequency']);
+                    const extLife = parseFloat(inputs['extendedLife']);
+                    const instBase = Math.round(volume * 1.5);
+                    const repairRev = instBase * repairFreq * repairPrice;
+                    const repairCosts = repairRev * (0.45 + 0.25 + 0.10);
+                    const repairMargin = repairRev - repairCosts;
+                    
+                    const sectorLifeMap = { electronics: 4, fashion: 2, furniture: 10, automotive: 8, packaging: 1 };
+                    const sectorVal = document.getElementById('sector').value;
+                    const baseLife = sectorLifeMap[sectorVal] || 5;
+                    const cannibUnits = Math.round(volume * (extLife / (extLife + baseLife)) * 0.15);
+                    const lostRevenue = cannibUnits * sellingPrice;
+                    const steadyStateLoss = Math.round(volume * extLife / (extLife + baseLife));
+                    
+                    explanation = `<strong>How it works:</strong> Base product sales continue, plus a paid repair service. An installed base of ~${instBase.toLocaleString()} units (estimated at 1.5× annual volume as the base builds over time) generates recurring repair revenue.`;
+                    explanation += `<br><strong>Repair stream (annual):</strong> ${instBase.toLocaleString()} units × ${repairFreq} repairs/year × $${repairPrice}/repair = ${f(repairRev)}/year. After labor (45%), parts (25%), and overhead (10%), the repair margin is ${f(repairMargin)}/year (${(repairMargin/repairRev*100).toFixed(0)}% of repair revenue).`;
+                    explanation += `<br><strong>Cannibalization (annual):</strong> Extending product life by ${extLife} years (from ~${baseLife} to ~${baseLife + extLife} years for ${sectorVal || 'this sector'}) means fewer customers need replacements each year. The model estimates ~${cannibUnits.toLocaleString()} fewer new unit sales per year (${f(lostRevenue)} lost annual revenue). This is a conservative early-years average — at full steady state the reduction would be ~${steadyStateLoss.toLocaleString()} units/year, but it takes several years to reach that level.`;
+                    
+                    if (repairMargin > lostRevenue) {
+                        diagnosis = `✅ Annual repair profits (${f(repairMargin)}) more than compensate for lost annual new sales (${f(lostRevenue)}). Net annual gain: ${f(repairMargin - lostRevenue)}.`;
+                    } else {
+                        const neededPrice = Math.ceil((lostRevenue / (instBase * repairFreq)) / 0.2);
+                        diagnosis = `⚠️ Annual repair profits (${f(repairMargin)}) don't fully offset lost annual sales (${f(lostRevenue)}). To improve: raise repair price to ~$${neededPrice} or increase repair frequency (e.g. offer maintenance contracts).`;
+                    }
+                    
+                    if (repairPrice < unitCost * 0.3) {
+                        explanation += `<br><strong>Pricing note:</strong> Repair price ($${repairPrice}) is only ${(repairPrice/unitCost*100).toFixed(0)}% of unit cost — ensure this covers parts + labor. Typical repair pricing is 30-60% of unit cost.`;
+                    }
+                    break;
+                }
+                case 'leasing': {
+                    const leaseRate = parseFloat(inputs['leaseRate']);
+                    const leaseTerm = parseFloat(inputs['leaseTerm']);
+                    const residual = parseFloat(inputs['residualValue']);
+                    const newPerYr = Math.round(volume / leaseTerm);
+                    const annualLeaseRev = volume * sellingPrice * leaseRate / 100;
+                    const residualRev = newPerYr * sellingPrice * residual / 100 * 0.80;
+                    const lifetimeLeaseRev = sellingPrice * leaseRate / 100 * leaseTerm;
+                    const prodCostPerYr = newPerYr * unitCost;
+                    
+                    explanation = `<strong>How it works:</strong> ${volume.toLocaleString()} units leased at ${leaseRate}% of price ($${(sellingPrice*leaseRate/100).toFixed(0)}/year). ${newPerYr.toLocaleString()} units replaced annually (${leaseTerm}-year cycle). Returned units resold at ${residual}% residual.`;
+                    explanation += `<br><strong>Revenue:</strong> Lease payments ${f(annualLeaseRev)} + residual sales ${f(residualRev)} = ${f(data.annualRevenue)}.`;
+                    explanation += `<br><strong>Lifetime value:</strong> Each unit generates $${lifetimeLeaseRev.toFixed(0)} over ${leaseTerm} years + ~$${(sellingPrice*residual/100*0.8).toFixed(0)} residual = $${(lifetimeLeaseRev + sellingPrice*residual/100*0.8).toFixed(0)} total vs $${sellingPrice} outright sale.`;
+                    
+                    const lifetimeTotal = lifetimeLeaseRev + sellingPrice * residual/100 * 0.8;
+                    if (lifetimeTotal < unitCost * 1.3) {
+                        diagnosis = `⚠️ Lifetime revenue per unit ($${lifetimeTotal.toFixed(0)}) barely exceeds production cost ($${unitCost}). Leasing economics need either a higher lease rate (try ${Math.ceil(unitCost*1.5/sellingPrice/leaseTerm*100)}%+), longer term, or this product may be too low-value for leasing.`;
+                    } else if (lifetimeTotal > sellingPrice * 1.5) {
+                        diagnosis = `✅ Strong leasing economics — lifetime value ($${lifetimeTotal.toFixed(0)}) is ${(lifetimeTotal/sellingPrice).toFixed(1)}× the purchase price.`;
+                    } else {
+                        diagnosis = `Leasing economics are marginal. Lifetime value $${lifetimeTotal.toFixed(0)} vs production cost $${unitCost} leaves ${(((lifetimeTotal-unitCost)/unitCost)*100).toFixed(0)}% for overhead + profit.`;
+                    }
+                    
+                    if (sellingPrice < 200) {
+                        explanation += `<br><strong>Product fit:</strong> At a $${sellingPrice} price point, leasing is unusual — it works best for products above $500 where monthly payments are more attractive to customers.`;
+                    }
+                    break;
+                }
+                case 'remanufacturing': {
+                    const coreAcq = parseFloat(inputs['coreAcquisition']);
+                    const procCost = parseFloat(inputs['processCost']);
+                    const saleP = parseFloat(inputs['salePrice']);
+                    const remanVol = Math.round(volume * 0.3);
+                    const newVol = Math.round(volume * 0.7);
+                    const remanUnitCost = unitCost * (coreAcq/100 + procCost/100 + 0.03);
+                    const remanUnitRev = sellingPrice * saleP / 100;
+                    const remanMarginPerUnit = remanUnitRev - remanUnitCost;
+                    const newMarginPerUnit = sellingPrice - unitCost;
+                    const savingsVsNew = unitCost - remanUnitCost;
+                    
+                    explanation = `<strong>How it works:</strong> ${remanVol.toLocaleString()} units (30%) are remanufactured from used cores; ${newVol.toLocaleString()} (70%) are new production.`;
+                    explanation += `<br><strong>Per-unit comparison:</strong> New: cost $${unitCost} → sell $${sellingPrice} = $${newMarginPerUnit.toFixed(0)} margin. Reman: cost $${remanUnitCost.toFixed(0)} (core ${coreAcq}% + process ${procCost}% + QC 3%) → sell $${remanUnitRev.toFixed(0)} (${saleP}% of new) = $${remanMarginPerUnit.toFixed(0)} margin.`;
+                    
+                    if (remanMarginPerUnit > newMarginPerUnit) {
+                        diagnosis = `✅ Reman units are MORE profitable ($${remanMarginPerUnit.toFixed(0)}) than new ($${newMarginPerUnit.toFixed(0)}) — consider increasing the reman share above 30%.`;
+                    } else if (remanMarginPerUnit > 0) {
+                        const marginGap = newMarginPerUnit - remanMarginPerUnit;
+                        diagnosis = `Reman units are profitable but $${marginGap.toFixed(0)}/unit less than new. The total savings of ${f(savingsVsNew * remanVol)} on production costs ${savingsVsNew > 0 ? 'helps' : 'doesn\'t'} offset the lower selling price.`;
+                    } else {
+                        const maxProcCost = Math.floor((remanUnitRev - unitCost * coreAcq/100 - unitCost * 0.03) / unitCost * 100);
+                        diagnosis = `⚠️ Reman units lose $${Math.abs(remanMarginPerUnit).toFixed(0)}/unit. Reduce processing cost below ${maxProcCost}% (currently ${procCost}%) or raise reman sale price above ${Math.ceil(remanUnitCost/sellingPrice*100)}%.`;
+                    }
+                    break;
+                }
+                case 'recycling': {
+                    const collCost = parseFloat(inputs['collectionCost']);
+                    const recovery = parseFloat(inputs['recoveryRate']);
+                    const matValue = parseFloat(inputs['materialValue']);
+                    const rbf = parseFloat(document.getElementById('recyclingBaseFactor').value);
+                    const rvf = parseFloat(document.getElementById('recyclingValueFactor').value);
+                    const rpc = parseFloat(document.getElementById('recyclingProcessCost').value);
+                    const rcr = parseFloat(document.getElementById('recyclingCostReduction').value);
+                    const recycledUnits = Math.round(volume * rbf);
+                    const recoveryValue = recycledUnits * unitCost * rvf * recovery/100 * matValue/100;
+                    const recyclingCosts = recycledUnits * (collCost + rpc);
+                    const netRecycling = recoveryValue - recyclingCosts;
+                    const prodSavings = volume * unitCost * (1 - rcr);
+                    
+                    explanation = `<strong>How it works:</strong> ${recycledUnits.toLocaleString()} units collected and processed. Material recovery: ${f(recoveryValue)} value, minus collection + processing costs of ${f(recyclingCosts)}.`;
+                    explanation += `<br><strong>Net recycling impact:</strong> ${netRecycling >= 0 ? 'Positive' : 'Negative'} ${f(Math.abs(netRecycling))}/year. Production cost savings from recycled materials: ${f(prodSavings)}.`;
+                    
+                    if (netRecycling < 0) {
+                        const breakEvenCollection = Math.floor((recoveryValue / recycledUnits) - rpc);
+                        diagnosis = `⚠️ Recycling costs ${f(Math.abs(netRecycling))} more than the recovered material value. Collection cost must drop below $${Math.max(0, breakEvenCollection).toFixed(0)}/unit (currently $${collCost}) to break even on material recovery alone.`;
+                    } else {
+                        diagnosis = `Material recovery generates a net positive of ${f(netRecycling)}. Combined with ${f(prodSavings)} in production savings, the total benefit is ${f(netRecycling + prodSavings)}/year.`;
+                    }
+                    explanation += `<br><strong>Reality check:</strong> Recycling is primarily a cost-reduction and sustainability strategy, not a profit driver. Its main value is waste cost reduction (${(rbf*50).toFixed(0)}% lower) and brand/regulatory positioning.`;
+                    break;
+                }
+                case 'longevity': {
+                    const costInc = parseFloat(inputs['costIncrease']);
+                    const priceInc = parseFloat(inputs['priceIncrease']);
+                    const lifeExt = parseFloat(inputs['lifeExtension']);
+                    const volFactor = 1 / (1 + (lifeExt - 1) * 0.4);
+                    const adjVol = Math.round(volume * volFactor);
+                    const newUnitCost = unitCost * (1 + costInc/100);
+                    const newUnitPrice = sellingPrice * (1 + priceInc/100);
+                    const newMarginPerUnit = newUnitPrice - newUnitCost;
+                    const oldMarginPerUnit = sellingPrice - unitCost;
+                    const sectorLifeMap2 = { electronics: 4, fashion: 2, furniture: 10, automotive: 8, packaging: 1 };
+                    const sectorVal2 = document.getElementById('sector').value;
+                    const baseLife2 = sectorLifeMap2[sectorVal2] || 5;
+                    
+                    explanation = `<strong>How it works:</strong> Products are designed to last ${lifeExt}× longer (from ~${baseLife2} to ~${(baseLife2*lifeExt).toFixed(0)} years for ${sectorVal2 || 'this sector'}). Cost per unit rises ${costInc}% ($${unitCost} → $${newUnitCost.toFixed(0)}), price rises ${priceInc}% ($${sellingPrice} → $${newUnitPrice.toFixed(0)}). Annual volume drops to ~${adjVol.toLocaleString()} (${(volFactor*100).toFixed(0)}% of original) as customers need replacements less often.`;
+                    explanation += `<br><strong>Per-unit improvement:</strong> Margin goes from $${oldMarginPerUnit.toFixed(0)} to $${newMarginPerUnit.toFixed(0)}/unit (${newMarginPerUnit > oldMarginPerUnit ? '+' : ''}$${(newMarginPerUnit-oldMarginPerUnit).toFixed(0)}).`;
+                    
+                    const totalOldMargin = volume * oldMarginPerUnit;
+                    const totalNewMargin = adjVol * newMarginPerUnit;
+                    explanation += `<br><strong>Total annual margin:</strong> ${volume.toLocaleString()} × $${oldMarginPerUnit.toFixed(0)} = ${f(totalOldMargin)} (linear) vs ${adjVol.toLocaleString()} × $${newMarginPerUnit.toFixed(0)} = ${f(totalNewMargin)} (longevity). ${totalNewMargin > totalOldMargin ? 'Higher per-unit margin overcomes the volume drop.' : 'Volume reduction outweighs the per-unit improvement.'}`;
+                    
+                    if (priceInc <= costInc) {
+                        diagnosis = `⚠️ Price premium (${priceInc}%) is at or below cost increase (${costInc}%) — you're absorbing the quality investment without recovering it. Price premium should be at least ${costInc + 5}% to justify the approach.`;
+                    } else if (totalNewMargin < totalOldMargin) {
+                        const neededPremium = Math.ceil(((volume * oldMarginPerUnit / adjVol) + newUnitCost - sellingPrice) / sellingPrice * 100);
+                        diagnosis = `Volume drop erases the margin gain. To match linear profit, you'd need a ${neededPremium}% price premium (currently ${priceInc}%), or the product life extension effect on volume needs to be less severe.`;
+                    } else {
+                        diagnosis = `✅ The ${priceInc}% premium more than compensates for ${costInc}% higher costs and ${(100-volFactor*100).toFixed(0)}% volume reduction.`;
+                    }
+                    break;
+                }
+                case 'modular': {
+                    const modCost = parseFloat(inputs['moduleCost']);
+                    const upgFreq = parseFloat(inputs['upgradeFrequency']);
+                    const pricePrem = parseFloat(inputs['pricePremium']);
+                    const effVol = Math.round(volume * 0.85);
+                    const baseRev = effVol * sellingPrice * (1 + pricePrem/100);
+                    const moduleRev = effVol * (upgFreq/5) * sellingPrice * modCost/100;
+                    const moduleProfit = moduleRev * (1 - 0.65 - 0.08);
+                    
+                    explanation = `<strong>How it works:</strong> Modular products sell at ${pricePrem}% premium ($${(sellingPrice*(1+pricePrem/100)).toFixed(0)}). Customers buy ~${upgFreq} module upgrades per product life (${(upgFreq/5).toFixed(1)}/year from installed base). Volume is ~${effVol.toLocaleString()} (15% cannibalization from longer life).`;
+                    explanation += `<br><strong>Revenue streams:</strong> Base sales ${f(baseRev)} + module upgrades ${f(moduleRev)} = ${f(baseRev + moduleRev)}.`;
+                    explanation += `<br><strong>Module economics:</strong> Each upgrade averages $${(sellingPrice*modCost/100).toFixed(0)} revenue, with 65% manufacturing + 8% inventory cost = ~27% margin on modules (${f(moduleProfit)}/year total).`;
+                    
+                    if (moduleRev < baseRev * 0.05) {
+                        diagnosis = `Module revenue (${f(moduleRev)}) is tiny compared to base sales — only ${(moduleRev/baseRev*100).toFixed(1)}%. Consider whether the 15% higher production cost and design complexity are justified for such a small secondary stream.`;
+                    } else {
+                        diagnosis = `Module upgrades add ${(moduleRev/baseRev*100).toFixed(0)}% on top of base revenue. ${moduleProfit > 0 ? 'The module stream is profitable and creates ongoing customer relationships.' : 'But module margins are thin after manufacturing and inventory costs.'}`;
+                    }
+                    break;
+                }
+                case 'reusable': {
+                    const reuses = parseFloat(inputs['reuseCount']);
+                    const cleanCost = parseFloat(inputs['cleaningCost']);
+                    const sysCost = parseFloat(inputs['systemCost']);
+                    const packagingShare = 0.10;
+                    const annualSysCost = sysCost / 5;
+                    const cleaningTotal = volume * cleanCost;
+                    const packagingSavings = volume * unitCost * packagingShare * (1 - 1/reuses);
+                    const logisticsCost = volume * parseFloat(document.getElementById('variableCostPerUnit').value) * 0.3;
+                    
+                    explanation = `<strong>How it works:</strong> Packaging (est. ${(packagingShare*100).toFixed(0)}% of unit cost = $${(unitCost*packagingShare).toFixed(2)}/unit) is reused ${reuses} times. System cost $${sysCost.toLocaleString()} amortized over 5 years = ${f(annualSysCost)}/year.`;
+                    explanation += `<br><strong>Savings:</strong> Packaging cost per use drops from $${(unitCost*packagingShare).toFixed(2)} to $${(unitCost*packagingShare/reuses).toFixed(2)} = ${f(packagingSavings)}/year savings.`;
+                    explanation += `<br><strong>New costs:</strong> Cleaning ${f(cleaningTotal)}, return logistics ${f(logisticsCost)}, system amortization ${f(annualSysCost)}.`;
+                    
+                    const netBenefit = packagingSavings - cleaningTotal - logisticsCost - annualSysCost;
+                    if (netBenefit < 0) {
+                        diagnosis = `⚠️ The new costs (${f(cleaningTotal + logisticsCost + annualSysCost)}) exceed packaging savings (${f(packagingSavings)}). This often happens when packaging is a small share of product cost. Reusable systems work best when packaging is expensive (>15% of unit cost) or regulatory pressure makes waste costly.`;
+                    } else {
+                        diagnosis = `Net annual benefit: ${f(netBenefit)}. Waste costs also drop ~70%, adding environmental and compliance value beyond the financial impact.`;
+                    }
+                    break;
+                }
+                case 'biodegradable': {
+                    const matPrem = parseFloat(inputs['materialPremium']);
+                    const mktPrem = parseFloat(inputs['marketPremium']);
+                    const wasteRed = parseFloat(inputs['wasteReduction']);
+                    const addedMatCost = volume * unitCost * matPrem / 100;
+                    const addedRevenue = volume * sellingPrice * mktPrem / 100;
+                    const wasteSavings = volume * parseFloat(document.getElementById('wasteCostPerUnit').value) * wasteRed / 100;
+                    
+                    explanation = `<strong>How it works:</strong> Biodegradable materials cost ${matPrem}% more (+${f(addedMatCost)}/year) but command ${mktPrem}% price premium (+${f(addedRevenue)}/year). Waste costs drop ${wasteRed}% (saving ${f(wasteSavings)}/year).`;
+                    explanation += `<br><strong>Net equation:</strong> Extra revenue ${f(addedRevenue)} + waste savings ${f(wasteSavings)} - extra material cost ${f(addedMatCost)} - certification costs ${f(data.annualRevenue * 0.02)} = ${f(addedRevenue + wasteSavings - addedMatCost - data.annualRevenue * 0.02)} net impact.`;
+                    
+                    if (mktPrem < matPrem * 0.7) {
+                        diagnosis = `⚠️ The market premium (${mktPrem}%) doesn't sufficiently offset the material cost increase (${matPrem}%). You need either a higher eco-premium (${Math.ceil(matPrem*0.8)}%+) or significant waste cost savings to justify the switch.`;
+                    } else {
+                        diagnosis = `The price premium and waste savings ${addedRevenue + wasteSavings > addedMatCost ? 'outweigh' : 'don\'t fully cover'} the higher material costs. ${wasteRed > 50 ? 'Substantial waste reduction (' + wasteRed + '%) is a key driver.' : 'Consider whether waste reduction could be higher.'}`;
+                    }
+                    break;
+                }
+                case 'refill': {
+                    const adoption = parseFloat(inputs['adoptionRate']);
+                    const refillPct = parseFloat(inputs['refillPrice']);
+                    const stCost = parseFloat(inputs['stationCost']);
+                    const refillVol = Math.round(volume * adoption / 100);
+                    const tradVol = volume - refillVol;
+                    const revLoss = refillVol * sellingPrice * (1 - refillPct/100);
+                    const prodSavings = refillVol * unitCost * 0.50;
+                    const varSavings = refillVol * parseFloat(document.getElementById('variableCostPerUnit').value) * 0.6;
+                    
+                    explanation = `<strong>How it works:</strong> ${adoption}% of sales (${refillVol.toLocaleString()} units) move to refill stations at ${refillPct}% of packaged price. Revenue drops ${f(revLoss)}/year on refill portion, but production costs fall 50% (saving ${f(prodSavings)}).`;
+                    explanation += `<br><strong>Infrastructure:</strong> Stations cost $${stCost.toLocaleString()}, amortized = ${f(stCost/5)}/year + maintenance. Variable and waste costs on refills drop 60% and 80% respectively.`;
+                    
+                    const netImpact = prodSavings + varSavings - revLoss - stCost/5;
+                    if (netImpact < 0) {
+                        const breakEvenAdoption = Math.ceil((stCost/5) / (unitCost * 0.5 - sellingPrice * (1-refillPct/100)) * 100 / volume * 100);
+                        diagnosis = `⚠️ Revenue loss (${f(revLoss)}) exceeds cost savings (${f(prodSavings + varSavings)}). ${refillPct < 80 ? `Raising refill price closer to packaged price (e.g. ${Math.min(90, Math.round(refillPct + 10))}%) would help.` : `At ${refillPct}% price retention, the issue is station costs — need higher adoption to spread fixed costs.`}`;
+                    } else {
+                        diagnosis = `✅ Cost savings (${f(prodSavings + varSavings)}) exceed revenue reduction (${f(revLoss)}). Higher adoption would amplify this, though watch for station capacity limits.`;
+                    }
+                    break;
+                }
+                default:
+                    explanation = 'No detailed explanation available for this strategy.';
+            }
+            
+            if (diagnosis) {
+                explanation += `<br><br><strong>🔍 Diagnosis:</strong> ${diagnosis}`;
+            }
+            
+            // Comparative summary
+            explanation += `<br><br><strong>${profitDiff >= 0 ? '📈' : '📉'} vs Linear:</strong> `;
+            if (Math.abs(profitDiff) < linearData.annualProfit * 0.03) {
+                explanation += `Roughly equal profitability (within 3%). The choice comes down to strategic factors — sustainability positioning, customer relationships, and long-term resilience — rather than short-term financial gain.`;
+            } else if (profitDiff > 0) {
+                explanation += `${f(profitDiff)} more annual profit (${marginDiff > 0 ? '+' : ''}${marginDiff.toFixed(1)}pp margin). `;
+                if (revDiff > 0 && costDiff > 0) explanation += `Both revenue (+${f(revDiff)}) and costs (+${f(costDiff)}) are higher, but revenue gains win.`;
+                else if (revDiff <= 0) explanation += `Revenue is ${f(Math.abs(revDiff))} lower, but costs are ${f(Math.abs(costDiff))} lower — better cost efficiency drives the improvement.`;
+                else explanation += `Revenue is higher (+${f(revDiff)}) with well-controlled costs.`;
+            } else {
+                explanation += `${f(Math.abs(profitDiff))} less annual profit (${marginDiff.toFixed(1)}pp margin). `;
+                if (costDiff > Math.abs(revDiff)) explanation += `The main drag is higher costs (+${f(costDiff)}) — the circular overhead (additional fixed costs, ops, logistics) is significant at this scale.`;
+                else if (revDiff < 0) explanation += `Lower revenue (${f(Math.abs(revDiff))}) is the primary issue${costDiff > 0 ? ', compounded by higher costs.' : '.'}`;
+                else explanation += `Despite higher revenue, the additional operational costs consume the gains.`;
+            }
+            
+            return explanation;
+        }
+
+        function calculateBusinessCase(isManual) {
+            const volume = parseFloat(document.getElementById('volume').value);
+            const unitCost = parseFloat(document.getElementById('unitCost').value);
+            const sellingPrice = parseFloat(document.getElementById('sellingPrice').value);
+            const strategy1 = document.getElementById('strategy1').value;
+            const strategy2 = document.getElementById('strategy2').value;
+            
+            if (!strategy1 || !strategy2) {
+                if (isManual) alert('Please select both circular strategies');
+                return;
+            }
+            
+            if (strategy1 === strategy2) {
+                if (isManual) alert('Please select two different circular strategies to compare');
+                return;
+            }
+            
+            // Get strategy inputs
+            const inputs1 = {};
+            const inputs2 = {};
+            
+            (strategyInputs[strategy1] || []).forEach(input => {
+                inputs1[input.id] = document.getElementById(`1_${input.id}`).value;
+            });
+            
+            (strategyInputs[strategy2] || []).forEach(input => {
+                inputs2[input.id] = document.getElementById(`2_${input.id}`).value;
+            });
+            
+            // Calculate results
+            const linear = calculateLinearModel(volume, unitCost, sellingPrice);
+            const circular1 = calculateCircularModel(strategy1, volume, unitCost, sellingPrice, inputs1, 1);
+            const circular2 = calculateCircularModel(strategy2, volume, unitCost, sellingPrice, inputs2, 2);
+            
+            // Display results
+            displayResults(linear, circular1, circular2, strategy1, strategy2);
+        }
+
+        function displayResults(linear, circular1, circular2, strategy1Name, strategy2Name) {
+            const grid = document.getElementById('comparisonGrid');
+            const summary = document.getElementById('summary');
+            const projectionYears = linear.projectionYears;
+            
+            const formatCurrency = (num) => {
+                const sign = num < 0 ? '-' : '';
+                return sign + '$' + Math.abs(num).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            };
+            const formatPercent = (num) => num.toFixed(1) + '%';
+            const formatPayback = (years, maxYears) => {
+                if (years > maxYears) return 'Not recovered';
+                return years.toFixed(1) + ' years';
+            };
+            
+            const userDiscountRate = parseFloat(document.getElementById('discountRate').value);
+            
+            function buildCard(title, emoji, cssClass, data, explanationHtml, cardId) {
+                return `
+                <div class="model-card ${cssClass}">
+                    <div class="model-title">${emoji} ${title}</div>
+                    <div class="metric">
+                        <span class="metric-name">Annual Revenue</span>
+                        <span class="metric-value">${formatCurrency(data.annualRevenue)}</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-name">Annual Profit</span>
+                        <span class="metric-value" style="color: ${data.annualProfit >= 0 ? '#27ae60' : '#e74c3c'}">${formatCurrency(data.annualProfit)}</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-name">Profit Margin</span>
+                        <span class="metric-value">${formatPercent(data.margin)}</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-name">${projectionYears}-Year Profit</span>
+                        <span class="metric-value">${formatCurrency(data.totalProfit)}</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-name">Annual ROI</span>
+                        <span class="metric-value">${formatPercent(data.annualROI)}</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-name">NPV (${formatPercent(userDiscountRate)} discount)</span>
+                        <span class="metric-value" style="color: ${data.npv >= 0 ? '#27ae60' : '#e74c3c'}">${formatCurrency(data.npv)}</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-name">Payback Period</span>
+                        <span class="metric-value">${formatPayback(data.paybackYears, projectionYears)}</span>
+                    </div>
+                    <button class="explanation-toggle" onclick="toggleExplanation('${cardId}')">Why these numbers?</button>
+                    <div class="explanation-content" id="explain_${cardId}">${explanationHtml}</div>
+                </div>`;
+            }
+            
+            // Generate explanations
+            const volume = parseFloat(document.getElementById('volume').value);
+            const unitCost = parseFloat(document.getElementById('unitCost').value);
+            const sellingPrice = parseFloat(document.getElementById('sellingPrice').value);
+            
+            const linearExplanation = generateLinearExplanation(linear, volume, unitCost, sellingPrice);
+            
+            const inputs1 = {};
+            const inputs2 = {};
+            (strategyInputs[strategy1Name] || []).forEach(input => {
+                inputs1[input.id] = document.getElementById(`1_${input.id}`).value;
+            });
+            (strategyInputs[strategy2Name] || []).forEach(input => {
+                inputs2[input.id] = document.getElementById(`2_${input.id}`).value;
+            });
+            
+            const circ1Explanation = generateCircularExplanation(strategy1Name, circular1, linear, volume, unitCost, sellingPrice, inputs1);
+            const circ2Explanation = generateCircularExplanation(strategy2Name, circular2, linear, volume, unitCost, sellingPrice, inputs2);
+            
+            grid.innerHTML = 
+                buildCard('Linear Model', '📦', 'linear', linear, linearExplanation, 'linear') +
+                buildCard(strategy1Name.charAt(0).toUpperCase() + strategy1Name.slice(1), '♻️', 'circular-1', circular1, circ1Explanation, 'circ1') +
+                buildCard(strategy2Name.charAt(0).toUpperCase() + strategy2Name.slice(1), '🔄', 'circular-2', circular2, circ2Explanation, 'circ2');
+            
+            // Determine best performer
+            const models = [
+                { name: 'Linear', data: linear },
+                { name: strategy1Name.charAt(0).toUpperCase() + strategy1Name.slice(1), data: circular1 },
+                { name: strategy2Name.charAt(0).toUpperCase() + strategy2Name.slice(1), data: circular2 }
+            ];
+            
+            const bestByNPV = models.sort((a, b) => b.data.npv - a.data.npv)[0];
+            
+            const improvement1 = ((circular1.totalProfit - linear.totalProfit) / Math.abs(linear.totalProfit)) * 100;
+            const improvement2 = ((circular2.totalProfit - linear.totalProfit) / Math.abs(linear.totalProfit)) * 100;
+            
+            const investmentValue = parseFloat(document.getElementById('initialInvestment').value);
+            const circInv1 = parseFloat(document.getElementById('circularInvestment1').value) || 0;
+            const circInv2 = parseFloat(document.getElementById('circularInvestment2').value) || 0;
+            const suggestedLow = linear.annualRevenue * 1;
+            const suggestedHigh = linear.annualRevenue * 3;
+            const s1Name = strategy1Name.charAt(0).toUpperCase() + strategy1Name.slice(1);
+            const s2Name = strategy2Name.charAt(0).toUpperCase() + strategy2Name.slice(1);
+            
+            summary.innerHTML = `
+                <h3>📊 Analysis Summary</h3>
+                <p><strong>Best NPV Model:</strong> ${bestByNPV.name} with NPV of ${formatCurrency(bestByNPV.data.npv)}</p>
+                <p><strong>${s1Name}:</strong> ${improvement1 > 0 ? '+' : ''}${formatPercent(improvement1)} profit vs Linear | Investment: ${formatCurrency(investmentValue + circInv1)} | Payback: ${formatPayback(circular1.paybackYears, projectionYears)}</p>
+                <p><strong>${s2Name}:</strong> ${improvement2 > 0 ? '+' : ''}${formatPercent(improvement2)} profit vs Linear | Investment: ${formatCurrency(investmentValue + circInv2)} | Payback: ${formatPayback(circular2.paybackYears, projectionYears)}</p>
+                <p style="margin-top: 15px;">💡 <em>Annual ROI = average yearly profit ÷ total investment. NPV discounts future cash flows at ${formatPercent(userDiscountRate)} to present value. Payback = years to recover the total investment (base + strategy-specific).</em></p>
+                <p style="margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.3);">⚠️ <em><strong>Sensitivity note:</strong> NPV, ROI, and Payback are highly sensitive to investment amounts. Current base business investment: ${formatCurrency(investmentValue)} (set to $0 if evaluating a circular transition for an existing business). Strategy-specific investments: ${formatCurrency(circInv1)} for ${s1Name}, ${formatCurrency(circInv2)} for ${s2Name}. For a new venture generating ${formatCurrency(linear.annualRevenue)}/year, a typical base investment is ${formatCurrency(suggestedLow)} – ${formatCurrency(suggestedHigh)} (1–3× revenue). Try adjusting these values and the discount rate (currently ${formatPercent(userDiscountRate)}) to test sensitivity.</em></p>
+            `;
+            
+            document.getElementById('results').style.display = 'block';
+        }
+        
+        function toggleExplanation(cardId) {
+            const el = document.getElementById('explain_' + cardId);
+            el.classList.toggle('open');
+            const btn = el.previousElementSibling;
+            btn.textContent = el.classList.contains('open') ? 'Hide explanation' : 'Why these numbers?';
+        }
+        
+        // Initialize auto-recalculate listeners
+        setupAutoRecalculate();
+    </script>
+</body>
+</html>

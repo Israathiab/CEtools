@@ -1,0 +1,1522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CIRCit Circular Strategy Explorer - Advanced v2.0</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--primary-gradient);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .version-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+        
+        .input-section {
+            padding: 40px;
+            background: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+        }
+        
+        .section-title {
+            font-size: 1.3em;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        .input-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .input-group label {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .tooltip {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            background: #6c757d;
+            color: white;
+            border-radius: 50%;
+            font-size: 0.75em;
+            text-align: center;
+            line-height: 16px;
+            cursor: help;
+            position: relative;
+        }
+        
+        .tooltip:hover::after {
+            content: attr(data-tip);
+            position: absolute;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 5px;
+            white-space: nowrap;
+            z-index: 1000;
+            font-size: 0.9rem;
+            max-width: 300px;
+            white-space: normal;
+        }
+        
+        .input-group input, .input-group select {
+            padding: 12px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+        
+        .input-group input:focus, .input-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .input-group input.error {
+            border-color: var(--danger);
+        }
+        
+        .error-message {
+            color: var(--danger);
+            font-size: 0.85em;
+            margin-top: 5px;
+        }
+        
+        .current-strategies {
+            margin-top: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+        }
+        
+        .strategy-checkbox {
+            margin: 10px 0;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .strategy-checkbox:hover {
+            background: #e9ecef;
+        }
+        
+        .strategy-checkbox input {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            width: 100%;
+            margin-top: 20px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .results-section {
+            padding: 40px;
+            display: none;
+        }
+        
+        .results-section.active {
+            display: block;
+        }
+        
+        .methodology-note {
+            background: #d1ecf1;
+            border-left: 4px solid var(--info);
+            padding: 15px;
+            margin-bottom: 30px;
+            border-radius: 5px;
+        }
+        
+        .methodology-note h3 {
+            color: #0c5460;
+            margin-bottom: 10px;
+        }
+        
+        .methodology-note p {
+            color: #0c5460;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+        
+        .metrics-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .metric-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .metric-label {
+            color: #6c757d;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+        
+        .metric-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .metric-subtitle {
+            color: #6c757d;
+            font-size: 0.85em;
+            margin-top: 5px;
+        }
+        
+        .strategy-framework {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .framework-title {
+            font-size: 1.8em;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .category-section {
+            border: 2px solid #dee2e6;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        
+        .category-header {
+            padding: 15px;
+            font-weight: bold;
+            font-size: 1.2em;
+            color: white;
+        }
+        
+        .category-header.rethink { background: linear-gradient(135deg, #f39c12, #e67e22); }
+        .category-header.reinvent { background: linear-gradient(135deg, #f1c40f, #f39c12); }
+        .category-header.restore { background: linear-gradient(135deg, #27ae60, #16a085); }
+        .category-header.recirculate-products { background: linear-gradient(135deg, #3498db, #2980b9); }
+        .category-header.recirculate-materials { background: linear-gradient(135deg, #8e44ad, #9b59b6); }
+        .category-header.logistics { background: linear-gradient(135deg, #34495e, #2c3e50); }
+        
+        .strategies-list {
+            padding: 20px;
+        }
+        
+        .strategy-item {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .strategy-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .strategy-item.implemented {
+            opacity: 0.6;
+            background: #e9ecef;
+        }
+        
+        .implemented-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #6c757d;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.75em;
+        }
+        
+        .strategy-item.high-relevance {
+            border-left: 5px solid var(--success);
+            background: linear-gradient(to right, rgba(40, 167, 69, 0.05), transparent);
+        }
+        
+        .strategy-item.medium-relevance {
+            border-left: 5px solid var(--warning);
+            background: linear-gradient(to right, rgba(255, 193, 7, 0.05), transparent);
+        }
+        
+        .strategy-item.low-relevance {
+            border-left: 5px solid var(--danger);
+            background: linear-gradient(to right, rgba(220, 53, 69, 0.05), transparent);
+        }
+        
+        .strategy-name {
+            font-weight: bold;
+            font-size: 1.1em;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+        
+        .score-breakdown {
+            display: inline-block;
+            margin-left: 10px;
+            font-size: 0.85em;
+            color: #6c757d;
+            cursor: help;
+        }
+        
+        .strategy-description {
+            color: #495057;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+        
+        .strategy-metrics {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+        
+        .metric {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+        
+        .metric.impact { background: #d4edda; color: #155724; }
+        .metric.implementation { background: #fff3cd; color: #856404; }
+        .metric.timeline { background: #d1ecf1; color: #0c5460; }
+        .metric.roi { background: #f8d7da; color: #721c24; }
+        .metric.mci { background: #e2e3e5; color: #383d41; }
+        
+        .strategy-example {
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #6c757d;
+        }
+        
+        .summary-section {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .summary-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        
+        .recommendation-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #667eea;
+            position: relative;
+            margin-bottom: 15px;
+        }
+        
+        .rank-badge {
+            position: absolute;
+            top: -10px;
+            right: 20px;
+            background: #667eea;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+        
+        .export-section {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+        }
+        
+        .export-btn {
+            padding: 10px 20px;
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .export-btn:hover {
+            background: #5a6268;
+        }
+        
+        @media print {
+            body { background: white; }
+            .container { box-shadow: none; }
+            .btn, .export-section { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔄 CIRCit Circular Strategy Explorer</h1>
+            <p>Advanced product-specific circular economy strategy analysis based on the CIRCit framework</p>
+            <div class="version-badge">Version 2.0 - Enhanced</div>
+        </div>
+        
+        <div class="input-section">
+            <div class="section-title">Product Information</div>
+            <div class="input-grid">
+                <div class="input-group">
+                    <label>
+                        Product Name/Type
+                        <span class="tooltip" data-tip="Enter the specific product or product type you want to analyze">?</span>
+                    </label>
+                    <input type="text" id="productName" placeholder="e.g., Smartphone, Office Chair, T-shirt" required>
+                    <span class="error-message" id="productNameError"></span>
+                </div>
+                
+                <div class="input-group">
+                    <label>
+                        Product Category
+                        <span class="tooltip" data-tip="Select the category that best describes your product">?</span>
+                    </label>
+                    <select id="productCategory" required>
+                        <option value="">Select category...</option>
+                        <option value="electronics">Electronics & Technology</option>
+                        <option value="furniture">Furniture & Fixtures</option>
+                        <option value="textiles">Textiles & Apparel</option>
+                        <option value="packaging">Packaging Materials</option>
+                        <option value="vehicles">Vehicles & Transport</option>
+                        <option value="machinery">Machinery & Equipment</option>
+                        <option value="construction">Construction Materials</option>
+                        <option value="consumer">Consumer Goods</option>
+                        <option value="food">Food & Beverages</option>
+                        <option value="medical">Medical & Healthcare</option>
+                    </select>
+                    <span class="error-message" id="productCategoryError"></span>
+                </div>
+                
+                <div class="input-group">
+                    <label>
+                        Current Lifecycle (years)
+                        <span class="tooltip" data-tip="Average lifespan of the product before disposal or replacement">?</span>
+                    </label>
+                    <input type="number" id="lifecycle" placeholder="e.g., 2" min="0.1" max="100" step="0.1" required>
+                    <span class="error-message" id="lifecycleError"></span>
+                </div>
+                
+                <div class="input-group">
+                    <label>
+                        Material Complexity
+                        <span class="tooltip" data-tip="Number of different materials used in the product">?</span>
+                    </label>
+                    <select id="complexity" required>
+                        <option value="simple">Simple (1-3 materials)</option>
+                        <option value="moderate">Moderate (4-10 materials)</option>
+                        <option value="complex">Complex (10+ materials)</option>
+                    </select>
+                </div>
+                
+                <div class="input-group">
+                    <label>
+                        Current Business Model
+                        <span class="tooltip" data-tip="How you currently sell or provide the product">?</span>
+                    </label>
+                    <select id="businessModel" required>
+                        <option value="linear">Linear Sale (one-time purchase)</option>
+                        <option value="lease">Lease/Rental</option>
+                        <option value="service">Service Model</option>
+                        <option value="subscription">Subscription</option>
+                    </select>
+                </div>
+                
+                <div class="input-group">
+                    <label>
+                        Production Volume
+                        <span class="tooltip" data-tip="Annual production or sales volume">?</span>
+                    </label>
+                    <select id="volume" required>
+                        <option value="low">Low (< 1,000/year)</option>
+                        <option value="medium">Medium (1,000-100,000/year)</option>
+                        <option value="high">High (> 100,000/year)</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="current-strategies">
+                <div class="section-title">Currently Implemented Strategies (Optional)</div>
+                <p style="color: #6c757d; margin-bottom: 15px;">Select strategies you've already implemented to focus recommendations on new opportunities:</p>
+                <div id="implementedStrategiesContainer">
+                    <!-- Will be populated dynamically -->
+                </div>
+            </div>
+            
+            <button class="btn" onclick="analyzeProduct()">Analyze Circular Strategies</button>
+        </div>
+        
+        <div class="results-section" id="results">
+            <!-- Results will be dynamically inserted here -->
+        </div>
+    </div>
+    
+    <script>
+        // Constants and configuration
+        const ADJUSTMENTS = {
+            LIFECYCLE_SHORT_LONGEVITY: 0.2,
+            LIFECYCLE_LONG_UPGRADE: 0.1,
+            COMPLEXITY_RECYCLE_PENALTY: -0.2,
+            COMPLEXITY_SIMPLE_RECYCLE_BONUS: 0.2,
+            LINEAR_TO_SERVICE_BONUS: 0.15,
+            ALREADY_IMPLEMENTED_PENALTY: -0.5,
+            HIGH_VOLUME_SHARING_PENALTY: -0.1,
+            LOW_VOLUME_MASS_PENALTY: -0.1
+        };
+        
+        const STRATEGY_TYPES = {
+            DIGITAL: 'digital',
+            PHYSICAL_REDESIGN: 'physical_redesign',
+            SERVICE: 'service',
+            SHARING: 'sharing',
+            RECYCLING: 'recycling',
+            REMANUFACTURING: 'remanufacturing',
+            REPAIR: 'repair',
+            BUYBACK: 'buyback'
+        };
+        
+        const TIMELINE_BASE = {
+            [STRATEGY_TYPES.DIGITAL]: 3,
+            [STRATEGY_TYPES.SERVICE]: 6,
+            [STRATEGY_TYPES.SHARING]: 8,
+            [STRATEGY_TYPES.REPAIR]: 4,
+            [STRATEGY_TYPES.RECYCLING]: 5,
+            [STRATEGY_TYPES.REMANUFACTURING]: 18,
+            [STRATEGY_TYPES.PHYSICAL_REDESIGN]: 24,
+            [STRATEGY_TYPES.BUYBACK]: 6
+        };
+        
+        const MCI_IMPROVEMENTS = {
+            'design-longevity': 0.20,
+            'recycled-content': 0.20,
+            'remanufacturing': 0.28,
+            'material-recovery': 0.20,
+            'modular-design': 0.15,
+            'sharing-models': 0.30
+        };
+        
+        const ROI_MULTIPLIERS = {
+            [STRATEGY_TYPES.SERVICE]: 2.5,
+            [STRATEGY_TYPES.SHARING]: 3.5,
+            [STRATEGY_TYPES.REMANUFACTURING]: 1.5,
+            [STRATEGY_TYPES.DIGITAL]: 4.0
+        };
+        
+        // Enhanced strategy database with type classifications
+        const circitStrategies = {
+            rethink: {
+                title: "RETHINK & RECONFIGURE",
+                subtitle: "Business model or value generation architecture",
+                strategies: {
+                    'result-performance': {
+                        id: 'result-performance',
+                        type: STRATEGY_TYPES.SERVICE,
+                        name: 'Result or Performance Agreements',
+                        description: 'Sell outcomes instead of products (e.g., Rolls-Royce Power-by-the-Hour)',
+                        applicability: {
+                            electronics: 0.8,
+                            machinery: 0.9,
+                            vehicles: 0.7,
+                            furniture: 0.5,
+                            textiles: 0.3,
+                            packaging: 0.1,
+                            construction: 0.4,
+                            consumer: 0.5,
+                            food: 0.2,
+                            medical: 0.8
+                        },
+                        examples: ['Rolls-Royce engines', 'Philips Pay-per-lux lighting', 'Michelin tire services'],
+                        mciKey: 'sharing-models'
+                    },
+                    'activity-management': {
+                        id: 'activity-management',
+                        type: STRATEGY_TYPES.SERVICE,
+                        name: 'Activity Management Agreements',
+                        description: 'Manage entire activity for customer rather than selling product',
+                        applicability: {
+                            electronics: 0.6,
+                            machinery: 0.8,
+                            vehicles: 0.5,
+                            furniture: 0.4,
+                            textiles: 0.3,
+                            packaging: 0.2,
+                            construction: 0.5,
+                            consumer: 0.4,
+                            food: 0.3,
+                            medical: 0.7
+                        },
+                        examples: ['Facility management', 'Fleet management', 'IT infrastructure management']
+                    },
+                    'sharing-platforms': {
+                        id: 'sharing-platforms',
+                        type: STRATEGY_TYPES.SHARING,
+                        name: 'Sharing/Pooling Platforms',
+                        description: 'Enable multiple users to share products, increasing utilization',
+                        applicability: {
+                            electronics: 0.5,
+                            machinery: 0.8,
+                            vehicles: 0.9,
+                            furniture: 0.6,
+                            textiles: 0.7,
+                            packaging: 0.1,
+                            construction: 0.7,
+                            consumer: 0.6,
+                            food: 0.1,
+                            medical: 0.4
+                        },
+                        examples: ['Bike sharing (Bycyklen)', 'Car sharing (Zipcar)', 'Tool libraries'],
+                        mciKey: 'sharing-models'
+                    },
+                    'temporary-contracts': {
+                        id: 'temporary-contracts',
+                        type: STRATEGY_TYPES.SERVICE,
+                        name: 'Temporary Contract-based Services',
+                        description: 'Lease, rent, or subscription models for temporary access',
+                        applicability: {
+                            electronics: 0.7,
+                            machinery: 0.8,
+                            vehicles: 0.8,
+                            furniture: 0.7,
+                            textiles: 0.8,
+                            packaging: 0.2,
+                            construction: 0.5,
+                            consumer: 0.6,
+                            food: 0.1,
+                            medical: 0.5
+                        },
+                        examples: ['Mud Jeans lease', 'Rent the Runway', 'Office furniture leasing']
+                    },
+                    'lifetime-products': {
+                        id: 'lifetime-products',
+                        type: STRATEGY_TYPES.PHYSICAL_REDESIGN,
+                        name: 'Lifetime Products',
+                        description: 'Design for extreme durability with lifetime warranty',
+                        applicability: {
+                            electronics: 0.5,
+                            machinery: 0.7,
+                            vehicles: 0.5,
+                            furniture: 0.8,
+                            textiles: 0.6,
+                            packaging: 0.1,
+                            construction: 0.9,
+                            consumer: 0.7,
+                            food: 0.0,
+                            medical: 0.6
+                        },
+                        examples: ['Vitsœ shelving', 'Miele appliances', 'Rolex watches'],
+                        mciKey: 'design-longevity'
+                    },
+                    'buyback-schemes': {
+                        id: 'buyback-schemes',
+                        type: STRATEGY_TYPES.BUYBACK,
+                        name: 'Buy-back Schemes/Agreements',
+                        description: 'Guaranteed take-back programs with resale or recycling',
+                        applicability: {
+                            electronics: 0.8,
+                            machinery: 0.6,
+                            vehicles: 0.9,
+                            furniture: 0.7,
+                            textiles: 0.7,
+                            packaging: 0.3,
+                            construction: 0.4,
+                            consumer: 0.6,
+                            food: 0.1,
+                            medical: 0.5
+                        },
+                        examples: ['Apple Trade In', 'IKEA furniture buy-back', 'Car trade-in programs']
+                    }
+                }
+            },
+            reinvent: {
+                title: "REINVENT",
+                subtitle: "Strive for full decoupling",
+                strategies: {
+                    'dematerialization': {
+                        id: 'dematerialization',
+                        type: STRATEGY_TYPES.DIGITAL,
+                        name: 'Dematerialization',
+                        description: 'Replace physical products with digital solutions',
+                        applicability: {
+                            electronics: 0.7,
+                            machinery: 0.2,
+                            vehicles: 0.1,
+                            furniture: 0.1,
+                            textiles: 0.1,
+                            packaging: 0.3,
+                            construction: 0.2,
+                            consumer: 0.5,
+                            food: 0.1,
+                            medical: 0.4
+                        },
+                        examples: ['Music streaming (Spotify)', 'Digital documents', 'Video conferencing']
+                    },
+                    'multifunctional': {
+                        id: 'multifunctional',
+                        type: STRATEGY_TYPES.PHYSICAL_REDESIGN,
+                        name: 'Multifunctional Design',
+                        description: 'Combine multiple functions in single product',
+                        applicability: {
+                            electronics: 0.9,
+                            machinery: 0.6,
+                            vehicles: 0.5,
+                            furniture: 0.7,
+                            textiles: 0.4,
+                            packaging: 0.3,
+                            construction: 0.4,
+                            consumer: 0.7,
+                            food: 0.2,
+                            medical: 0.6
+                        },
+                        examples: ['Smartphones', 'Swiss Army knives', 'Convertible furniture'],
+                        mciKey: 'modular-design'
+                    }
+                }
+            },
+            restore: {
+                title: "RESTORE, REDUCE & AVOID",
+                subtitle: "Impacts in the areas of raw materials, manufacturing, and product use",
+                strategies: {
+                    'renewable-materials': {
+                        id: 'renewable-materials',
+                        type: STRATEGY_TYPES.PHYSICAL_REDESIGN,
+                        name: 'Renewable Materials',
+                        description: 'Use bio-based, renewable materials',
+                        applicability: {
+                            electronics: 0.3,
+                            machinery: 0.2,
+                            vehicles: 0.4,
+                            furniture: 0.8,
+                            textiles: 0.9,
+                            packaging: 0.9,
+                            construction: 0.7,
+                            consumer: 0.7,
+                            food: 0.9,
+                            medical: 0.5
+                        },
+                        examples: ['Bamboo products', 'Bio-plastics', 'Cork materials']
+                    },
+                    'recycled-content': {
+                        id: 'recycled-content',
+                        type: STRATEGY_TYPES.RECYCLING,
+                        name: 'Recycled/Secondary Materials',
+                        description: 'Use recycled or secondary source materials',
+                        applicability: {
+                            electronics: 0.6,
+                            machinery: 0.7,
+                            vehicles: 0.7,
+                            furniture: 0.8,
+                            textiles: 0.8,
+                            packaging: 0.9,
+                            construction: 0.8,
+                            consumer: 0.7,
+                            food: 0.3,
+                            medical: 0.4
+                        },
+                        examples: ['Columbia shoes (40% recycled)', 'Ocean plastic products', 'Recycled aluminum'],
+                        mciKey: 'recycled-content'
+                    },
+                    'lean-manufacturing': {
+                        id: 'lean-manufacturing',
+                        type: STRATEGY_TYPES.PHYSICAL_REDESIGN,
+                        name: 'Lean Manufacturing & Cleaner Production',
+                        description: 'Minimize waste and energy in production',
+                        applicability: {
+                            electronics: 0.8,
+                            machinery: 0.8,
+                            vehicles: 0.9,
+                            furniture: 0.7,
+                            textiles: 0.7,
+                            packaging: 0.8,
+                            construction: 0.7,
+                            consumer: 0.8,
+                            food: 0.9,
+                            medical: 0.9
+                        },
+                        examples: ['Adnams brewery efficiency', 'Toyota Production System', 'Zero-waste factories']
+                    },
+                    'product-longevity': {
+                        id: 'product-longevity',
+                        type: STRATEGY_TYPES.PHYSICAL_REDESIGN,
+                        name: 'Product Longevity Design',
+                        description: 'Design for extended lifespan and durability',
+                        applicability: {
+                            electronics: 0.7,
+                            machinery: 0.8,
+                            vehicles: 0.7,
+                            furniture: 0.9,
+                            textiles: 0.7,
+                            packaging: 0.2,
+                            construction: 0.9,
+                            consumer: 0.7,
+                            food: 0.1,
+                            medical: 0.7
+                        },
+                        examples: ['Finlayson textiles', 'Patagonia gear', 'Cast iron cookware'],
+                        mciKey: 'design-longevity'
+                    }
+                }
+            },
+            recirculateProducts: {
+                title: "RECIRCULATE - Parts & Products",
+                subtitle: "Extend existing use-cycle and extend to new use-cycles",
+                strategies: {
+                    'upgrade': {
+                        id: 'upgrade',
+                        type: STRATEGY_TYPES.REPAIR,
+                        name: 'Upgrade',
+                        description: 'Update products with new technology or features',
+                        applicability: {
+                            electronics: 0.9,
+                            machinery: 0.7,
+                            vehicles: 0.6,
+                            furniture: 0.5,
+                            textiles: 0.2,
+                            packaging: 0.1,
+                            construction: 0.4,
+                            consumer: 0.5,
+                            food: 0.0,
+                            medical: 0.7
+                        },
+                        examples: ['Fischer LED lighting upgrades', 'Software updates', 'Modular upgrades']
+                    },
+                    'repair-maintenance': {
+                        id: 'repair-maintenance',
+                        type: STRATEGY_TYPES.REPAIR,
+                        name: 'Repair & Maintenance',
+                        description: 'Enable easy repair and regular maintenance',
+                        applicability: {
+                            electronics: 0.8,
+                            machinery: 0.9,
+                            vehicles: 0.9,
+                            furniture: 0.7,
+                            textiles: 0.6,
+                            packaging: 0.1,
+                            construction: 0.5,
+                            consumer: 0.7,
+                            food: 0.0,
+                            medical: 0.8
+                        },
+                        examples: ['Fairphone modular repair', '3Temp coffee machines', 'Right to repair initiatives']
+                    },
+                    'refurbishment': {
+                        id: 'refurbishment',
+                        type: STRATEGY_TYPES.REMANUFACTURING,
+                        name: 'Refurbishment',
+                        description: 'Restore products to like-new condition',
+                        applicability: {
+                            electronics: 0.9,
+                            machinery: 0.7,
+                            vehicles: 0.7,
+                            furniture: 0.8,
+                            textiles: 0.5,
+                            packaging: 0.2,
+                            construction: 0.5,
+                            consumer: 0.6,
+                            food: 0.0,
+                            medical: 0.6
+                        },
+                        examples: ['Inrego IT equipment', 'Refurbished phones', 'Restored furniture']
+                    },
+                    'remanufacturing': {
+                        id: 'remanufacturing',
+                        type: STRATEGY_TYPES.REMANUFACTURING,
+                        name: 'Remanufacturing',
+                        description: 'Disassemble and rebuild to original specifications',
+                        applicability: {
+                            electronics: 0.7,
+                            machinery: 0.9,
+                            vehicles: 0.8,
+                            furniture: 0.6,
+                            textiles: 0.2,
+                            packaging: 0.1,
+                            construction: 0.4,
+                            consumer: 0.5,
+                            food: 0.0,
+                            medical: 0.7
+                        },
+                        examples: ['Canon printers (80% emission reduction)', 'Caterpillar machinery', 'Auto parts'],
+                        mciKey: 'remanufacturing'
+                    }
+                }
+            },
+            recirculateMaterials: {
+                title: "RECIRCULATE - Materials",
+                subtitle: "Effective application in end-of-life",
+                strategies: {
+                    'recycle': {
+                        id: 'recycle',
+                        type: STRATEGY_TYPES.RECYCLING,
+                        name: 'Recycle (Chemical & Physical)',
+                        description: 'Break down materials for reuse in new products',
+                        applicability: {
+                            electronics: 0.6,
+                            machinery: 0.7,
+                            vehicles: 0.7,
+                            furniture: 0.6,
+                            textiles: 0.5,
+                            packaging: 0.9,
+                            construction: 0.7,
+                            consumer: 0.7,
+                            food: 0.4,
+                            medical: 0.4
+                        },
+                        examples: ['3D printed glasses (monomaterial)', 'Kickpack cardboard furniture', 'PET bottle recycling'],
+                        mciKey: 'material-recovery'
+                    },
+                    'cascade': {
+                        id: 'cascade',
+                        type: STRATEGY_TYPES.RECYCLING,
+                        name: 'Cascade to Other Systems',
+                        description: 'Use materials in progressively lower-grade applications',
+                        applicability: {
+                            electronics: 0.3,
+                            machinery: 0.4,
+                            vehicles: 0.4,
+                            furniture: 0.6,
+                            textiles: 0.7,
+                            packaging: 0.8,
+                            construction: 0.6,
+                            consumer: 0.5,
+                            food: 0.9,
+                            medical: 0.2
+                        },
+                        examples: ['Carlsberg Green Fiber Bottle', 'Paper cascading', 'Textile downcycling']
+                    }
+                }
+            }
+        };
+        
+        // Initialize implemented strategies checkboxes
+        function initializeImplementedStrategies() {
+            const container = document.getElementById('implementedStrategiesContainer');
+            let html = '';
+            
+            const commonStrategies = [
+                { id: 'repair-maintenance', name: 'Repair & Maintenance Programs' },
+                { id: 'recycle', name: 'Recycling Programs' },
+                { id: 'temporary-contracts', name: 'Leasing/Rental Services' },
+                { id: 'buyback-schemes', name: 'Buy-back Programs' },
+                { id: 'refurbishment', name: 'Refurbishment Services' },
+                { id: 'recycled-content', name: 'Using Recycled Materials' }
+            ];
+            
+            commonStrategies.forEach(strategy => {
+                html += `
+                    <label class="strategy-checkbox">
+                        <input type="checkbox" value="${strategy.id}" name="implemented">
+                        <span>${strategy.name}</span>
+                    </label>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        // Validation functions
+        function validateInputs() {
+            let isValid = true;
+            
+            // Product name validation
+            const productName = document.getElementById('productName').value.trim();
+            if (!productName) {
+                document.getElementById('productNameError').textContent = 'Product name is required';
+                document.getElementById('productName').classList.add('error');
+                isValid = false;
+            } else {
+                document.getElementById('productNameError').textContent = '';
+                document.getElementById('productName').classList.remove('error');
+            }
+            
+            // Category validation
+            const category = document.getElementById('productCategory').value;
+            if (!category) {
+                document.getElementById('productCategoryError').textContent = 'Please select a category';
+                document.getElementById('productCategory').classList.add('error');
+                isValid = false;
+            } else {
+                document.getElementById('productCategoryError').textContent = '';
+                document.getElementById('productCategory').classList.remove('error');
+            }
+            
+            // Lifecycle validation
+            const lifecycle = parseFloat(document.getElementById('lifecycle').value);
+            if (isNaN(lifecycle) || lifecycle <= 0 || lifecycle > 100) {
+                document.getElementById('lifecycleError').textContent = 'Enter a valid lifecycle between 0.1 and 100 years';
+                document.getElementById('lifecycle').classList.add('error');
+                isValid = false;
+            } else {
+                document.getElementById('lifecycleError').textContent = '';
+                document.getElementById('lifecycle').classList.remove('error');
+            }
+            
+            return isValid;
+        }
+        
+        function getImplementedStrategies() {
+            const checkboxes = document.querySelectorAll('input[name="implemented"]:checked');
+            return Array.from(checkboxes).map(cb => cb.value);
+        }
+        
+        function calculateRelevanceScore(strategy, category, lifecycle, complexity, businessModel, volume, implementedStrategies) {
+            // Start with base applicability score
+            let score = strategy.applicability[category] || 0.5;
+            
+            // Track adjustments for transparency
+            const adjustments = [];
+            
+            // Check if already implemented
+            if (implementedStrategies.includes(strategy.id)) {
+                score += ADJUSTMENTS.ALREADY_IMPLEMENTED_PENALTY;
+                adjustments.push(`Already implemented: ${ADJUSTMENTS.ALREADY_IMPLEMENTED_PENALTY}`);
+            }
+            
+            // Lifecycle adjustments
+            if (lifecycle < 2 && strategy.name.includes('Longevity')) {
+                score += ADJUSTMENTS.LIFECYCLE_SHORT_LONGEVITY;
+                adjustments.push(`Short lifecycle + longevity: +${ADJUSTMENTS.LIFECYCLE_SHORT_LONGEVITY}`);
+            }
+            if (lifecycle > 5 && strategy.name.includes('Upgrade')) {
+                score += ADJUSTMENTS.LIFECYCLE_LONG_UPGRADE;
+                adjustments.push(`Long lifecycle + upgrade: +${ADJUSTMENTS.LIFECYCLE_LONG_UPGRADE}`);
+            }
+            
+            // Complexity adjustments
+            if (complexity === 'complex' && strategy.type === STRATEGY_TYPES.RECYCLING) {
+                score += ADJUSTMENTS.COMPLEXITY_RECYCLE_PENALTY;
+                adjustments.push(`Complex + recycling: ${ADJUSTMENTS.COMPLEXITY_RECYCLE_PENALTY}`);
+            }
+            if (complexity === 'simple' && strategy.type === STRATEGY_TYPES.RECYCLING) {
+                score += ADJUSTMENTS.COMPLEXITY_SIMPLE_RECYCLE_BONUS;
+                adjustments.push(`Simple + recycling: +${ADJUSTMENTS.COMPLEXITY_SIMPLE_RECYCLE_BONUS}`);
+            }
+            
+            // Business model adjustments
+            if (businessModel === 'linear' && strategy.type === STRATEGY_TYPES.SERVICE) {
+                score += ADJUSTMENTS.LINEAR_TO_SERVICE_BONUS;
+                adjustments.push(`Linear to service: +${ADJUSTMENTS.LINEAR_TO_SERVICE_BONUS}`);
+            }
+            
+            // Volume adjustments
+            if (volume === 'high' && strategy.type === STRATEGY_TYPES.SHARING) {
+                score += ADJUSTMENTS.HIGH_VOLUME_SHARING_PENALTY;
+                adjustments.push(`High volume + sharing: ${ADJUSTMENTS.HIGH_VOLUME_SHARING_PENALTY}`);
+            }
+            
+            // Normalize score to 0-1 range
+            score = Math.max(0, Math.min(1, score));
+            
+            return { score, adjustments };
+        }
+        
+        function calculateImpact(strategy, relevanceScore) {
+            const impactModifiers = {
+                [STRATEGY_TYPES.REMANUFACTURING]: 1.3,
+                [STRATEGY_TYPES.SERVICE]: 1.2,
+                [STRATEGY_TYPES.SHARING]: 1.2,
+                [STRATEGY_TYPES.REPAIR]: 1.1,
+                [STRATEGY_TYPES.RECYCLING]: 0.9,
+                [STRATEGY_TYPES.DIGITAL]: 1.4,
+                [STRATEGY_TYPES.PHYSICAL_REDESIGN]: 1.0,
+                [STRATEGY_TYPES.BUYBACK]: 1.0
+            };
+            
+            const modifier = impactModifiers[strategy.type] || 1.0;
+            const adjustedScore = relevanceScore * modifier;
+            
+            if (adjustedScore > 0.8) return 'Very High Impact';
+            if (adjustedScore > 0.6) return 'High Impact';
+            if (adjustedScore > 0.4) return 'Medium Impact';
+            if (adjustedScore > 0.2) return 'Low Impact';
+            return 'Minimal Impact';
+        }
+        
+        function calculateImplementation(strategy, complexity, businessModel) {
+            let difficulty = 2; // Base difficulty
+            
+            // Type-based adjustments
+            const typeModifiers = {
+                [STRATEGY_TYPES.DIGITAL]: -1.0,
+                [STRATEGY_TYPES.PHYSICAL_REDESIGN]: 1.5,
+                [STRATEGY_TYPES.REMANUFACTURING]: 1.5,
+                [STRATEGY_TYPES.SHARING]: 1.0,
+                [STRATEGY_TYPES.REPAIR]: -0.5,
+                [STRATEGY_TYPES.BUYBACK]: 0.5,
+                [STRATEGY_TYPES.RECYCLING]: -0.3,
+                [STRATEGY_TYPES.SERVICE]: 0
+            };
+            
+            difficulty += typeModifiers[strategy.type] || 0;
+            
+            // Complexity adjustments
+            if (complexity === 'complex') difficulty += 0.7;
+            if (complexity === 'simple') difficulty -= 0.5;
+            
+            // Business model alignment
+            if (businessModel === 'service' && strategy.type === STRATEGY_TYPES.SERVICE) {
+                difficulty -= 0.8;
+            }
+            if (businessModel === 'linear' && strategy.type === STRATEGY_TYPES.SERVICE) {
+                difficulty += 0.5;
+            }
+            
+            if (difficulty <= 1) return 'Easy';
+            if (difficulty <= 2) return 'Moderate';
+            if (difficulty <= 3) return 'Difficult';
+            return 'Very Difficult';
+        }
+        
+        function calculateTimeline(strategy, complexity) {
+            let months = TIMELINE_BASE[strategy.type] || 9;
+            
+            // Complexity adjustment
+            if (complexity === 'complex') months *= 1.4;
+            if (complexity === 'simple') months *= 0.7;
+            
+            months = Math.round(months);
+            
+            if (months <= 3) return '1-3 months';
+            if (months <= 6) return '3-6 months';
+            if (months <= 9) return '6-9 months';
+            if (months <= 12) return '9-12 months';
+            if (months <= 18) return '12-18 months';
+            if (months <= 24) return '18-24 months';
+            return '24+ months';
+        }
+        
+        function calculateMCI(strategy) {
+            const improvement = MCI_IMPROVEMENTS[strategy.mciKey] || 0;
+            return improvement > 0 ? `+${(improvement * 100).toFixed(0)}% MCI` : 'N/A';
+        }
+        
+        function calculateROI(strategy) {
+            const multiplier = ROI_MULTIPLIERS[strategy.type];
+            if (multiplier) {
+                return `${multiplier}x revenue potential`;
+            }
+            return 'Standard ROI';
+        }
+        
+        function analyzeProduct() {
+            if (!validateInputs()) {
+                return;
+            }
+            
+            const productName = document.getElementById('productName').value || 'Your Product';
+            const category = document.getElementById('productCategory').value;
+            const lifecycle = parseFloat(document.getElementById('lifecycle').value);
+            const complexity = document.getElementById('complexity').value;
+            const businessModel = document.getElementById('businessModel').value;
+            const volume = document.getElementById('volume').value;
+            const implementedStrategies = getImplementedStrategies();
+            
+            const analysis = performAnalysis(
+                productName, 
+                category, 
+                lifecycle, 
+                complexity, 
+                businessModel, 
+                volume,
+                implementedStrategies
+            );
+            
+            displayResults(analysis, productName, implementedStrategies);
+        }
+        
+        function performAnalysis(productName, category, lifecycle, complexity, businessModel, volume, implementedStrategies) {
+            const results = [];
+            
+            Object.keys(circitStrategies).forEach(categoryKey => {
+                const categoryData = circitStrategies[categoryKey];
+                const categoryResults = {
+                    title: categoryData.title,
+                    subtitle: categoryData.subtitle,
+                    strategies: []
+                };
+                
+                Object.keys(categoryData.strategies).forEach(strategyKey => {
+                    const strategy = categoryData.strategies[strategyKey];
+                    
+                    const { score: relevanceScore, adjustments } = calculateRelevanceScore(
+                        strategy, 
+                        category, 
+                        lifecycle, 
+                        complexity, 
+                        businessModel, 
+                        volume,
+                        implementedStrategies
+                    );
+                    
+                    const impact = calculateImpact(strategy, relevanceScore);
+                    const implementation = calculateImplementation(strategy, complexity, businessModel);
+                    const timeline = calculateTimeline(strategy, complexity);
+                    const mci = calculateMCI(strategy);
+                    const roi = calculateROI(strategy);
+                    const isImplemented = implementedStrategies.includes(strategy.id);
+                    
+                    categoryResults.strategies.push({
+                        ...strategy,
+                        relevanceScore,
+                        adjustments,
+                        impact,
+                        implementation,
+                        timeline,
+                        mci,
+                        roi,
+                        isImplemented
+                    });
+                });
+                
+                // Sort strategies by relevance
+                categoryResults.strategies.sort((a, b) => b.relevanceScore - a.relevanceScore);
+                results.push(categoryResults);
+            });
+            
+            return results;
+        }
+        
+        function displayResults(analysis, productName, implementedStrategies) {
+            const resultsDiv = document.getElementById('results');
+            
+            // Get all strategies
+            const allStrategies = [];
+            analysis.forEach(category => {
+                category.strategies.forEach(strategy => {
+                    allStrategies.push({
+                        ...strategy,
+                        category: category.title
+                    });
+                });
+            });
+            
+            // Separate implemented and new strategies
+            const implementedCount = allStrategies.filter(s => s.isImplemented).length;
+            const newStrategies = allStrategies.filter(s => !s.isImplemented);
+            
+            // Sort and get top strategies
+            newStrategies.sort((a, b) => b.relevanceScore - a.relevanceScore);
+            const topStrategies = newStrategies.slice(0, 5);
+            
+            // Calculate summary metrics
+            const avgRelevance = (newStrategies.reduce((sum, s) => sum + s.relevanceScore, 0) / newStrategies.length * 100).toFixed(0);
+            const highImpactCount = newStrategies.filter(s => s.impact.includes('High')).length;
+            const easyImplementCount = newStrategies.filter(s => s.implementation === 'Easy' || s.implementation === 'Moderate').length;
+            
+            let html = `
+                <div class="methodology-note">
+                    <h3>📊 Analysis Methodology</h3>
+                    <p>This analysis uses the CIRCit framework to evaluate ${newStrategies.length} circular strategies across 6 categories. 
+                    Scores are calculated based on product characteristics, industry benchmarks, and implementation feasibility. 
+                    ${implementedCount > 0 ? `${implementedCount} already-implemented strategies have been deprioritized.` : ''}
+                    Hover over relevance scores to see calculation details.</p>
+                </div>
+                
+                <div class="metrics-summary">
+                    <div class="metric-card">
+                        <div class="metric-label">Average Relevance</div>
+                        <div class="metric-value">${avgRelevance}%</div>
+                        <div class="metric-subtitle">Across all strategies</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">High Impact Strategies</div>
+                        <div class="metric-value">${highImpactCount}</div>
+                        <div class="metric-subtitle">Available opportunities</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Easy to Implement</div>
+                        <div class="metric-value">${easyImplementCount}</div>
+                        <div class="metric-subtitle">Quick wins available</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Already Implemented</div>
+                        <div class="metric-value">${implementedCount}</div>
+                        <div class="metric-subtitle">Existing strategies</div>
+                    </div>
+                </div>
+                
+                <div class="summary-section">
+                    <div class="summary-title">🎯 Top 5 ${implementedCount > 0 ? 'NEW ' : ''}Recommended Strategies for ${productName}</div>
+            `;
+            
+            topStrategies.forEach((strategy, index) => {
+                const percentage = Math.round(strategy.relevanceScore * 100);
+                const adjustmentsTooltip = strategy.adjustments.length > 0 
+                    ? `Base score + adjustments: ${strategy.adjustments.join(', ')}` 
+                    : 'Base applicability score';
+                
+                html += `
+                    <div class="recommendation-card">
+                        <div class="rank-badge">#${index + 1}</div>
+                        <div style="font-size: 1.2em; font-weight: bold; color: #2c3e50; margin: 10px 0;">
+                            ${strategy.name} 
+                            <span class="score-breakdown" title="${adjustmentsTooltip}">(${percentage}%)</span>
+                        </div>
+                        <div style="color: #495057; line-height: 1.6;">
+                            <strong>Category:</strong> ${strategy.category}<br>
+                            <strong>Description:</strong> ${strategy.description}<br>
+                            <strong>Examples:</strong> ${strategy.examples.join(', ')}
+                        </div>
+                        <div style="margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 10px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span style="color: #6c757d;">Expected Impact:</span>
+                                <span style="font-weight: bold; color: #2c3e50;">${strategy.impact}</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span style="color: #6c757d;">Implementation:</span>
+                                <span style="font-weight: bold; color: #2c3e50;">${strategy.implementation}</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span style="color: #6c757d;">Timeline:</span>
+                                <span style="font-weight: bold; color: #2c3e50;">${strategy.timeline}</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span style="color: #6c757d;">Circularity Improvement:</span>
+                                <span style="font-weight: bold; color: #2c3e50;">${strategy.mci}</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span style="color: #6c757d;">Revenue Potential:</span>
+                                <span style="font-weight: bold; color: #2c3e50;">${strategy.roi}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += `
+                </div>
+                
+                <div class="strategy-framework">
+                    <div class="framework-title">Complete CIRCit Strategy Analysis</div>
+                    <div class="strategy-categories">
+            `;
+            
+            // Display all categories
+            analysis.forEach(category => {
+                let categoryClass = category.title.toLowerCase()
+                    .replace(/&/g, 'and')
+                    .replace(/\s+/g, '-')
+                    .replace(/[^\w-]/g, '');
+                
+                if (category.title.includes('RETHINK')) categoryClass = 'rethink';
+                if (category.title.includes('REINVENT')) categoryClass = 'reinvent';
+                if (category.title.includes('RESTORE')) categoryClass = 'restore';
+                if (category.title.includes('Parts & Products')) categoryClass = 'recirculate-products';
+                if (category.title.includes('Materials')) categoryClass = 'recirculate-materials';
+                
+                html += `
+                    <div class="category-section">
+                        <div class="category-header ${categoryClass}">
+                            ${category.title}
+                            <div style="font-size: 0.8em; font-weight: normal; margin-top: 5px;">
+                                ${category.subtitle}
+                            </div>
+                        </div>
+                        <div class="strategies-list">
+                `;
+                
+                // Show top strategies for each category
+                const strategiesToShow = category.strategies.slice(0, 5);
+                strategiesToShow.forEach(strategy => {
+                    const relevanceClass = strategy.relevanceScore > 0.7 ? 'high-relevance' : 
+                                          strategy.relevanceScore > 0.4 ? 'medium-relevance' : 'low-relevance';
+                    const relevancePercent = Math.round(strategy.relevanceScore * 100);
+                    const adjustmentsTooltip = strategy.adjustments.length > 0 
+                        ? `Adjustments: ${strategy.adjustments.join(', ')}` 
+                        : 'Base applicability score';
+                    
+                    html += `
+                        <div class="strategy-item ${relevanceClass} ${strategy.isImplemented ? 'implemented' : ''}">
+                            ${strategy.isImplemented ? '<span class="implemented-badge">Already Implemented</span>' : ''}
+                            <div class="strategy-name">
+                                ${strategy.name} 
+                                <span class="score-breakdown" title="${adjustmentsTooltip}">(${relevancePercent}%)</span>
+                            </div>
+                            <div class="strategy-description">${strategy.description}</div>
+                            <div class="strategy-metrics">
+                                <span class="metric impact">${strategy.impact}</span>
+                                <span class="metric implementation">Implementation: ${strategy.implementation}</span>
+                                <span class="metric timeline">Timeline: ${strategy.timeline}</span>
+                                <span class="metric mci">MCI: ${strategy.mci}</span>
+                                <span class="metric roi">ROI: ${strategy.roi}</span>
+                            </div>
+                            <div class="strategy-example">
+                                <strong>Real Examples:</strong> ${strategy.examples.join(', ')}
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                html += `
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += `
+                    </div>
+                </div>
+                
+                <div class="export-section">
+                    <button class="export-btn" onclick="exportToPDF()">📄 Export as PDF</button>
+                    <button class="export-btn" onclick="exportToCSV()">📊 Export as CSV</button>
+                    <button class="export-btn" onclick="saveScenario()">💾 Save Scenario</button>
+                </div>
+            `;
+            
+            resultsDiv.innerHTML = html;
+            resultsDiv.classList.add('active');
+            resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        
+        function exportToPDF() {
+            window.print();
+        }
+        
+        function exportToCSV() {
+            // Implementation for CSV export
+            alert('CSV export would be implemented here - collecting all strategy data in tabular format');
+        }
+        
+        function saveScenario() {
+            // Implementation for saving scenario
+            const data = {
+                productName: document.getElementById('productName').value,
+                category: document.getElementById('productCategory').value,
+                lifecycle: document.getElementById('lifecycle').value,
+                complexity: document.getElementById('complexity').value,
+                businessModel: document.getElementById('businessModel').value,
+                volume: document.getElementById('volume').value,
+                implemented: getImplementedStrategies(),
+                timestamp: new Date().toISOString()
+            };
+            
+            const dataStr = JSON.stringify(data, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            
+            const exportFileDefaultName = `circuit-scenario-${Date.now()}.json`;
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+        }
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeImplementedStrategies();
+        });
+    </script>
+</body>
+</html>

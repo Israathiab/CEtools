@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Circular Economy Learning Tools</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink: #1a1a2e;
+            --paper: #faf9f6;
+            --sage: #4a7c6f;
+            --sage-light: #e8f0ed;
+            --sage-dark: #365c52;
+            --warm: #c9956b;
+            --warm-light: #f5ebe0;
+            --slate: #64748b;
+            --rule: #d4d0c8;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--paper);
+            color: var(--ink);
+            line-height: 1.7;
+        }
+
+        /* ── HEADER ── */
+        header {
+            padding: 0 40px;
+            border-bottom: 1px solid var(--rule);
+        }
+
+        .header-top {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 50px 0 20px;
+        }
+
+        .header-top p.label {
+            font-size: 0.75em;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--sage);
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        header h1 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 3.2em;
+            font-weight: 400;
+            line-height: 1.15;
+            color: var(--ink);
+            max-width: 700px;
+        }
+
+        header h1 em {
+            font-style: italic;
+            color: var(--sage);
+        }
+
+        .header-intro {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 24px 0 40px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+        }
+
+        .header-intro p {
+            color: var(--slate);
+            font-size: 1.05em;
+            line-height: 1.8;
+        }
+
+        .header-intro p strong {
+            color: var(--ink);
+            font-weight: 600;
+        }
+
+        /* ── TOOLS GRID ── */
+        .tools-section {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 60px 40px;
+        }
+
+        .section-label {
+            font-size: 0.72em;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--sage);
+            font-weight: 600;
+            margin-bottom: 30px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--sage);
+            display: inline-block;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 10px;
+        }
+
+        .tool-card {
+            background: white;
+            border: 1px solid var(--rule);
+            border-radius: 3px;
+            padding: 36px;
+            position: relative;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .tool-card:hover {
+            border-color: var(--sage);
+            box-shadow: 0 8px 30px rgba(74, 124, 111, 0.08);
+        }
+
+        .tool-card .number {
+            font-family: 'DM Serif Display', serif;
+            font-size: 3.5em;
+            color: var(--sage-light);
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            line-height: 1;
+        }
+
+        .tool-card .tag {
+            display: inline-block;
+            font-size: 0.68em;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 2px;
+            margin-bottom: 16px;
+        }
+
+        .tag-live {
+            background: var(--sage-light);
+            color: var(--sage-dark);
+        }
+
+        .tag-coming {
+            background: var(--warm-light);
+            color: var(--warm);
+        }
+
+        .tool-card h3 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.45em;
+            font-weight: 400;
+            margin-bottom: 12px;
+            line-height: 1.3;
+            max-width: 85%;
+        }
+
+        .tool-card p {
+            color: var(--slate);
+            font-size: 0.92em;
+            margin-bottom: 20px;
+            line-height: 1.7;
+        }
+
+        .tool-links {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .tool-links a {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85em;
+            font-weight: 600;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 3px;
+            transition: all 0.2s;
+        }
+
+        .btn-tool {
+            background: var(--sage);
+            color: white;
+        }
+
+        .btn-tool:hover {
+            background: var(--sage-dark);
+        }
+
+        .btn-guide {
+            background: transparent;
+            color: var(--sage);
+            border: 1px solid var(--sage);
+        }
+
+        .btn-guide:hover {
+            background: var(--sage-light);
+        }
+
+        .btn-disabled {
+            background: var(--rule);
+            color: var(--slate);
+            cursor: default;
+            pointer-events: none;
+        }
+
+        /* ── HOW TO USE ── */
+        .how-section {
+            background: var(--sage);
+            color: white;
+            padding: 60px 40px;
+        }
+
+        .how-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .how-inner .section-label {
+            color: rgba(255,255,255,0.6);
+            border-bottom-color: rgba(255,255,255,0.25);
+        }
+
+        .how-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            margin-top: 10px;
+        }
+
+        .how-step {
+            padding: 10px 0;
+        }
+
+        .how-step .step-num {
+            font-family: 'DM Serif Display', serif;
+            font-size: 2em;
+            color: rgba(255,255,255,0.25);
+            margin-bottom: 10px;
+        }
+
+        .how-step h4 {
+            font-size: 1em;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .how-step p {
+            font-size: 0.88em;
+            color: rgba(255,255,255,0.75);
+            line-height: 1.6;
+        }
+
+        /* ── GITHUB SECTION ── */
+        .github-section {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 60px 40px;
+        }
+
+        .github-box {
+            background: white;
+            border: 1px solid var(--rule);
+            border-left: 4px solid var(--ink);
+            padding: 30px 36px;
+            border-radius: 0 3px 3px 0;
+        }
+
+        .github-box h3 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.3em;
+            margin-bottom: 10px;
+        }
+
+        .github-box p {
+            color: var(--slate);
+            font-size: 0.95em;
+            margin-bottom: 12px;
+        }
+
+        .github-box a {
+            color: var(--sage);
+            font-weight: 600;
+            text-decoration: none;
+            border-bottom: 1px solid var(--sage);
+        }
+
+        .github-box a:hover {
+            color: var(--sage-dark);
+        }
+
+        /* ── FOOTER ── */
+        footer {
+            border-top: 1px solid var(--rule);
+            padding: 40px;
+            text-align: center;
+        }
+
+        footer p {
+            color: var(--slate);
+            font-size: 0.85em;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        footer p strong {
+            color: var(--ink);
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 800px) {
+            header h1 { font-size: 2.2em; }
+            .header-intro { grid-template-columns: 1fr; gap: 20px; }
+            .tools-grid { grid-template-columns: 1fr; }
+            .how-grid { grid-template-columns: 1fr 1fr; }
+            .tools-section, .github-section { padding: 40px 24px; }
+            .how-section { padding: 40px 24px; }
+            header { padding: 0 24px; }
+        }
+
+        @media (max-width: 500px) {
+            header h1 { font-size: 1.8em; }
+            .how-grid { grid-template-columns: 1fr; }
+            .tool-card .number { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-top">
+        <p class="label">Educational Tools</p>
+        <h1>Circular Economy <em>Learning&nbsp;Tools</em></h1>
+    </div>
+    <div class="header-intro">
+        <p>A collection of interactive tools for exploring the financial, strategic, and environmental dimensions of circular economy business models. Built for students and educators — designed to build intuition, not to replace business planning.</p>
+        <p><strong>These tools are for learning.</strong> They help you explore trade-offs, understand what drives circular business economics, and develop the critical thinking needed to evaluate real-world circular strategies. Change the inputs, watch what happens, and ask why.</p>
+    </div>
+</header>
+
+<div class="tools-section">
+    <div class="section-label">Tools &amp; Guides</div>
+    <div class="tools-grid">
+
+        <!-- TOOL 1: Circular Business Case -->
+        <div class="tool-card">
+            <div class="number">01</div>
+            <span class="tag tag-live">Available</span>
+            <h3>Circular Business Case Comparison Tool</h3>
+            <p>Compare a linear business model against two circular strategies across 14 approaches and 5 industries. See profit margins, NPV, payback periods, and read diagnostic explanations of what drives each result.</p>
+            <div class="tool-links">
+                <a href="circular-business-tool-v2-fixed.html" class="btn-tool">Open Tool →</a>
+                <a href="student_guide.html" class="btn-guide">Student Guide</a>
+            </div>
+        </div>
+
+        <!-- TOOL 2: Circularity Assessment -->
+        <div class="tool-card">
+            <div class="number">02</div>
+            <span class="tag tag-live">Available</span>
+            <h3>Product Circularity Assessment Tool</h3>
+            <p>Measure how circular a product is across five dimensions: material flows (MCI), design for circularity, product lifetime, end-of-life management, and business model. Based on the Ellen MacArthur Foundation methodology.</p>
+            <div class="tool-links">
+                <a href="circularity-assessment-fixed.html" class="btn-tool">Open Tool →</a>
+                <a href="circularity-student-guide.html" class="btn-guide">Student Guide</a>
+            </div>
+        </div>
+
+        <!-- TOOL 3: CIRCit Strategy Explorer -->
+        <div class="tool-card">
+            <div class="number">03</div>
+            <span class="tag tag-live">Available</span>
+            <h3>CIRCit Circular Strategy Explorer</h3>
+            <p>Discover which circular economy strategies are most relevant for a specific product. Based on the CIRCit research framework (DTU, RISE, NTNU), it ranks strategies across six categories by relevance, impact, and implementation difficulty.</p>
+            <div class="tool-links">
+                <a href="circuit-explorer-fixed.html" class="btn-tool">Open Tool →</a>
+                <a href="circuit-student-guide.html" class="btn-guide">Student Guide</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="how-section">
+    <div class="how-inner">
+        <div class="section-label">How to Use These Tools</div>
+        <div class="how-grid">
+            <div class="how-step">
+                <div class="step-num">01</div>
+                <h4>Pick a product</h4>
+                <p>Think of a real product you know — a phone, a jacket, a chair. Estimate its production cost and selling price. Real-ish numbers make the learning stick.</p>
+            </div>
+            <div class="how-step">
+                <div class="step-num">02</div>
+                <h4>Run the model</h4>
+                <p>Enter your numbers, choose circular strategies, and calculate. Read the results — but don't stop at the numbers.</p>
+            </div>
+            <div class="how-step">
+                <div class="step-num">03</div>
+                <h4>Read the explanations</h4>
+                <p>Click "Why these numbers?" on each card. The diagnostic tells you what's driving the result and what would change it.</p>
+            </div>
+            <div class="how-step">
+                <div class="step-num">04</div>
+                <h4>Change and explore</h4>
+                <p>Adjust one parameter and watch what happens. Find the tipping points. That cycle of hypothesis → test → observe is where real understanding forms.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="github-section">
+    <div class="github-box">
+        <h3>Open Source</h3>
+        <!-- UPDATE: Replace with your actual GitHub repository URL -->
+        <p>All tools and guides are open source. View the code, suggest improvements, or adapt them for your own teaching at <a href="https://github.com/yourusername/circular-economy-tools" target="_blank">github.com/yourusername/circular-economy-tools</a>.</p>
+        <p>These tools are provided for educational use. They are not financial planning instruments.</p>
+    </div>
+</div>
+
+<footer>
+    <p><strong>Circular Economy Learning Tools</strong> — For educational exploration. Built to develop intuition about circular business models, not to make financial predictions.</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CIRCit Strategy Explorer — Student Guide</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.7; color: #2d3436; background: #f0f2f5; }
+        .guide { max-width: 960px; margin: 0 auto; background: white; box-shadow: 0 0 30px rgba(0,0,0,0.08); }
+        .header { background: linear-gradient(135deg, #00b894 0%, #00cec9 50%, #0984e3 100%); color: white; padding: 50px 40px; }
+        .header h1 { font-size: 2.2em; margin-bottom: 8px; font-weight: 700; }
+        .header p { font-size: 1.15em; opacity: 0.92; }
+        .header .subtitle { font-size: 0.95em; margin-top: 15px; opacity: 0.8; font-style: italic; }
+        nav { background: #2d3436; position: sticky; top: 0; z-index: 100; padding: 0 20px; overflow-x: auto; white-space: nowrap; }
+        nav a { display: inline-block; padding: 14px 18px; color: #dfe6e9; text-decoration: none; font-size: 0.9em; font-weight: 500; border-bottom: 2px solid transparent; }
+        nav a:hover { color: #fff; border-bottom-color: #00b894; }
+        .content { padding: 40px; }
+        section { margin-bottom: 55px; }
+        section h2 { color: #0984e3; font-size: 1.7em; margin-bottom: 18px; padding-bottom: 8px; border-bottom: 3px solid #00b894; }
+        section h3 { color: #2d3436; font-size: 1.3em; margin: 28px 0 12px; }
+        p, li { margin-bottom: 10px; }
+        ul, ol { margin-left: 28px; }
+        .concept-box { background: #dfe6e9; border-left: 4px solid #0984e3; padding: 18px 20px; margin: 20px 0; border-radius: 0 6px 6px 0; }
+        .concept-box strong { color: #0984e3; }
+        .try-it { background: #ffeaa7; border-left: 4px solid #fdcb6e; padding: 18px 20px; margin: 22px 0; border-radius: 0 6px 6px 0; }
+        .try-it strong { color: #e17055; }
+        .think-about { background: #e8f5e9; border-left: 4px solid #00b894; padding: 18px 20px; margin: 22px 0; border-radius: 0 6px 6px 0; }
+        .think-about strong { color: #00b894; }
+        .warning-box { background: #ffeef0; border-left: 4px solid #d63031; padding: 18px 20px; margin: 20px 0; border-radius: 0 6px 6px 0; }
+        .warning-box strong { color: #d63031; }
+        .walkthrough { background: #f8f9fa; border: 1px solid #dfe6e9; border-radius: 8px; padding: 25px; margin: 20px 0; }
+        .walkthrough h4 { color: #636e72; margin-bottom: 12px; font-size: 1.1em; }
+        .exercise-box { background: linear-gradient(135deg, #f8f9fa 0%, #dfe6e9 100%); border: 2px solid #0984e3; border-radius: 10px; padding: 25px; margin: 25px 0; }
+        .exercise-box h4 { color: #0984e3; margin-bottom: 10px; }
+        .exercise-box ol { margin-left: 24px; }
+        .cat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0; }
+        .cat-item { border-radius: 6px; padding: 15px; color: white; }
+        .cat-item h5 { margin-bottom: 6px; font-size: 1em; }
+        .cat-item p { margin: 0; font-size: 0.92em; opacity: 0.92; }
+        .cat-rethink { background: linear-gradient(135deg, #f39c12, #e67e22); }
+        .cat-reinvent { background: linear-gradient(135deg, #f1c40f, #f39c12); color: #2d3436; }
+        .cat-reinvent p { opacity: 0.8; }
+        .cat-restore { background: linear-gradient(135deg, #27ae60, #16a085); }
+        .cat-recirc-prod { background: linear-gradient(135deg, #3498db, #2980b9); }
+        .cat-recirc-mat { background: linear-gradient(135deg, #8e44ad, #9b59b6); }
+        .cat-logistics { background: linear-gradient(135deg, #34495e, #2c3e50); }
+        .footer { margin-top: 50px; padding: 30px; background: #2d3436; color: #b2bec3; text-align: center; font-size: 0.9em; }
+        .footer strong { color: #dfe6e9; }
+        @media (max-width: 700px) { .content { padding: 24px; } .header { padding: 30px 24px; } .header h1 { font-size: 1.6em; } .cat-grid { grid-template-columns: 1fr; } }
+        @media print { nav { display: none; } .header { background: none; color: #2d3436; border-bottom: 3px solid #0984e3; } }
+    </style>
+</head>
+<body>
+<div class="guide">
+
+<div class="header">
+    <h1>🔄 CIRCit Circular Strategy Explorer</h1>
+    <p>Student Guide</p>
+    <div class="subtitle">Discover which circular economy strategies are most relevant for a specific product — based on the CIRCit research framework from DTU, RISE, and NTNU.</div>
+</div>
+
+<nav>
+    <a href="#purpose">Purpose</a>
+    <a href="#framework">The Framework</a>
+    <a href="#walkthrough">Walkthrough</a>
+    <a href="#categories">Six Categories</a>
+    <a href="#reading-results">Reading Results</a>
+    <a href="#exercises">Exercises</a>
+    <a href="#pitfalls">Pitfalls</a>
+    <a href="#glossary">Glossary</a>
+</nav>
+
+<div class="content">
+
+<section id="purpose">
+    <h2>1. What This Tool Is (and Isn't)</h2>
+    <p>The CIRCit Strategy Explorer takes a product you describe — its category, lifecycle, complexity, business model, and production volume — and identifies which circular economy strategies are most relevant for it. It ranks dozens of specific strategies by relevance, shows their expected impact, implementation difficulty, and timeline.</p>
+
+    <div class="concept-box">
+        <strong>This tool is for discovery and strategic thinking.</strong> It helps you explore the landscape of circular strategies and understand which ones fit which product types. It's not a roadmap or action plan — those require deep knowledge of your specific business, market, and capabilities. Think of it as a compass, not a GPS.
+    </div>
+
+    <h3>What you'll learn</h3>
+    <ul>
+        <li><strong>There are more circular strategies than you think.</strong> Beyond "recycle more," there are dozens of approaches spanning digital transformation, service models, physical redesign, repair networks, and material recovery. This tool maps the full landscape.</li>
+        <li><strong>Relevance depends on context.</strong> A strategy that's critical for electronics (e.g. modular design for upgradability) may be irrelevant for packaging (where reusability or composting matters more). The tool shows you why context determines strategy.</li>
+        <li><strong>Implementation isn't equal.</strong> Some strategies are quick wins (labelling materials for recycling), others are transformational and take years (switching to a service model). Understanding this distinction is essential for planning.</li>
+        <li><strong>Strategies interact.</strong> Implementing one strategy often makes others more feasible. Setting up reverse logistics for a take-back program also enables refurbishment and remanufacturing. The tool hints at these connections.</li>
+    </ul>
+</section>
+
+<section id="framework">
+    <h2>2. The CIRCit Framework</h2>
+    <p>The CIRCit (Circular Economy Implementation through Communication and Information Technology) framework was developed by researchers at the Technical University of Denmark (DTU), Research Institutes of Sweden (RISE), and the Norwegian University of Science and Technology (NTNU). It provides a systematic taxonomy for circular economy strategies.</p>
+    <p>The framework organises strategies into six categories, each addressing a different aspect of the transition from linear to circular. The categories aren't alternatives — a comprehensive circular strategy typically draws from several of them.</p>
+
+    <div class="think-about">
+        <strong>🤔 Think about this:</strong> The categories are roughly ordered from "rethink the whole concept" (most transformational) to "optimise the logistics" (most operational). Early categories challenge your fundamental business model; later ones optimise existing operations. Both matter, but they require very different kinds of change.
+    </div>
+</section>
+
+<section id="walkthrough">
+    <h2>3. Step-by-Step Walkthrough</h2>
+
+    <div class="walkthrough">
+        <h4>Step 1 — Describe your product</h4>
+        <p>Select the product category (electronics, furniture, textiles, packaging, vehicles, machinery, construction, consumer goods, food, or medical). This is the single most important input — it determines which strategies are relevant and which aren't.</p>
+    </div>
+
+    <div class="walkthrough">
+        <h4>Step 2 — Set the product characteristics</h4>
+        <ul>
+            <li><strong>Current Lifecycle</strong> — how many years does the product typically last?</li>
+            <li><strong>Material Complexity</strong> — simple (1-3 materials), moderate (4-10), or complex (10+)</li>
+            <li><strong>Current Business Model</strong> — linear sale, lease, service, or subscription</li>
+            <li><strong>Production Volume</strong> — low, medium, or high</li>
+        </ul>
+        <p>These shape the relevance scoring. A short-lifecycle, high-volume product like packaging gets very different strategy recommendations than a long-lifecycle, low-volume product like industrial machinery.</p>
+    </div>
+
+    <div class="walkthrough">
+        <h4>Step 3 — Mark strategies you've already implemented (optional)</h4>
+        <p>If you're assessing a product that already has some circular strategies in place, check those off. The tool will then adjust its recommendations to avoid suggesting things you're already doing and to prioritise complementary next steps.</p>
+    </div>
+
+    <div class="walkthrough">
+        <h4>Step 4 — Explore the results</h4>
+        <p>Click "Analyse Product" and browse the strategies organised by category. Each strategy shows its relevance (high/medium/low), expected impact, implementation difficulty, and estimated timeline. Strategies are colour-coded by relevance.</p>
+    </div>
+
+    <div class="try-it">
+        <strong>🧪 Try this:</strong> Run the tool twice for the same product category but with different lifecycles — say 2 years and 15 years. Watch how the strategy recommendations shift. Short-lifecycle products tend to need "recirculate" strategies (recycling, take-back); long-lifecycle products benefit more from "restore" strategies (repair, refurbishment, modular upgrades).
+    </div>
+</section>
+
+<section id="categories">
+    <h2>4. The Six Strategy Categories</h2>
+    <p>Each category contains multiple specific strategies. Here's what they mean and what kinds of change they require.</p>
+
+    <div class="cat-grid">
+        <div class="cat-item cat-rethink">
+            <h5>🔶 Rethink</h5>
+            <p>Challenge the fundamental need. Can the product be replaced by a digital service? Can its function be delivered differently? Can usage be shared? These are the most radical strategies — they question whether the physical product needs to exist in its current form.</p>
+        </div>
+        <div class="cat-item cat-reinvent">
+            <h5>🔸 Reinvent</h5>
+            <p>Redesign the business model. Move from selling products to selling outcomes, services, or performance. Subscription models, leasing, pay-per-use. These keep ownership with the manufacturer, creating incentives for durability and take-back.</p>
+        </div>
+        <div class="cat-item cat-restore">
+            <h5>🟢 Restore</h5>
+            <p>Extend product life through maintenance, repair, refurbishment, and remanufacturing. These strategies extract more value from existing products and materials by keeping them in use longer.</p>
+        </div>
+        <div class="cat-item cat-recirc-prod">
+            <h5>🔵 Recirculate Products</h5>
+            <p>Keep whole products flowing through the economy. Take-back programs, resale platforms, buy-back schemes, product exchanges. The product stays intact but finds new users or returns to the manufacturer.</p>
+        </div>
+        <div class="cat-item cat-recirc-mat">
+            <h5>🟣 Recirculate Materials</h5>
+            <p>When products can't be reused, recover the materials. Recycling, material harvesting, composting, energy recovery. This is the "last resort" before disposal but still far better than landfill.</p>
+        </div>
+        <div class="cat-item cat-logistics">
+            <h5>⚫ Logistics & Enablers</h5>
+            <p>The infrastructure that makes everything else work. Reverse logistics, digital tracking, material passports, collection networks. Without these enablers, even the best circular strategies can't function at scale.</p>
+        </div>
+    </div>
+
+    <div class="concept-box">
+        <strong>The hierarchy matters.</strong> Strategies higher in the list (Rethink, Reinvent) generally preserve more value than those lower down (Recirculate Materials). Keeping a product in use is almost always better than recycling its materials. But higher strategies are also harder to implement and require more fundamental change. Real circular transitions usually start with lower strategies and work upward.
+    </div>
+</section>
+
+<section id="reading-results">
+    <h2>5. Reading Your Results</h2>
+
+    <h3>Relevance indicators</h3>
+    <p>Each strategy is tagged with a relevance level for your specific product:</p>
+    <ul>
+        <li><strong>High relevance (green highlight)</strong> — strongly suited to your product characteristics. These are your priority strategies to explore.</li>
+        <li><strong>Medium relevance (yellow)</strong> — potentially useful but depends on specific circumstances. Worth considering but not automatic.</li>
+        <li><strong>Low relevance (no highlight)</strong> — unlikely to be impactful for this product type. Don't ignore them entirely, but don't start here.</li>
+    </ul>
+
+    <h3>Strategy metrics</h3>
+    <p>Each strategy also shows:</p>
+    <ul>
+        <li><strong>Impact</strong> — from Minimal to Very High. How much difference this strategy would make to your product's circularity.</li>
+        <li><strong>Implementation</strong> — Easy, Moderate, or Complex. How difficult it is to actually do this.</li>
+        <li><strong>Timeline</strong> — how long from decision to operational. Quick wins vs long-term transformations.</li>
+    </ul>
+
+    <h3>Real-world examples</h3>
+    <p>Many strategies include examples of companies that have implemented them. These aren't endorsements — they're evidence that the strategy works in practice, not just in theory.</p>
+
+    <div class="think-about">
+        <strong>🤔 A useful lens:</strong> Plot strategies on a 2×2 matrix in your mind — Impact (high/low) vs Implementation Difficulty (easy/hard). The sweet spot is high impact + easy implementation. But don't ignore high impact + hard implementation — those are often the strategies that create lasting competitive advantage.
+    </div>
+</section>
+
+<section id="exercises">
+    <h2>6. Learning Exercises</h2>
+
+    <div class="exercise-box">
+        <h4>Exercise 1 — Map the landscape</h4>
+        <p>Choose a product you're interested in and run the full analysis. Don't focus on individual strategies yet — look at the big picture.</p>
+        <ol>
+            <li>How many strategies are flagged as high relevance? Which categories do they cluster in?</li>
+            <li>Are any entire categories irrelevant for your product? Why?</li>
+            <li>What pattern do you see? Is your product more suited to "upstream" strategies (Rethink, Reinvent) or "downstream" ones (Recirculate)?</li>
+        </ol>
+    </div>
+
+    <div class="exercise-box">
+        <h4>Exercise 2 — Context shifts everything</h4>
+        <p>Run the tool for the same product concept across three different contexts:</p>
+        <ol>
+            <li>As a cheap, high-volume consumer good (e.g. a basic phone case)</li>
+            <li>As a mid-range product (e.g. a quality jacket)</li>
+            <li>As a premium, low-volume item (e.g. industrial equipment)</li>
+            <li>How do the recommended strategies change? What does this tell you about the relationship between product value, volume, and circular strategy?</li>
+        </ol>
+    </div>
+
+    <div class="exercise-box">
+        <h4>Exercise 3 — Build a circular roadmap</h4>
+        <p>From your results, pick three strategies: one quick win (easy + short timeline), one medium-term project, and one long-term transformation.</p>
+        <ol>
+            <li>In what order would you implement them?</li>
+            <li>Does the quick win create infrastructure or learning that makes the later strategies easier?</li>
+            <li>What would a company need (skills, partners, investment) for each stage?</li>
+            <li>Present your three-stage roadmap to a classmate and get their critique.</li>
+        </ol>
+    </div>
+
+    <div class="exercise-box">
+        <h4>Exercise 4 — Cross-reference with the other tools</h4>
+        <p>Use this tool to identify the top strategies for a product. Then use the Business Case Tool to model the financial impact of one of those strategies, and the Circularity Assessment Tool to measure how the strategy would change the product's circularity score.</p>
+        <ol>
+            <li>Does a "high relevance" strategy here translate to financial viability in the Business Case Tool?</li>
+            <li>How much would implementing this strategy improve the product's circularity score?</li>
+            <li>What tensions or contradictions do you find between the three tools' perspectives?</li>
+        </ol>
+    </div>
+
+    <div class="exercise-box">
+        <h4>Exercise 5 — Challenge the framework</h4>
+        <p>Think critically about the CIRCit framework itself:</p>
+        <ol>
+            <li>Are there circular strategies you know of that don't fit neatly into the six categories?</li>
+            <li>The relevance scoring is based on product characteristics — what other factors should influence strategy selection? (Customer willingness? Regulations? Competitive landscape?)</li>
+            <li>The framework was developed in a Nordic/European research context. Would the strategies and their relevance be different in other regions? Why?</li>
+        </ol>
+    </div>
+</section>
+
+<section id="pitfalls">
+    <h2>7. Common Misconceptions</h2>
+    <div class="warning-box">
+        <strong>❌ "High relevance means I should definitely do this"</strong>
+        <p>Relevance means the strategy fits your product type. It doesn't account for your market, your capabilities, your customers' willingness, or your budget. A strategy can be highly relevant in theory but impossible in practice for your specific situation.</p>
+    </div>
+    <div class="warning-box">
+        <strong>❌ "I should focus only on the highest-impact strategies"</strong>
+        <p>High-impact strategies are usually the hardest to implement. A portfolio approach — mixing quick wins with transformational strategies — is more realistic. Quick wins build momentum, generate learning, and fund bigger changes.</p>
+    </div>
+    <div class="warning-box">
+        <strong>❌ "Recycling is the main circular strategy"</strong>
+        <p>Recycling sits at the bottom of the circular hierarchy — it's the last option before disposal. Higher-value strategies (reuse, repair, refurbishment, remanufacturing, service models) preserve much more value. This tool is designed to show you the full range.</p>
+    </div>
+    <div class="warning-box">
+        <strong>❌ "The strategies are independent — just pick the best ones"</strong>
+        <p>Strategies interact. Setting up a take-back program (Recirculate) creates the supply of used products needed for refurbishment (Restore). Moving to a service model (Reinvent) creates incentives for design-for-durability (Rethink). Think in systems, not in isolated strategies.</p>
+    </div>
+</section>
+
+<section id="glossary">
+    <h2>8. Glossary</h2>
+    <div class="concept-box">
+        <strong>CIRCit Framework</strong> — a circular economy strategy taxonomy developed by DTU, RISE, and NTNU as part of a Nordic research collaboration. Organises strategies into six categories from Rethink to Logistics.<br><br>
+        <strong>Product Lifecycle</strong> — the total lifespan of a product from manufacturing to end-of-life. Includes use phase, maintenance, and any second/third life through refurbishment or resale.<br><br>
+        <strong>Material Complexity</strong> — the number and variety of materials in a product. Higher complexity makes disassembly and recycling more difficult.<br><br>
+        <strong>Reverse Logistics</strong> — the systems for moving products from customers back to manufacturers or processors. Includes collection, transport, sorting, and inspection.<br><br>
+        <strong>Material Passport</strong> — a digital record of a product's material composition, enabling efficient sorting, recycling, and reuse at end of life.<br><br>
+        <strong>Product-as-a-Service (PaaS)</strong> — a business model where the customer pays for the use or outcome of a product rather than owning it. The manufacturer retains ownership and responsibility.<br><br>
+        <strong>Remanufacturing</strong> — returning a used product to at least its original performance specifications by rebuilding it with a combination of reused, repaired, and new parts.<br><br>
+        <strong>Cascading Use</strong> — using a material or product in progressively lower-value applications as it degrades. For example: timber → furniture → chipboard → biomass energy.<br><br>
+        <strong>Industrial Symbiosis</strong> — a system where one industry's waste or by-product becomes another's input material. Reduces waste and creates value from residual flows.<br><br>
+        <strong>Design for X (DfX)</strong> — a design philosophy where X represents a specific goal: Design for Disassembly, Design for Recycling, Design for Longevity, Design for Repair, etc.
+    </div>
+</section>
+
+</div>
+
+<div class="footer">
+    <strong>CIRCit Circular Strategy Explorer — Student Guide</strong><br>
+    For educational exploration. Discover which circular strategies fit which products and understand why context determines strategy.
+</div>
+
+</div>
+</body>
+</html>
