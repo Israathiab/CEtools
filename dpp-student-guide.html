@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DPP Compass — Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1a1a2e;--paper:#faf9f6;--sage:#4a7c6f;--sage-light:#e8f0ed;--sage-dark:#365c52;--warm:#c9956b;--warm-light:#f5ebe0;--slate:#64748b;--rule:#d4d0c8;--gold:#c9a86b;--rust:#b8553a}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);line-height:1.7;font-size:15px}
+.wrap{max-width:780px;margin:0 auto;padding:60px 40px 100px}
+header{margin-bottom:48px;border-bottom:1px solid var(--rule);padding-bottom:32px}
+.label{font-size:0.72em;letter-spacing:0.2em;text-transform:uppercase;color:var(--sage);font-weight:600;margin-bottom:12px}
+h1{font-family:'DM Serif Display',serif;font-size:2.6em;font-weight:400;line-height:1.15;margin-bottom:14px}
+h1 em{font-style:italic;color:var(--sage)}
+header p.lede{font-size:1.1em;color:var(--slate);max-width:660px}
+h2{font-family:'DM Serif Display',serif;font-size:1.7em;font-weight:400;margin:48px 0 14px;line-height:1.25}
+h3{font-family:'DM Serif Display',serif;font-size:1.2em;font-weight:400;margin:24px 0 8px;color:var(--ink)}
+p{color:var(--ink);margin-bottom:14px}
+ul,ol{margin:0 0 18px 22px;color:var(--ink)}
+li{margin-bottom:8px}
+.box{background:var(--sage-light);border-left:3px solid var(--sage);padding:18px 22px;border-radius:0 4px 4px 0;margin:22px 0;color:var(--sage-dark);font-size:0.95em}
+.box.warm{background:var(--warm-light);border-left-color:var(--warm);color:#8a5a30}
+.box strong{color:var(--ink)}
+.toc{background:#fff;border:1px solid var(--rule);border-radius:4px;padding:22px 26px;margin-bottom:40px}
+.toc h3{margin:0 0 10px;font-size:1em;color:var(--slate);text-transform:uppercase;letter-spacing:0.15em;font-weight:600;font-family:'DM Sans',sans-serif}
+.toc ol{margin:0 0 0 22px}
+.toc a{color:var(--sage);text-decoration:none;font-weight:500}
+.toc a:hover{color:var(--sage-dark);text-decoration:underline}
+.nav{display:flex;gap:14px;flex-wrap:wrap;margin-top:30px;padding-top:30px;border-top:1px solid var(--rule)}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;background:var(--sage);color:#fff;border-radius:3px;font-size:0.88em;font-weight:600;text-decoration:none}
+.btn:hover{background:var(--sage-dark)}
+.btn-ghost{background:#fff;color:var(--sage);border:1px solid var(--sage)}
+table{width:100%;border-collapse:collapse;font-size:0.92em;margin:14px 0 20px}
+th{text-align:left;padding:10px 12px;font-weight:600;font-size:0.72em;letter-spacing:0.12em;text-transform:uppercase;color:var(--slate);border-bottom:1px solid var(--rule);background:var(--paper)}
+td{padding:10px 12px;border-bottom:1px solid var(--rule);vertical-align:top}
+.pill{display:inline-block;padding:2px 9px;border-radius:10px;font-size:0.72em;font-weight:600;letter-spacing:0.04em;background:var(--sage-light);color:var(--sage-dark)}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+<header>
+<div class="label">User Guide</div>
+<h1>DPP <em>Compass</em> — what it is and how to use it</h1>
+<p class="lede">A working primer for small and medium manufacturers preparing for the EU Digital Product Passport. Use this guide alongside the dashboard and the consumer-app demo.</p>
+</header>
+
+<div class="toc">
+<h3>Contents</h3>
+<ol>
+  <li><a href="#why">Why this exists</a></li>
+  <li><a href="#parts">The two parts of the system</a></li>
+  <li><a href="#entity">Three entity modes</a></li>
+  <li><a href="#tabs">What's in each tab</a></li>
+  <li><a href="#flow">How information flows</a></li>
+  <li><a href="#dpp">A 60-second primer on the EU DPP</a></li>
+  <li><a href="#start">Where to start</a></li>
+</ol>
+</div>
+
+<section id="why">
+<h2>1 · Why this exists</h2>
+<p>The EU's Ecodesign for Sustainable Products Regulation (ESPR, Reg. 2024/1781) and the Batteries Regulation (Reg. 2023/1542) introduce the <strong>Digital Product Passport</strong>: a machine-readable record attached to a product that travels with it from production to end-of-life. By the late 2020s, almost every physical product placed on the EU market — from batteries and electronics to textiles, furniture and white goods — will need one.</p>
+<p>For large multinationals this is an expensive compliance project. For an SME exporting to Europe, or supplying parts and materials into someone else's EU-bound product, it can be existential — without a DPP, the customs door closes.</p>
+<p>DPP Compass is a single screen that pulls together the four things an SME actually needs to do:</p>
+<ul>
+  <li><strong>Account for waste</strong> in mass and dollars, so the business case for change is visible.</li>
+  <li><strong>Find recycled-input alternatives</strong> in the supply chain and quantify the saving.</li>
+  <li><strong>Track products in the field</strong> via QR codes so end-of-life material can come home.</li>
+  <li><strong>Generate the DPP record itself</strong> — every field, with status and verification.</li>
+</ul>
+</section>
+
+<section id="parts">
+<h2>2 · The two parts of the system</h2>
+<p>DPP Compass has two interfaces:</p>
+<table>
+<thead><tr><th style="width:30%">Interface</th><th>Used by</th><th>What it does</th></tr></thead>
+<tbody>
+<tr><td><strong>Manufacturer dashboard</strong></td><td>You — the SME</td><td>Waste, supply chain, BOM/BOP, tracking, recovery, DPP compliance, redesign opportunities.</td></tr>
+<tr><td><strong>Loop consumer app</strong></td><td>Your customer</td><td>Scans the QR on the product, sees the DPP, locates take-back points, earns rewards for returning the product at end-of-life.</td></tr>
+</tbody>
+</table>
+<p>The two are tightly coupled. Every QR scan in the app lights up in your dashboard. Every take-back drop-off feeds your recovered-material ledger and your recycled-content claim.</p>
+</section>
+
+<section id="entity">
+<h2>3 · Three entity modes</h2>
+<p>The dashboard works for three kinds of company. Use the toggle in the top right.</p>
+<table>
+<thead><tr><th>Mode</th><th>Who it's for</th><th>What changes</th></tr></thead>
+<tbody>
+<tr><td><strong>End-product manufacturer</strong></td><td>You sell finished products to consumers (white goods, furniture, lighting, electronics).</td><td>Full QR consumer tracking, take-back network view, consumer-facing DPP.</td></tr>
+<tr><td><strong>Parts supplier</strong></td><td>You make motors, PCBs, frames, sub-assemblies for OEMs that ship to the EU.</td><td>Batch-level DPP, B2B offcut return, your DPP feeds your customer's DPP.</td></tr>
+<tr><td><strong>Material supplier</strong></td><td>You make polymers, alloys, fibres, pellets, billets sold to parts suppliers.</td><td>Per-batch DPP with chain-of-custody, recycled content & carbon footprint as the headline claim.</td></tr>
+</tbody>
+</table>
+<div class="box"><strong>Tip.</strong> A material supplier's DPP is upstream of everything. If you sell rPET to a parts maker who sells to an end-product brand, your batch DPP is what lets the brand claim recycled content on the consumer's QR scan.</div>
+</section>
+
+<section id="tabs">
+<h2>4 · What's in each tab</h2>
+
+<h3>Overview</h3>
+<p>Four KPIs (waste, savings, in-market units, DPP readiness) plus a 12-month trend and a live QR-scan feed. The donut shows what share of your material input is recycled.</p>
+
+<h3>Waste &amp; Value</h3>
+<p>Production waste by material category and by line, in kilograms and USD. Each material row shows the current disposal path (landfill, energy recovery, re-melt, etc.) and the best-available path — with the dollar amount you'd recover by switching. "Hotspots" flag anywhere your scrap rate beats the sector benchmark or your waste cost crosses a threshold.</p>
+
+<h3>Supply Chain</h3>
+<p>Every material in your active BOMs is listed with virgin and recycled price per kg, recycled-content availability, lead time, and DPP traceability. A negative saving means recycled is currently more expensive — but you may still want it for the DPP claim. The supplier shortlist below filters to DPP-ready partners only.</p>
+
+<h3>BOM &amp; BOP</h3>
+<p>Multi-level Bill of Materials and the production sequence (Bill of Processes) for the currently selected product. Each component shows its mass, cost, recycled %, and country of origin — the data that has to populate the DPP. Each process step shows energy use, scrap rate and embodied CO₂e.</p>
+
+<h3>Product Tracking</h3>
+<p>Where your products are in the world — based on consumer QR scans. The heat map is regional density; the stacked bar splits the installed base by lifecycle stage (early / mid / late / awaiting EoL / recovered).</p>
+
+<h3>Disposal &amp; Recovery</h3>
+<p>What's coming back from the consumer app to your take-back partners — by stream, mass, value, and whether it closes the loop. Below that, the partner network shown in the consumer app, and the rewards consumers receive for each scan and drop-off.</p>
+
+<h3>DPP Compliance</h3>
+<p>The complete list of DPP fields required for this product group, with status (complete / partial / missing) and verifier. The DPP card on the right is a preview of what a consumer's QR scan will display. The SKU roster at the bottom is your project plan — every SKU you sell into the EU, and what's blocking its DPP.</p>
+
+<h3>Circular Opportunities</h3>
+<p>For the selected product, automatic flags across five lenses (disassembly, recyclability, life extension, material substitution, service model). Each opportunity comes with a per-unit savings estimate, a CO₂e estimate, and tags. The scorecard at the bottom is your product's circularity profile.</p>
+</section>
+
+<section id="flow">
+<h2>5 · How information flows</h2>
+<ol>
+  <li>You record your <strong>BOM and BOP</strong> per product — the master data.</li>
+  <li>The system computes <strong>waste, cost, recycled-content and footprint</strong> per SKU from those records.</li>
+  <li>It checks them against <strong>DPP required fields</strong> for the product group and tells you what's missing.</li>
+  <li>It generates a <strong>QR code</strong> per unit, linked to the live DPP.</li>
+  <li>The <strong>consumer app</strong> exposes the DPP, repair instructions, and take-back locations.</li>
+  <li>Consumer scans (purchase, mid-life, EoL) feed back into the <strong>tracking</strong> tab.</li>
+  <li>Take-back drop-offs feed the <strong>recovery</strong> tab, which feeds your next batch's <strong>recycled content</strong> — closing the loop.</li>
+</ol>
+<div class="box warm"><strong>Important.</strong> All numbers in this demo are illustrative. Real production data lives in your MRP/ERP. The point of the demo is the shape of the workflow, not the figures.</div>
+</section>
+
+<section id="dpp">
+<h2>6 · A 60-second primer on the EU DPP</h2>
+<table>
+<thead><tr><th>What</th><th>Detail</th></tr></thead>
+<tbody>
+<tr><td><strong>Legal basis</strong></td><td>ESPR (EU 2024/1781) for most product groups; EU 2023/1542 for batteries.</td></tr>
+<tr><td><strong>First product groups</strong></td><td>Batteries (Feb 2027), then textiles, electronics, ICT, furniture, iron &amp; steel, tyres, detergents.</td></tr>
+<tr><td><strong>Format</strong></td><td>Machine-readable record linked from a data carrier on the product — usually a QR code or NFC tag.</td></tr>
+<tr><td><strong>Who must comply</strong></td><td>Any economic operator placing the product on the EU market. Non-EU exporters comply via their EU authorised representative.</td></tr>
+<tr><td><strong>Typical content</strong></td><td>Identifier, manufacturer, material composition, recycled content, substances of concern, carbon footprint, repair info, expected lifetime, end-of-life instructions.</td></tr>
+<tr><td><strong>Verification</strong></td><td>Mandatory fields must be sourced and verifiable. Third-party verification is required for some product groups and recommended for all.</td></tr>
+</tbody>
+</table>
+</section>
+
+<section id="start">
+<h2>7 · Where to start</h2>
+<ol>
+  <li><strong>Pick your entity mode.</strong> Switch the toggle in the dashboard header to match what you sell.</li>
+  <li><strong>Pick one product.</strong> Don't try to fix all SKUs at once — pick the highest EU-revenue product first.</li>
+  <li><strong>Open the BOM &amp; BOP tab.</strong> Make sure the structure matches your actual product. Every gap here becomes a DPP gap.</li>
+  <li><strong>Go to DPP Compliance.</strong> Look at the missing/partial rows. These are your concrete task list — one row, one task.</li>
+  <li><strong>Open Supply Chain.</strong> Identify two materials where recycled input is high-availability and either price-positive or close to parity. Those are your quick wins.</li>
+  <li><strong>Open Circular Opportunities.</strong> Pick the top opportunity by combined dollar + CO₂ impact and brief your design team.</li>
+</ol>
+<p>Most SMEs can close the gap to a market-ready DPP in 4–6 months of focused work if they start now.</p>
+
+<div class="nav">
+  <a href="dpp-dashboard.html" class="btn">Open the dashboard →</a>
+  <a href="dpp-consumer-app.html" class="btn btn-ghost">See the consumer app</a>
+  <a href="index.html" class="btn btn-ghost">All tools</a>
+</div>
+</section>
+
+</div>
+
+</body>
+</html>
