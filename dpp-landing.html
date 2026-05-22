@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DPP Compass — Digital Product Passport platform for SME manufacturers</title>
+<meta name="description" content="DPP Compass helps small and medium manufacturers ship products into the EU under the new Digital Product Passport regulations — waste, supply chain, BOM, QR tracking and DPP compliance in one workspace.">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1a1a2e; --ink-soft:#2d2d44; --paper:#faf9f6; --sage:#4a7c6f;
+  --sage-light:#e8f0ed; --sage-dark:#365c52; --warm:#c9956b;
+  --warm-light:#f5ebe0; --slate:#64748b; --rule:#d4d0c8; --gold:#c9a86b;
+  --rust:#b8553a;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);line-height:1.6}
+a{color:var(--sage);text-decoration:none}
+
+/* NAV */
+.nav{position:sticky;top:0;background:rgba(250,249,246,0.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--rule);z-index:50}
+.nav-inner{max-width:1200px;margin:0 auto;padding:16px 32px;display:flex;justify-content:space-between;align-items:center;gap:24px}
+.logo{display:flex;align-items:center;gap:12px;font-family:'DM Serif Display',serif;font-size:1.2em;color:var(--ink)}
+.logo-mark{width:34px;height:34px;background:var(--sage);border-radius:6px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.3em}
+.nav-links{display:flex;gap:30px;align-items:center}
+.nav-links a{color:var(--ink-soft);font-size:0.88em;font-weight:500}
+.nav-links a:hover{color:var(--sage-dark)}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;background:var(--sage);color:#fff;border-radius:4px;font-size:0.88em;font-weight:600;border:1px solid var(--sage);transition:all .15s;cursor:pointer;font-family:inherit}
+.btn:hover{background:var(--sage-dark);border-color:var(--sage-dark);color:#fff}
+.btn-ghost{background:transparent;color:var(--sage)}
+.btn-ghost:hover{background:var(--sage-light);color:var(--sage-dark)}
+.btn-lg{padding:14px 28px;font-size:0.95em}
+@media(max-width:760px){.nav-links{display:none}}
+
+/* HERO */
+.hero{padding:80px 32px 70px;border-bottom:1px solid var(--rule);position:relative;overflow:hidden}
+.hero-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1.1fr 1fr;gap:60px;align-items:center}
+@media(max-width:900px){.hero-inner{grid-template-columns:1fr;gap:40px}}
+.hero-tag{display:inline-block;background:var(--sage-light);color:var(--sage-dark);padding:5px 12px;border-radius:14px;font-size:0.75em;font-weight:600;letter-spacing:0.06em;margin-bottom:22px}
+.hero h1{font-family:'DM Serif Display',serif;font-size:3.6em;font-weight:400;line-height:1.08;margin-bottom:22px;letter-spacing:-0.01em}
+.hero h1 em{font-style:italic;color:var(--sage)}
+.hero .lede{font-size:1.18em;color:var(--slate);max-width:560px;margin-bottom:30px;line-height:1.6}
+.hero-ctas{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:32px}
+.hero-trust{display:flex;gap:28px;flex-wrap:wrap;font-size:0.8em;color:var(--slate)}
+.hero-trust strong{display:block;font-family:'DM Serif Display',serif;font-size:1.5em;color:var(--ink);font-weight:400;letter-spacing:-0.01em}
+@media(max-width:600px){.hero h1{font-size:2.4em}}
+
+/* HERO VISUAL — mini dashboard mockup */
+.preview{background:#fff;border:1px solid var(--rule);border-radius:8px;box-shadow:0 30px 80px rgba(26,26,46,0.12), 0 8px 24px rgba(26,26,46,0.06);overflow:hidden;transform:rotate(-1deg);transition:transform .3s}
+.preview:hover{transform:rotate(0deg)}
+.preview-bar{background:#f5f3ee;padding:9px 12px;display:flex;gap:6px;border-bottom:1px solid var(--rule)}
+.preview-bar i{width:11px;height:11px;border-radius:50%;background:var(--rule);display:block}
+.preview-bar i:first-child{background:#ed6a5e}
+.preview-bar i:nth-child(2){background:#f4bf4f}
+.preview-bar i:nth-child(3){background:#61c554}
+.preview-body{padding:20px}
+.preview-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.preview-h .t{font-family:'DM Serif Display',serif;font-size:0.92em}
+.preview-h .sub{font-size:0.6em;letter-spacing:0.15em;text-transform:uppercase;color:var(--sage);font-weight:600;margin-bottom:3px}
+.preview-pill{font-size:0.65em;background:var(--sage-light);color:var(--sage-dark);padding:3px 8px;border-radius:8px;font-weight:600}
+.preview-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.preview-kpi{background:var(--paper);border:1px solid var(--rule);border-left:2px solid var(--sage);padding:10px;border-radius:3px}
+.preview-kpi.gold{border-left-color:var(--gold)}
+.preview-kpi.warm{border-left-color:var(--warm)}
+.preview-kpi .l{font-size:0.55em;letter-spacing:0.12em;text-transform:uppercase;color:var(--slate);font-weight:600;margin-bottom:4px}
+.preview-kpi .v{font-family:'DM Serif Display',serif;font-size:1.15em;line-height:1}
+.preview-bar2{display:flex;flex-direction:column;gap:7px}
+.preview-row{display:grid;grid-template-columns:60px 1fr 38px;gap:8px;align-items:center;font-size:0.7em}
+.preview-row .n{color:var(--ink-soft);font-weight:500}
+.preview-row .t{background:var(--paper);height:10px;border-radius:2px;overflow:hidden;border:1px solid var(--rule)}
+.preview-row .f{height:100%;background:var(--sage)}
+.preview-row .v{text-align:right;color:var(--slate);font-size:0.78em}
+
+/* SECTIONS */
+section{padding:80px 32px}
+.container{max-width:1200px;margin:0 auto}
+.section-head{text-align:center;margin-bottom:48px}
+.section-tag{display:inline-block;background:#fff;border:1px solid var(--rule);color:var(--sage);padding:4px 12px;border-radius:14px;font-size:0.7em;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:16px}
+.section-head h2{font-family:'DM Serif Display',serif;font-size:2.4em;font-weight:400;line-height:1.18;margin-bottom:14px;letter-spacing:-0.01em}
+.section-head h2 em{font-style:italic;color:var(--sage)}
+.section-head p{color:var(--slate);max-width:680px;margin:0 auto;font-size:1.02em}
+@media(max-width:600px){section{padding:60px 24px}.section-head h2{font-size:1.85em}}
+
+/* PROBLEM */
+.problem{background:var(--ink);color:#fff}
+.problem .section-tag{background:transparent;border-color:rgba(255,255,255,0.2);color:var(--gold)}
+.problem h2{color:#fff}
+.problem .section-head p{color:rgba(255,255,255,0.7)}
+.problem-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:30px;margin-top:14px}
+@media(max-width:760px){.problem-grid{grid-template-columns:1fr}}
+.problem-stat{padding:30px 0;border-top:1px solid rgba(255,255,255,0.15)}
+.problem-stat .big{font-family:'DM Serif Display',serif;font-size:3em;line-height:1;color:var(--gold);margin-bottom:12px;letter-spacing:-0.01em}
+.problem-stat h3{font-size:1.05em;font-weight:600;margin-bottom:8px;color:#fff}
+.problem-stat p{color:rgba(255,255,255,0.7);font-size:0.92em;line-height:1.6}
+
+/* HOW IT WORKS */
+.how-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+@media(max-width:900px){.how-grid{grid-template-columns:1fr 1fr;gap:30px}}
+@media(max-width:500px){.how-grid{grid-template-columns:1fr}}
+.how-step{position:relative;padding-top:18px}
+.how-step .num{font-family:'DM Serif Display',serif;font-size:2.4em;color:var(--sage-light);line-height:1;margin-bottom:14px}
+.how-step h3{font-family:'DM Serif Display',serif;font-size:1.2em;font-weight:400;margin-bottom:10px;line-height:1.3}
+.how-step p{color:var(--slate);font-size:0.92em;line-height:1.65}
+
+/* WHO */
+.who{background:var(--sage);color:#fff}
+.who .section-tag{background:transparent;border-color:rgba(255,255,255,0.25);color:rgba(255,255,255,0.85)}
+.who h2{color:#fff}
+.who .section-head p{color:rgba(255,255,255,0.8)}
+.who-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+@media(max-width:900px){.who-grid{grid-template-columns:1fr}}
+.who-card{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);padding:30px;border-radius:6px;transition:all .2s}
+.who-card:hover{background:rgba(255,255,255,0.1);transform:translateY(-3px)}
+.who-card .role{font-size:0.7em;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:14px}
+.who-card h3{font-family:'DM Serif Display',serif;font-size:1.3em;font-weight:400;margin-bottom:12px;line-height:1.25}
+.who-card p{color:rgba(255,255,255,0.78);font-size:0.92em;margin-bottom:16px}
+.who-card ul{list-style:none;padding:0;margin:0;font-size:0.88em;color:rgba(255,255,255,0.85)}
+.who-card ul li{padding:6px 0;padding-left:22px;position:relative}
+.who-card ul li::before{content:"";position:absolute;left:0;top:13px;width:10px;height:1px;background:var(--gold)}
+
+/* FEATURES */
+.features-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
+@media(max-width:1000px){.features-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.features-grid{grid-template-columns:1fr}}
+.feature{padding:26px;background:#fff;border:1px solid var(--rule);border-radius:4px;transition:all .2s}
+.feature:hover{border-color:var(--sage);box-shadow:0 8px 26px rgba(74,124,111,0.08)}
+.feature .ico{width:36px;height:36px;background:var(--sage-light);color:var(--sage-dark);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-size:1.1em;margin-bottom:16px}
+.feature h3{font-family:'DM Serif Display',serif;font-size:1.08em;font-weight:400;margin-bottom:8px;line-height:1.25}
+.feature p{color:var(--slate);font-size:0.88em;line-height:1.6}
+
+/* WHY */
+.why-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+@media(max-width:900px){.why-grid{grid-template-columns:1fr;gap:40px}}
+.why-list{list-style:none;padding:0}
+.why-list li{padding:18px 0;border-top:1px solid var(--rule);display:grid;grid-template-columns:30px 1fr;gap:16px;align-items:start}
+.why-list li:first-child{border-top:none;padding-top:0}
+.why-list .check{width:24px;height:24px;background:var(--sage);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.78em;font-weight:700;flex-shrink:0;margin-top:2px}
+.why-list h4{font-size:1em;font-weight:600;margin-bottom:5px}
+.why-list p{color:var(--slate);font-size:0.92em;line-height:1.6}
+.why-quote{background:var(--paper);border:1px solid var(--rule);border-left:4px solid var(--gold);padding:30px;border-radius:0 4px 4px 0;font-family:'DM Serif Display',serif;font-size:1.2em;line-height:1.45;color:var(--ink);position:relative}
+.why-quote::before{content:"\201C";font-size:3em;color:var(--gold);position:absolute;top:-10px;left:18px;line-height:1}
+.why-quote .src{display:block;margin-top:18px;font-family:'DM Sans',sans-serif;font-size:0.68em;letter-spacing:0.12em;text-transform:uppercase;color:var(--slate);font-weight:600;font-style:normal}
+
+/* FINAL CTA */
+.cta-block{background:linear-gradient(135deg,var(--ink) 0%,var(--ink-soft) 100%);color:#fff;border-radius:12px;padding:60px 40px;text-align:center;position:relative;overflow:hidden}
+.cta-block::before{content:"";position:absolute;top:-50%;right:-10%;width:300px;height:300px;background:radial-gradient(circle, rgba(201,168,107,0.25) 0%, transparent 70%);pointer-events:none}
+.cta-block h2{font-family:'DM Serif Display',serif;font-size:2.2em;font-weight:400;color:#fff;margin-bottom:14px;line-height:1.2}
+.cta-block h2 em{font-style:italic;color:var(--gold)}
+.cta-block p{color:rgba(255,255,255,0.75);max-width:560px;margin:0 auto 30px;font-size:1.02em}
+.cta-block .btn{background:var(--gold);border-color:var(--gold);color:var(--ink)}
+.cta-block .btn:hover{background:#b8893f;border-color:#b8893f;color:#fff}
+.cta-block .btn-ghost{background:transparent;color:#fff;border-color:rgba(255,255,255,0.3)}
+.cta-block .btn-ghost:hover{background:rgba(255,255,255,0.1);color:#fff;border-color:rgba(255,255,255,0.5)}
+
+/* FOOTER */
+footer{border-top:1px solid var(--rule);padding:40px 32px;background:#fff}
+.foot-inner{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;flex-wrap:wrap;gap:20px;font-size:0.85em;color:var(--slate)}
+.foot-inner .links{display:flex;gap:24px}
+.foot-inner a:hover{color:var(--sage-dark)}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="dpp-landing.html" class="logo">
+      <div class="logo-mark">◐</div>
+      <div>DPP Compass</div>
+    </a>
+    <div class="nav-links">
+      <a href="#how">How it works</a>
+      <a href="#who">Who it's for</a>
+      <a href="#features">Features</a>
+      <a href="dpp-overview.html">Overview</a>
+    </div>
+    <a href="dpp-dashboard.html" class="btn">Open the demo →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div>
+      <span class="hero-tag">EU ESPR · Digital Product Passport</span>
+      <h1>Ship products into Europe <em>without losing the door.</em></h1>
+      <p class="lede">DPP Compass is the operational workspace for small and medium manufacturers preparing for the EU Digital Product Passport. Track waste in dollars, find recycled inputs, build the BOM that the regulation requires, and close the loop with QR-coded products in the field.</p>
+      <div class="hero-ctas">
+        <a href="dpp-dashboard.html" class="btn btn-lg">Open the live demo →</a>
+        <a href="dpp-consumer-app.html" class="btn btn-ghost btn-lg">See the consumer app</a>
+      </div>
+      <div class="hero-trust">
+        <div><strong>Feb 2027</strong>First DPP deadline (batteries)</div>
+        <div><strong>30+</strong>Product groups under ESPR scope</div>
+        <div><strong>3 entity types</strong>materials · parts · end-product</div>
+      </div>
+    </div>
+
+    <div class="preview">
+      <div class="preview-bar"><i></i><i></i><i></i></div>
+      <div class="preview-body">
+        <div class="preview-h">
+          <div>
+            <div class="sub">DPP Compass</div>
+            <div class="t">Overview · WM-220</div>
+          </div>
+          <div class="preview-pill">DPP 64%</div>
+        </div>
+        <div class="preview-kpis">
+          <div class="preview-kpi"><div class="l">Waste lost</div><div class="v">$142.8k</div></div>
+          <div class="preview-kpi gold"><div class="l">In market</div><div class="v">184.6k</div></div>
+          <div class="preview-kpi warm"><div class="l">Saved</div><div class="v">$96.4k</div></div>
+        </div>
+        <div class="preview-bar2">
+          <div class="preview-row"><div class="n">Steel</div><div class="t"><div class="f" style="width:71%"></div></div><div class="v">71%</div></div>
+          <div class="preview-row"><div class="n">Aluminium</div><div class="t"><div class="f" style="width:62%;background:var(--warm)"></div></div><div class="v">62%</div></div>
+          <div class="preview-row"><div class="n">rPET</div><div class="t"><div class="f" style="width:48%;background:var(--gold)"></div></div><div class="v">48%</div></div>
+          <div class="preview-row"><div class="n">Copper</div><div class="t"><div class="f" style="width:34%;background:var(--warm)"></div></div><div class="v">34%</div></div>
+          <div class="preview-row"><div class="n">Cotton</div><div class="t"><div class="f" style="width:22%;background:var(--gold)"></div></div><div class="v">22%</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<section class="problem">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-tag">The problem</span>
+      <h2>Europe just changed the rules. <em>Most SMEs aren't ready.</em></h2>
+      <p>By the late 2020s, almost every physical product placed on the EU market will need a Digital Product Passport — a machine-readable record of materials, recycled content, carbon footprint, repair information and end-of-life routes. Enterprise compliance vendors charge six figures. SMEs need something else.</p>
+    </div>
+    <div class="problem-grid">
+      <div class="problem-stat">
+        <div class="big">€680bn</div>
+        <h3>EU goods trade exposed</h3>
+        <p>Annual non-EU manufactured imports falling under ESPR scope by 2030. Every shipment will need a DPP.</p>
+      </div>
+      <div class="problem-stat">
+        <div class="big">90%</div>
+        <h3>of suppliers are SMEs</h3>
+        <p>The companies that need to comply are the least prepared. They lack the data systems large brands already have.</p>
+      </div>
+      <div class="problem-stat">
+        <div class="big">4–6 mo</div>
+        <h3>to a market-ready DPP</h3>
+        <p>If you start now. Most SMEs discover the gap when their EU buyer flags it at the next purchase order — by then it's too late.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-tag">How it works</span>
+      <h2>From your BOM to a passport, <em>in one workspace.</em></h2>
+      <p>DPP Compass ingests the product data you already keep, computes what the regulation asks for, and gives the consumer a QR code that closes the loop back to your shop floor.</p>
+    </div>
+    <div class="how-grid">
+      <div class="how-step">
+        <div class="num">01</div>
+        <h3>Map the product</h3>
+        <p>Upload or build the BOM and BOP. The platform calculates recycled content, carbon footprint, and waste cost from the data you give it.</p>
+      </div>
+      <div class="how-step">
+        <div class="num">02</div>
+        <h3>Find better inputs</h3>
+        <p>The supply-chain view ranks every material by the dollar saving and DPP impact of switching to verified recycled or low-carbon suppliers.</p>
+      </div>
+      <div class="how-step">
+        <div class="num">03</div>
+        <h3>Generate the DPP</h3>
+        <p>Every required ESPR field is mapped and status-tracked. When complete, a QR code is generated for every unit you ship.</p>
+      </div>
+      <div class="how-step">
+        <div class="num">04</div>
+        <h3>Close the loop</h3>
+        <p>The consumer app guides users to take-back points at end-of-life. Recovered materials feed your next batch and lift your recycled-content claim.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHO -->
+<section class="who" id="who">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-tag">Who it's for</span>
+      <h2>Built for every tier of the chain</h2>
+      <p>Whether you make the finished product, the parts inside it, or the raw material it starts as — DPP Compass models your data and your obligations.</p>
+    </div>
+    <div class="who-grid">
+      <div class="who-card">
+        <div class="role">Tier 0</div>
+        <h3>End-product manufacturer</h3>
+        <p>You sell finished products to consumers across the EU — white goods, furniture, lighting, small electronics, textiles.</p>
+        <ul>
+          <li>Consumer-facing QR + DPP</li>
+          <li>Installed-base tracking</li>
+          <li>Take-back network management</li>
+          <li>Per-SKU compliance roster</li>
+        </ul>
+      </div>
+      <div class="who-card">
+        <div class="role">Tier 1</div>
+        <h3>Parts supplier</h3>
+        <p>You ship motors, PCBs, frames, sub-assemblies to OEMs that sell into Europe. Your batch DPP feeds theirs.</p>
+        <ul>
+          <li>Batch-level DPP records</li>
+          <li>Customer offcut return tickets</li>
+          <li>Critical raw materials disclosure</li>
+          <li>OEM-ready data exports</li>
+        </ul>
+      </div>
+      <div class="who-card">
+        <div class="role">Tier 2+</div>
+        <h3>Material supplier</h3>
+        <p>You make polymers, alloys, fibres, pellets, billets. Your DPP is the foundation of every claim downstream.</p>
+        <ul>
+          <li>Per-batch chain-of-custody</li>
+          <li>Recycled content attestation</li>
+          <li>ISO 14067 carbon footprint</li>
+          <li>Premium pricing on verified DPP</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-tag">Inside the platform</span>
+      <h2>Eight modules, <em>one workspace</em></h2>
+      <p>Each module replaces a spreadsheet, a consultant call, or a missing piece of compliance documentation.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature"><div class="ico">◐</div><h3>Overview</h3><p>KPIs and trends across waste, savings, installed base and DPP readiness. Your daily start screen.</p></div>
+      <div class="feature"><div class="ico">⊟</div><h3>Waste &amp; Value</h3><p>Production waste in kilograms and USD by material and line. Hotspots auto-flagged.</p></div>
+      <div class="feature"><div class="ico">↔</div><h3>Supply Chain</h3><p>Virgin vs recycled pricing, availability, lead time, and verified DPP-ready suppliers.</p></div>
+      <div class="feature"><div class="ico">⊞</div><h3>BOM &amp; BOP</h3><p>Multi-level Bill of Materials and process steps with mass, cost, recycled %, and CO₂e.</p></div>
+      <div class="feature"><div class="ico">◍</div><h3>Product Tracking</h3><p>Real-time QR-scan map of your installed base. Lifecycle stage on every unit.</p></div>
+      <div class="feature"><div class="ico">↺</div><h3>Recovery</h3><p>End-of-life material coming back from consumers — by stream, value and partner.</p></div>
+      <div class="feature"><div class="ico">✓</div><h3>DPP Compliance</h3><p>Every ESPR field, status-tracked, with a preview of what consumers see when they scan.</p></div>
+      <div class="feature"><div class="ico">✦</div><h3>Circular Opportunities</h3><p>Redesign opportunities scanned across five lenses, with dollar and CO₂ estimates.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY -->
+<section style="background:var(--paper)">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-tag">Why DPP Compass</span>
+      <h2>Compliance is the floor. <em>Circularity is the upside.</em></h2>
+    </div>
+    <div class="why-grid">
+      <ul class="why-list">
+        <li>
+          <div class="check">✓</div>
+          <div>
+            <h4>Built for SMEs, priced for SMEs</h4>
+            <p>No six-figure enterprise contract. No 12-month implementation. Sign up, open the dashboard, start by Friday.</p>
+          </div>
+        </li>
+        <li>
+          <div class="check">✓</div>
+          <div>
+            <h4>Every tier of the chain</h4>
+            <p>Material, parts and end-product suppliers each get a workspace shaped to their data — and to their downstream customer's obligations.</p>
+          </div>
+        </li>
+        <li>
+          <div class="check">✓</div>
+          <div>
+            <h4>Waste turns into revenue</h4>
+            <p>The same data that satisfies the regulator surfaces where your business is losing money. Most users find recoverable margin in week one.</p>
+          </div>
+        </li>
+        <li>
+          <div class="check">✓</div>
+          <div>
+            <h4>Consumer app included</h4>
+            <p>The QR your product needs by law becomes a loyalty channel. Scans, repairs and take-back drop-offs feed back into your data — and your recycled content claim.</p>
+          </div>
+        </li>
+      </ul>
+      <div>
+        <div class="why-quote">
+          The hardest part of the new EU rules isn't writing the data. It's having it in the first place. DPP Compass is what we use to find out where the gaps are — and to fix them in time.
+          <span class="src">— Operations Director · pilot manufacturer</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section>
+  <div class="container">
+    <div class="cta-block">
+      <h2>The deadline isn't moving. <em>Start mapping today.</em></h2>
+      <p>The live demo is fully populated with sample data across three entity types and three products. Click through every tab — it's the fastest way to see whether DPP Compass fits how your team actually works.</p>
+      <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap">
+        <a href="dpp-dashboard.html" class="btn btn-lg">Open the demo →</a>
+        <a href="dpp-overview.html" class="btn btn-ghost btn-lg">Read the overview</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-inner">
+    <div>© DPP Compass · prototype · all data illustrative</div>
+    <div class="links">
+      <a href="dpp-dashboard.html">Dashboard</a>
+      <a href="dpp-consumer-app.html">Consumer app</a>
+      <a href="dpp-overview.html">Overview</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
